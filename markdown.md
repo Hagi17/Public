@@ -1,6 +1,6 @@
 ## Markdown
 
-[1]
+[Cheatsheet][1]
 
 ```markdown
 Syntax highlighted code block
