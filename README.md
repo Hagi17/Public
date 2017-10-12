@@ -8,5 +8,5 @@ Branch for ESP Bsp
 
 [Webpage][1]
 
-[logo]: res/mountain.jpg
+[logo]: res/mountain_logo.jpg
 [1]: https://hagi17.github.io/ESP/
