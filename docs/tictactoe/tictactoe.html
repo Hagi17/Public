@@ -1,0 +1,544 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+<meta name="date" content="24.10.2017">
+<meta name="robots" content="noindex,nofollow">
+<title>Tic-Tac-Toe</title>
+<script>
+var player=0,win=false;
+var asrc,bsrc,csrc;
+var x_path="x.bmp",o_path="o.bmp",e_path="empty.bmp";
+var x_="x.bmp",o_="o.bmp",e_="empty.bmp";
+function won() {
+for(i=0;i<3;i++) {
+asrc=document.getElementById("p0"+i).src.toString();
+bsrc=document.getElementById("p1"+i).src.toString();
+csrc=document.getElementById("p2"+i).src.toString();
+if(asrc==bsrc&&asrc==csrc&&asrc.substring(asrc.lastIndexOf("/")+1)!=e_) {
+if(asrc.substring(asrc.lastIndexOf("/")+1)==x_) return 0;
+else return 1;
+}
+asrc=document.getElementById("p"+i+"0").src.toString();
+bsrc=document.getElementById("p"+i+"1").src.toString();
+csrc=document.getElementById("p"+i+"2").src.toString();
+if(asrc==bsrc&&asrc==csrc&&asrc.substring(asrc.lastIndexOf("/")+1)!=e_) {
+if(asrc.substring(asrc.lastIndexOf("/")+1)==x_) return 0;
+else return 1;
+}
+}
+asrc=document.getElementById("p00").src.toString();
+bsrc=document.getElementById("p11").src.toString();
+csrc=document.getElementById("p22").src.toString();
+if(asrc==bsrc&&asrc==csrc&&asrc.substring(asrc.lastIndexOf("/")+1)!=e_) {
+if(asrc.substring(asrc.lastIndexOf("/")+1)==x_) return 0;
+else return 1;
+}
+asrc=document.getElementById("p20").src.toString();
+bsrc=document.getElementById("p11").src.toString();
+csrc=document.getElementById("p02").src.toString();
+if(asrc==bsrc&&asrc==csrc&&asrc.substring(asrc.lastIndexOf("/")+1)!=e_) {
+if(asrc.substring(asrc.lastIndexOf("/")+1)==x_) return 0;
+else return 1;
+}
+/*if(count()==9) {
+alert("It's a draw!");
+win=true;
+}
+*/return -1;
+}
+function _src(x,y) {
+var xs=document.getElementById("p"+x+y).src.toString();
+return xs.substring(xs.lastIndexOf("/")+1);
+}
+function count() {
+var count=0;
+var xsrc;
+for(i=0;i<3;i++)
+for(j=0;j<3;j++)
+if(_src(i,j)!=e_) count++;
+return count;
+}
+function set(x,y) {
+document.getElementById("p"+x+y).src=o_path;
+}
+function array(a,b) {
+var ary=new Array(2);
+ary[0]=a;
+ary[1]=b;
+return ary;
+}
+function twoof3(bmp) {
+for(index=0;index<3;index++) {
+if(_src(index,0)==bmp&&_src(index,1)==bmp&&_src(index,2)==e_)
+return array(index,2);
+if(_src(index,0)==bmp&&_src(index,2)==bmp&&_src(index,1)==e_)
+return array(index,1);
+if(_src(index,2)==bmp&&_src(index,1)==bmp&&_src(index,0)==e_)
+return array(index,0);
+if(_src(0,index)==bmp&&_src(1,index)==bmp&&_src(2,index)==e_)
+return array(2,index);
+if(_src(0,index)==bmp&&_src(2,index)==bmp&&_src(1,index)==e_)
+return array(1,index);
+if(_src(2,index)==bmp&&_src(1,index)==bmp&&_src(0,index)==e_)
+return array(0,index);
+}
+if(_src(0,0)==bmp&&_src(1,1)==bmp&&_src(2,2)==e_) return array(2,2);
+if(_src(0,0)==bmp&&_src(2,2)==bmp&&_src(1,1)==e_) return array(1,1);
+if(_src(2,2)==bmp&&_src(1,1)==bmp&&_src(0,0)==e_) return array(0,0);
+if(_src(2,0)==bmp&&_src(1,1)==bmp&&_src(0,2)==e_) return array(0,2);
+if(_src(2,0)==bmp&&_src(0,2)==bmp&&_src(1,1)==e_) return array(1,1);
+if(_src(0,2)==bmp&&_src(1,1)==bmp&&_src(2,0)==e_) return array(2,0);
+return array(-1,-1);
+}
+function getwin() {
+return twoof3(o_);
+}
+function danger() {
+return twoof3(x_);
+}
+function sit(i,j,c) {
+if(_src(i,j)==c) return true;
+return false;
+}
+function nS3() {
+if((sit(0,0,x_)&&sit(2,0,x_)&&sit(1,0,o_))||(sit(0,0,x_)&&sit(0,2,x_)&&sit(0,1,o_))
+||(sit(2,2,x_)&&sit(2,0,x_)&&sit(2,1,o_))||(sit(2,2,x_)&&sit(0,2,x_)&&sit(1,2,o_))) {
+set(1,1);
+return;
+}//A112
+if(sit(1,1,o_)&&((sit(0,0,x_)&&sit(2,2,x_))||(sit(0,2,x_)&&sit(2,0,x_)))) {
+set(0,1);
+return;
+}//A341
+if(sit(1,1,x_)) {
+var got=true;
+if((sit(0,0,o_)&&sit(2,2,x_))||(sit(0,0,x_)&&sit(2,2,o_))) {
+set(0,2);
+}//C142
+else if((sit(0,2,o_)&&sit(2,0,x_))||(sit(2,0,x_)&&sit(0,2,o_))) {
+set(0,0);
+}//C142
+else if((sit(0,1,x_)&&sit(2,1,o_))||(sit(1,0,x_)&&sit(1,2,o_))) {
+set(0,0);
+}//B531
+else if((sit(0,1,o_)&&sit(2,1,x_))||(sit(1,0,o_)&&sit(1,2,x_))) {
+set(2,2);
+}//B531
+else got=false;
+if(got) return;
+}
+if(sit(1,1,o_)) {
+var got=true;
+if((sit(0,1,x_)&&sit(2,1,x_))||(sit(1,0,x_)&&sit(1,2,x_))) set(0,0);
+else got=false;
+if(got) return;
+}//B341
+if(sit(1,0,x_)&&((sit(0,0,o_)&&sit(0,1,x_))||(sit(2,0,o_)&&sit(2,1,x_)))) {
+set(1,2);
+return;
+}//B123
+if(sit(1,2,x_)&&((sit(0,2,o_)&&sit(0,1,x_))||(sit(2,2,o_)&&sit(2,1,x_)))) {
+set(1,0);
+return;
+}//B123
+//--
+if(sit(0,0,x_)&&sit(1,1,o_)&&sit(1,2,x_)) {
+set(2,2);
+return;
+}
+if(sit(0,2,x_)&&sit(1,1,o_)&&sit(1,0,x_)) {
+set(2,0);
+return;
+}
+if(sit(0,2,x_)&&sit(1,1,o_)&&sit(2,1,x_)) {
+set(2,0);
+return;
+}
+if(sit(2,2,x_)&&sit(1,1,o_)&&sit(0,1,x_)) {
+set(0,0);
+return;
+}
+if(sit(2,2,x_)&&sit(1,1,o_)&&sit(1,0,x_)) {
+set(0,0);
+return;
+}
+if(sit(2,0,x_)&&sit(1,1,o_)&&sit(1,2,x_)) {
+set(0,2);
+return;
+}
+if(sit(2,0,x_)&&sit(1,1,o_)&&sit(0,1,x_)) {
+set(0,2);
+return;
+}
+if(sit(0,0,x_)&&sit(1,1,o_)&&sit(2,1,x_)) {
+set(2,2);
+return;
+}
+//A336
+}
+function nS2() {
+if((sit(0,0,o_)&&(sit(0,1,x_)||sit(1,0,x_)))||(sit(0,2,o_)&&(sit(0,1,x_)||sit(1,2,x_)))) {
+set(1,1);
+return;
+}//A12
+if((sit(2,2,o_)&&(sit(2,1,x_)||sit(1,2,x_)))||(sit(2,0,o_)&&(sit(2,1,x_)||sit(1,0,x_)))) {
+set(1,1);
+return;
+}//A12
+if(sit(1,1,x_)) {
+var got=true;
+if(sit(0,0,o_)) set(2,2);
+else if(sit(2,0,o_)) set(0,2);
+else if(sit(0,2,o_)) set(2,0);
+else if(sit(2,2,o_)) set(0,0);
+else if(sit(0,1,o_)||sit(2,1,o_)) set(1,0);
+else if(sit(1,0,o_)||sit(1,2,o_)) set(0,1);
+else got=false;
+if(got) return;
+}//A34 & B32
+if((sit(0,0,o_)&&sit(0,2,x_))||(sit(2,2,x_)&&sit(2,0,o_))) {
+set(1,0);
+return;
+}//A22
+if((sit(0,2,o_)&&sit(2,2,x_))||(sit(0,0,o_)&&sit(2,0,x_))) {
+set(0,1);
+return;
+}//A22
+if((sit(0,0,x_)&&sit(0,2,o_))||(sit(2,2,o_)&&sit(2,0,x_))) {
+set(1,2);
+return;
+}//A22
+if((sit(0,2,x_)&&sit(2,2,o_))||(sit(0,0,x_)&&sit(2,0,o_))) {
+set(2,1);
+return;
+}//A22
+if((sit(0,0,o_)&&sit(2,2,x_))||(sit(0,0,x_)&&sit(2,2,o_))) {
+set(0,2);
+return;
+}//A52
+if((sit(0,2,o_)&&sit(2,0,x_))||(sit(2,0,x_)&&sit(0,2,o_))) {
+set(0,0);
+return;
+}//A52
+if((sit(0,1,o_)&&sit(2,1,x_))||(sit(1,0,x_)&&sit(1,2,o_))) {
+set(2,0);
+return;
+}//B54
+if((sit(0,1,x_)&&sit(2,1,o_))||(sit(1,0,o_)&&sit(1,2,x_))) {
+set(0,2);
+return;
+}//B54
+if(sit(1,1,o_)) {
+var got=true;
+if(sit(0,1,x_)||sit(1,0,x_)) set(0,0);
+else if(sit(1,2,x_)||sit(2,1,x_)) set(2,2);
+else if(sit(0,0,x_)) set(2,2);
+else if(sit(2,2,x_)) set(0,0);
+else if(sit(0,2,x_)) set(2,0);
+else if(sit(2,0,x_)) set(0,2);
+else got=false;
+if(got) return;
+}//C21 && C14
+}
+function nS4() {
+if(sit(0,1,o_)&&sit(1,0,o_)&&sit(1,1,x_)&&(sit(1,2,x_)||sit(2,1,x_))) {
+set(0,0);
+return;
+}
+if(sit(0,1,o_)&&sit(1,2,o_)&&sit(1,1,x_)&&(sit(2,1,x_)||sit(1,0,x_))) {
+set(0,2);
+return;
+}
+if(sit(1,2,o_)&&sit(2,1,o_)&&sit(1,1,x_)&&(sit(1,0,x_)||sit(0,1,x_))) {
+set(2,2);
+return;
+}
+if(sit(2,1,o_)&&sit(1,0,o_)&&sit(1,1,x_)&&(sit(0,1,x_)||sit(1,2,x_))) {
+set(2,0);
+return;
+}
+//B323a
+if(sit(1,1,o_)&&sit(0,0,o_)&&sit(0,1,x_)&&sit(2,2,x_)) {
+set(1,0);
+return;
+}
+if(sit(1,1,o_)&&sit(0,2,o_)&&sit(0,1,x_)&&sit(2,0,x_)) {
+set(1,2);
+return;
+}
+if(sit(1,1,o_)&&sit(0,2,o_)&&sit(1,2,x_)&&sit(2,0,x_)) {
+set(0,1);
+return;
+}
+if(sit(1,1,o_)&&sit(2,2,o_)&&sit(1,2,x_)&&sit(0,0,x_)) {
+set(2,1);
+return;
+}
+if(sit(1,1,o_)&&sit(2,2,o_)&&sit(2,1,x_)&&sit(0,0,x_)) {
+set(1,2);
+return;
+}
+if(sit(1,1,o_)&&sit(2,0,o_)&&sit(2,1,x_)&&sit(0,2,x_)) {
+set(1,0);
+return;
+}
+if(sit(1,1,o_)&&sit(2,0,o_)&&sit(1,0,x_)&&sit(0,2,x_)) {
+set(2,1);
+return;
+}
+if(sit(1,1,o_)&&sit(0,0,o_)&&sit(1,0,x_)&&sit(2,2,x_)) {
+set(0,1);
+return;
+}
+//A122
+if(true) {
+if((sit(0,0,o_)&&sit(0,1,x_)&&sit(0,2,o_)&&sit(1,0,x_))||
+(sit(0,0,o_)&&sit(0,1,x_)&&sit(0,2,o_)&&sit(1,2,x_))||
+(sit(0,2,o_)&&sit(1,2,x_)&&sit(2,2,o_)&&sit(0,1,x_))||
+(sit(0,2,o_)&&sit(1,2,x_)&&sit(2,2,o_)&&sit(2,1,x_))||
+(sit(2,2,o_)&&sit(2,1,x_)&&sit(2,0,o_)&&sit(1,0,x_))||
+(sit(2,2,o_)&&sit(2,1,x_)&&sit(2,0,o_)&&sit(1,2,x_))||
+(sit(2,0,o_)&&sit(1,0,x_)&&sit(0,0,o_)&&sit(0,1,x_))||
+(sit(2,0,o_)&&sit(1,0,x_)&&sit(0,0,o_)&&sit(2,1,x_))) {
+set(1,1);
+return;
+}
+}
+//A111a
+if(sit(0,0,o_)&&sit(0,1,x_)&&sit(0,2,o_)&&sit(2,0,x_)) {
+set(2,2);
+return;
+}
+if(sit(0,0,o_)&&sit(0,1,x_)&&sit(0,2,o_)&&sit(2,2,x_)) {
+set(2,0);
+return;
+}
+if(sit(0,2,o_)&&sit(1,2,x_)&&sit(2,2,o_)&&sit(2,0,x_)) {
+set(0,0);
+return;
+}
+if(sit(0,2,o_)&&sit(1,2,x_)&&sit(2,2,o_)&&sit(0,0,x_)) {
+set(2,0);
+return;
+}
+if(sit(2,2,o_)&&sit(2,1,x_)&&sit(2,0,o_)&&sit(0,0,x_)) {
+set(0,2);
+return;
+}
+if(sit(2,2,o_)&&sit(2,1,x_)&&sit(2,0,o_)&&sit(0,2,x_)) {
+set(0,0);
+return;
+}
+if(sit(2,0,o_)&&sit(1,0,x_)&&sit(0,0,o_)&&sit(0,2,x_)) {
+set(2,2);
+return;
+}
+if(sit(2,0,o_)&&sit(1,0,x_)&&sit(0,0,o_)&&sit(2,2,x_)) {
+set(0,2);
+return;
+}
+//A113e
+}
+function nS5() {
+}
+function nS6() {
+}
+function nextStep() {
+var cn=count();
+if(cn==0) {
+nextRandomStep();
+//set(0,1);
+return;
+}
+if(cn==1) {
+if(_src(1,1)==e_)
+set(1,1);//A3,B3
+else set(0,0);//C1
+return;
+}
+if(cn==2) nS2();
+if(cn==3) nS3();
+if(cn==4) nS4();
+if(cn==5) nS5();
+if(cn==6) nS6();
+if(cn==8||cn==7) {
+for(i=0;i<3;i++)
+for(j=0;j<3;j++)
+if(_src(i,j)==e_) {
+set(i,j);
+if(count()==9) {
+win=true;
+alert("It's a draw!");
+return;
+}
+return;
+}
+}
+}
+function nextRandomStep() {
+var cn=count();
+do {
+var m=Math.floor(Math.random()*1247)%9;
+var i=Math.floor(m/3);
+var j=m%3;
+if(_src(i,j)==e_) set(i,j);
+}while(cn==count());
+}
+function comp() {
+if(win) return;
+if(count()==9) {
+win=true;
+alert("It's a draw!");
+return;
+}
+var x=getwin();
+if(x[0]!=-1) {
+set(x[0],x[1]);
+if(won()!=-1) {
+if(won()==0) alert("You won!");
+else alert("Computer won!");
+win=true;
+}
+return;
+}
+x=danger();
+if(x[0]!=-1) {
+set(x[0],x[1]);
+if(won()!=-1) {
+if(won()==0) alert("You won!");
+else alert("Computer won!");
+win=true;
+}
+if(count()==9) {
+win=true;
+alert("It's a draw!");
+}
+return;
+}
+if(document.getElementById("difficulty").checked) nextStep();
+else nextRandomStep();
+if(won()!=-1) {
+if(won()==0) alert("You won!");
+else alert("Computer won!");
+win=true;
+return;
+}
+}
+function Clear() {
+for(i=0;i<3;i++)
+for(j=0;j<3;j++)
+document.getElementById("p"+i+j).src=e_path;
+win=false;
+}
+function Start() {
+Clear();
+var start=Math.floor((Math.random()*127)%2);
+if(!document.getElementById("mode").checked) {
+if(start==1) comp();
+player=0;
+}
+else player=start;
+}
+function change() {
+document.getElementById("difficulty").disabled=document.getElementById("mode").checked;
+if(document.getElementById("difficulty").disabled)
+document.getElementById("difficulty").checked=false;
+Clear();
+}
+function play(x,y) {
+if(win) return;
+if(_src(x,y)!=e_) return;
+var bmp;
+if(player==0) bmp=x_path;
+else bmp=o_path;
+document.getElementById("p"+x+y).src=bmp;
+if(document.getElementById("mode").checked)  {
+if(won()!=-1) {
+alert("Player "+(won()+1)+" has won!");
+win=true;
+return;
+}
+if(count()==9) {
+win=true;
+alert("It's a draw!");
+return;
+}
+player=(player+1)%2;
+}
+else {
+if(won()==0) {
+alert("You won!");
+win=true;
+return;
+}
+if(count()==9) {
+win=true;
+alert("It's a draw!");
+return;
+}
+comp();
+}
+}
+</script>
+<style type="text/css">
+img {width:100px; height:100px; border:0px;}
+td {width:80px; height:80px;}
+</style>
+</head>
+<body onload="Start();">
+<h1 align="center">TIC-TAC-TOE</h1>
+<table border="1" rules="">
+<tr>
+<td><img src="empty.bmp" usemap="#M00" id="p00" alt="empty"></td>
+<td><img src="empty.bmp" usemap="#M01" id="p01" alt="empty"></td>
+<td><img src="empty.bmp" usemap="#M02" id="p02" alt="empty"></td>
+<td rowspan="3" style="width:300px" valign="top">
+<input type="button" value="Neu" onclick="Start();"><br>
+<input type="checkbox" id="difficulty" onclick="Clear();">Schwer<br>
+<input type="checkbox" id="mode" onclick="change();">2 Spieler<br>
+</td>
+</tr>
+<tr>
+<td><img src="empty.bmp" usemap="#M10" id="p10" alt="empty"></td>
+<td><img src="empty.bmp" usemap="#M11" id="p11" alt="empty"></td>
+<td><img src="empty.bmp" usemap="#M12" id="p12" alt="empty"></td>
+</tr>
+<tr>
+<td><img src="empty.bmp" usemap="#M20" id="p20" alt="empty"></td>
+<td><img src="empty.bmp" usemap="#M21" id="p21" alt="empty"></td>
+<td><img src="empty.bmp" usemap="#M22" id="p22" alt="empty"></td>
+</tr>
+</table>
+<a href="index.php">Index</a><br>
+Wenn es nicht funktioniert, evtl. FireGloves ausschalten!
+<map name="M00">
+<area href="javascript:play(0,0);" coords="0,0,100,100">
+</map>
+<map name="M01">
+<area href="javascript:play(0,1);" coords="0,0,100,100">
+</map>
+<map name="M02">
+<area href="javascript:play(0,2);" coords="0,0,100,100">
+</map>
+<map name="M10">
+<area href="javascript:play(1,0);" coords="0,0,100,100">
+</map>
+<map name="M11">
+<area href="javascript:play(1,1);" coords="0,0,100,100">
+</map>
+<map name="M12">
+<area href="javascript:play(1,2);" coords="0,0,100,100">
+</map>
+<map name="M20">
+<area href="javascript:play(2,0);" coords="0,0,100,100">
+</map>
+<map name="M21">
+<area href="javascript:play(2,1);" coords="0,0,100,100">
+</map>
+<map name="M22">
+<area href="javascript:play(2,2);" coords="0,0,100,100">
+</map>
+</body>
+</html>
