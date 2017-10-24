@@ -6,7 +6,7 @@ This Repository is from me.
 
 Interesting Links:
 
-[2]Let's Encrypt
+[Let's Encrypt][2]
 
 [logo]: res/mountain_logo.jpg
 [1]: https://hagi17.github.io/ESP/
