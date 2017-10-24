@@ -1,0 +1,125 @@
+<!DOCTYPE HTML>
+
+<html lang="de" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="a very basic, not yet finished homepage">
+
+<link rel="icon" type="image/png" href="res/symbol.png">
+
+<title>Galerie</title>
+<style>
+
+figure{
+  margin: 0;
+}
+
+figure.einzel {
+  display: inline-block;
+  padding: 10px;
+  width: 31%;
+  border: 1px solid gainsboro;
+}
+
+figcaption {
+  padding: 10px;
+  text-align: center;
+  text-font: Arial;
+}
+
+body {
+  max-width: 90em;
+}
+
+figure img {
+  width: 100%;
+}
+	  
+@media only screen and (max-width:800px) {
+  body{
+    width: 100%;
+    margin: 2% 0;
+    padding: 1%;
+  }
+  figure.einzel {
+    width: 48%;
+  }
+}   
+
+@media only screen and (max-width:600px) {
+  figure.einzel {
+    width: 96%;
+  }
+}
+
+span.date
+{
+  color: gray;
+  font-style: italic;
+}
+
+h2
+{
+  text-align: center;
+}
+</style>
+</head>
+<body>
+<h2>Diverse Fotos von Touren</h1>
+<figure class="gesamt">
+  <figure class="einzel">
+    <img src="Lichtsee2013.jpg" alt="Lichtsee im Obernbergtal" />
+    <figcaption>Lichtsee vor den Tribulaunen im Obernbergtal <br>
+    <span class="date">Sept. 2013</span><br>&nbsp;</figcaption>
+  </figure>
+  <figure class="einzel">
+    <img src="Olperer2013.jpg" alt="Olperer und Fussstein" />
+    <figcaption>Olperer und Fu&szlig;stein<br>
+      Blick vom Weg aus dem Wildlahnertal zur Geraer H&uuml;tte<br>
+      <span class="date">Sept. 2013</span></figcaption>
+  </figure>
+  <figure class="einzel">
+    <img src="Serles2014.jpg" alt="Serles" />
+    <figcaption>Serles<br><span class="date">Feb. 2014</span>
+    <br>&nbsp;</figcaption>
+  </figure>
+  <figure class="einzel">
+    <img src="Trollstunga2016.jpg" alt="Trollstunga" />
+    <figcaption>Trollstunga<br>Norwegen<br>
+    <span class="date">Jul. 2016</span></figcaption>
+  </figure>
+  <figure class="einzel">
+    <img src="Grossglockner2016.jpg" alt="Grossglockner" />
+    <figcaption>Gro&szlig;glockner<br>
+    <span class="date">Aug. 2016</span><br>&nbsp;</figcaption>
+  </figure>
+  <figure class="einzel">
+    <img src="Garklerin2017.jpg" alt="Garklerin" />
+    <figcaption>Gipfelkreuz der Garklerin vor dem Habicht <br>
+    im Gschnitztal<br>
+    <span class="date">Mai. 2017</span></figcaption>
+  </figure>
+  <figure class="einzel">
+    <img src="Reckner2017.jpg" alt="Lizumer Reckner" />
+    <figcaption>Lizumer Reckner, Lizumer Sonnenspitze und 
+     Tarntaler K&ouml;pfe <br> im Navistal <br>
+     <span class="date">Aug. 2017</span></figcaption>
+  </figure>
+  <figure class="einzel">
+    <img src="Acherkogel2017.jpg" alt="Acherkogel" />
+    <figcaption>
+    Pockkogel, Zw&ouml;lferkogel und Acherkogel vom Gaiskogel <br>
+    bei K&uuml;htai<br> 
+    <span class="date">Aug. 2017</span></figcaption>
+  </figure>
+  <figure class="einzel">
+    <img src="Kreuzspitze2017.jpg" alt="Kreuzspitze" />
+    <figcaption>Blick auf die Kreuzspitze im Venter Tal <br>
+    beim Abstieg von der Breslauer H&uuml;tte <br>
+    <span class="date">Sept. 2017</span></figcaption>
+  </figure>
+</figure>
+</body>
+</html>
