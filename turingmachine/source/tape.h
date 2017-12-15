@@ -2,10 +2,9 @@
 /// Turing Machine Simulator in C++
 ///
 /// Author: Clemens Hagenbuchner
-/// Last edited: 14.12.17
+/// Last edited: 15.12.17
 /// 
-/// Information about certain functions used 
-/// from stackOverflow.com and cplusplus.com
+/// Input/Output Tape
 ///
 
 #ifndef _TAPE_H_
@@ -60,7 +59,6 @@ class Tape
     }
     char read()
     {
-      if(mHeadPos >= mTape.size()) cout << "NOOOOOOO" << endl;
       while(mHeadPos >= mTape.size()) extendTapeRight();
       return mTape[mHeadPos];
     }

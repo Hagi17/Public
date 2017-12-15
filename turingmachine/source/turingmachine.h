@@ -2,10 +2,9 @@
 /// Turing Machine Simulator in C++
 ///
 /// Author: Clemens Hagenbuchner
-/// Last edited: 14.12.17
+/// Last edited: 15.12.17
 /// 
-/// Information about certain functions used 
-/// from stackOverflow.com and cplusplus.com
+/// Turing Machine class
 ///
 
 #ifndef _TURINGMACHINE_H_

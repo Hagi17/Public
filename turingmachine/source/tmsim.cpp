@@ -2,7 +2,7 @@
 /// Turing Machine Simulator in C++
 ///
 /// Author: Clemens Hagenbuchner
-/// Last edited: 14.12.17
+/// Last edited: 15.12.17
 /// 
 /// Information about certain functions used 
 /// from stackOverflow.com and cplusplus.com
@@ -19,7 +19,7 @@
 #include <conio.h>
 #endif
 
-#define VERSION "1.0"
+#define VERSION "1.0.1"
 #define IO_ERROR 2
 
 using namespace std;
@@ -30,11 +30,13 @@ bool getParameter(int argc, char* argv[], TuringMachine* machine,
 bool askForPath(string& programFile);
 void getInput(string& input);
 int preExit(bool exitDirect, ErrorInfo info);
-void printHeader(string version, string programFile);
+void printHeader(string version);
 void printCursor(int fieldCount = 60);
 void printHelp();
 bool handleResult(bool result, bool warning, TuringMachine* machine);
 void handleError(ErrorInfo info);
+string readFile(string path);
+void printLoading(string programFile);
 
 ///
 /// Turing Machine Simulator
@@ -57,8 +59,11 @@ int main(int argc, char* argv[])
   
   TuringMachine* machine = new TuringMachine();
   
+  printHeader(VERSION);
+  
   getParameter(argc, argv, machine, programFile, input, exitDirect, saveOnExit,
     saveFile);
+  
   if(programFile.compare("?help") == 0 || 
     programFile.compare("-help") == 0)
   {
@@ -67,7 +72,7 @@ int main(int argc, char* argv[])
     return preExit(exitDirect, errorInfo);
   }
   
-  printHeader(VERSION, programFile);
+  printLoading(programFile);
   
   if(!machine->loadProgram(programFile, errorInfo))
   {
@@ -132,26 +137,27 @@ void printHelp()
 {
   cout << "Usage: ./tm <programfile> [-show] [-in=<input>] [-help] [-exit]";
   cout << " [-speed=<steps/sec>] [-I<folder>] [-ext] [-out=<file>]" << endl;
-  cout << "<programfile> specifies the path to the Programfile (Ending: .tm, .txt)" << endl;
-  cout << "if -show is set, the current tape will be printed after each step.";
-  cout << "with -speed=<>, the time for a step can be adjusted" << endl;
   cout << endl;
-  cout << "if -in is set, this will be taken as input" << endl;
-  cout << "if -help is set, this help will be shown" << endl;
-  cout << "if -ext is set, internal/read, internal/write and internal/clear will be";
-  cout << "available." << endl;
-  cout << "if -exit is set, the user won't be asked to enter a key at the end.";
+  cout << "<programfile>\tspecifies the path to the Programfile (Ending: .tm, .txt)" << endl;
+  cout << "-show\t\tprint the current tape after each step." << endl;
+  cout << "-speed=<>\tthe time for a step when displaying the tape in steps/sec" << endl;
+  cout << "-tape\t\tspecify input (characters on tape)" << endl;
+  cout << "-help\t\tshow this help" << endl;
+  cout << "-ext\t\tinclude internal/read, internal/write and internal/clear" << endl;
+  cout << "-exit\t\tdon't ask for enter at the end of the program.";
   cout << endl;
-  cout << "if -out=<file> is set, the input and the final output will be stored";
-  cout << " in the given file after the machine stopped." << endl;
-  cout << "-I<folder>   Add <folder> to the Machines searchpath for TM - Files";
+  cout << "-in=<file>\tset the content of file as input on the tape" << endl;
+  cout << "-out=<file>\tstore the input and the final output in the specified file";
+  cout << endl;
+  cout << "-I<folder>\tAdd <folder> to the Machines searchpath for TM - Files";
   cout << endl << endl;
-  cout << "internal/read: interprets the content of the tape until '$' as a filepath ";
-  cout << "and loads the content on to the tape behind that $ (ignores \\n)" << endl;
-  cout << "internal/write: interprets the content of the tape until '$' as a filepath ";
-  cout << "and stores the tape behind the $ in the file" << endl;
+  cout << "internal/read: interprets the content of the tape until '$' as a filepath" << endl;
+  cout << "\t\tand loads the content on to the tape behind that $ (ignores \\n)" << endl;
+  cout << "internal/write: interprets the content of the tape until '$' as a filepath" << endl;
+  cout << "\t\tand stores the tape behind the $ in the file" << endl;
   cout << "internal/clear: clear complete tape" << endl;
-  cout << "from internal/write and internal/read you can go on by reading * or $";
+  cout << endl;
+  cout << "from internal/write and internal/read you can go on by reading * or $" << endl;
   cout << "from internal/clear by reading * or _" << endl << endl;
   cout << "Program-Layout: " << endl;
   cout << "[#include \"<file>\"]" << endl;
@@ -161,17 +167,22 @@ void printHelp()
   cout << "<state>,<input>,<output>,<move>,<newstate>" << endl;
   cout << "//comments will be ignored" << endl;
   cout << endl;
-  cout << "With #include <file> a sub-TM can be loaded," << endl;
-  cout << "multiple #includes can be specified." << endl;
-  cout << "Name indicates the Name of the Program." << endl;
-  cout << "init indicates the start State of the Program." << endl;
-  cout << "accept indicates the accepted states of the Program." << endl;
+  cout << "#include <file>\tinclude a Sub-TM (as many as needed)" << endl;
+  cout << "Name\t\tindicates the Name of the Program (important when used as Sub-TM)." << endl;
+  cout << "init\t\tindicates the start State of the Program." << endl;
+  cout << "accept\t\tindicates the accepted states of the Program." << endl;
+  cout << endl;
   cout << "The 5-Tupel must be specified for each transition" << endl;
-  cout << "move can be < (go left), > (go right) or - (stay)" << endl;
-  cout << "for the states, this program takes in strings" << endl;
-  cout << "for input and output, a single character must be specified" << endl;
+  cout << "<state>\t\tcurrent state; any case-sensitive string" << endl;
+  cout << "<input>\t\tif this single character is read, the transition will be triggered" << endl;
+  cout << "<output>\tsingle character to be written onto the tape"<< endl;
+  cout << "<move>\t\tMove the Head: < (go left), > (go right) or - (stay)" << endl;
+  cout << "<newstate>\tnext state; any case-sensitive string"<<endl;
+  cout << endl;
   cout << "'*' reads any character, '_' reads an empty field" << endl;
   cout << "'*' writes no character, '_' writes an empty field" << endl;
+  cout << endl;
+  cout << "Sub-TM:\tfor <state>/<newstate> use name/state, where name is the name of the sub-TM" << endl;
 }
 
 void printCursor(int fieldCount)
@@ -182,13 +193,19 @@ void printCursor(int fieldCount)
   cout << cursor << endl;
 }
 
-void printHeader(string version, string programFile)
+void printHeader(string version)
 {
   cout << "Turing Machine Simulator" << endl;
   cout << "Version " << version << endl;
+  cout << endl << "© Clemens Hagenbuchner, 2017" << endl;
+  cout << endl << "Use -help for more informations.." << endl;
   cout << endl;
-  if(!programFile.empty())
-    cout << "Loading program: " << programFile << endl;
+}
+
+void printLoading(string programFile)
+{
+  if(programFile.empty()) return;
+  cout << "Loading program: " << programFile << endl;
 }
 
 int preExit(bool exitDirect, ErrorInfo info)
@@ -228,7 +245,9 @@ bool getParameter(int argc, char* argv[], TuringMachine* machine,
       saveFile = arg.substr(5);
     }
     else if (arg.substr(0,4).compare("-in=") == 0)
-      input = arg.substr(4);
+      input = readFile(arg.substr(4));
+    else if(arg.substr(0,6).compare("-tape=") == 0)
+      input = arg.substr(6);
     else if (arg.substr(0,7).compare("-speed=") == 0)
       speed = stoi(arg.substr(7));//set speed
     else if(arg.substr(0,2).compare("-I") == 0)
@@ -241,6 +260,20 @@ bool getParameter(int argc, char* argv[], TuringMachine* machine,
   machine->sleepTimeInMilliSeconds = sleepTime;
   machine->sleepTimeInMicroSeconds = sleepTime * 1000;
   return true;
+}
+
+string readFile(string path)
+{
+  ifstream file(path);
+  string content = "";
+  if(file.is_open())
+  {
+    string line;
+    while(getline(file, line))
+      content += line;
+    file.close();
+  }
+  return content;
 }
 
 bool askForPath(string& programFile)
@@ -257,4 +290,5 @@ void getInput(string& input)
     cout << "Input for run: ";
     getline(cin, input);
   }
+  cout << endl;
 }
