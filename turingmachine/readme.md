@@ -2,7 +2,7 @@
 
 &copy; Clemens Hagenbuchner, 2017
 
-<u>Source-Files:</u>  
+<u>Source-Files:</u>;  
 [Main][mainsrc]  
 [Turing Machine class][tmsrc]  
 [Tape class][tapesrc]  
@@ -10,38 +10,40 @@
 [5Tupel class][tupelsrc]  
 [Support functions][supsrc]  
 
-Compile: *g++ -std=c++11 -o tm tmsim.cpp*
+_Compile: _ *g++ -std=c++11 -o tm tmsim.cpp*
 
 *c++11* is minimum standard.
 
-Usage:  
-*./tm <programfile> [-show] [-in=<input>] [-help] [-exit] [-speed=<steps/sec>] [-I<folder>] [-ext] [-out=<file>]*
+_Usage: _ 
+*./tm &lt;programfile&gt; [-show] [-help] [-exit] [-in=&lt;file&gt;] [-tape=&lt;input&gt;] [-speed=&lt;steps/sec&gt;] [-I&lt;folder&gt;] [-ext] [-out=&lt;file&gt;]*
 
-<programfile>   specifies the path to the Programfile (Ending: .tm, .txt)  
+&lt;programfile&gt;   specifies the path to the Programfile (Ending: .tm, .txt)  
 -show           print the current tape after each step.  
--speed=<>       the time for a step when displaying the tape in steps/sec  
+-speed=&lt;&gt;       the time for a step when displaying the tape in steps/sec  
 -tape           specify input (characters on tape)  
 -help           show this help  
 -ext            include internal/read, internal/write and internal/clear  
 -exit           don't ask for enter at the end of the program.  
--in=<file>      set the content of file as input on the tape  
--out=<file>     store the input and the final output in the specified file  
--I<folder>      Add <folder> to the Machines searchpath for TM - Files  
+-in=&lt;file&gt;      set the content of file as input on the tape  
+-out=&lt;file&gt;     store the input and the final output in the specified file  
+-I&lt;folder&gt;      Add &lt;folder&gt; to the Machines searchpath for TM - Files  
 
 internal/read: interprets the content of the tape until '$' as a filepath  
-                and loads the content on to the tape behind that $ (ignores \n)  
+                and loads the content on to the tape behind that $ (ignores \n)
+                
 internal/write: interprets the content of the tape until '$' as a filepath  
                 and stores the tape behind the $ in the file  
+                
 internal/clear: clear complete tape  
 
 from internal/write and internal/read you can go on by reading * or $  
 from internal/clear by reading * or _  
 
-Program-Layout:  
+_Program-Layout:  _
 \[#include "&lt;file&gt;"\]  
 name: &lt;name&gt;  
 init: &lt;state&gt;  
-accept: &lt;state&gt;[,&lt;state>]  
+accept: &lt;state&gt;[,&lt;state&gt;]  
 &lt;state&gt;,&lt;input&gt;,&lt;output&gt;,&lt;move&gt;,&lt;newstate&gt;  
 //comments will be ignored  
 
@@ -57,14 +59,14 @@ The 5-Tupel must be specified for each transition
 &lt;move&gt;          Move the Head: &lt; (go left), &gt; (go right) or - (stay)  
 &lt;newstate&gt;      next state; any case-sensitive string  
 
-'\*' reads any character, '_' reads an empty field  
-'\*' writes no character, '_' writes an empty field  
+'\*' reads any character, '\_' reads an empty field  
+'\*' writes no character, '\_' writes an empty field  
 
 Sub-TM: for &lt;state&gt;/&lt;newstate&gt; use name/state, where name is the name of the sub-TM
 
-[mainsrc][source/tmsim.cpp]  
-[tmsrc][source/turingmachine.h]  
-[tapesrc][source/tape.h]  
-[statesrc][source/state.h]  
-[tupelsrc][source/transition.h]  
-[supsrc][source/support.h]  
+[mainsrc]: source/tmsim.cpp  
+[tmsrc]: source/turingmachine.h  
+[tapesrc]: source/tape.h  
+[statesrc]: source/state.h  
+[tupelsrc]: source/transition.h 
+[supsrc]: source/support.h  
