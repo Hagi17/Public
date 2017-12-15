@@ -330,8 +330,8 @@ class TuringMachine
       string newState = parts[4];
       if(!primary)
       {
-        curState = prefix + "/" + curState;
-        newState = prefix + "/" + newState;
+        if(curState.find("/") == string::npos) curState = prefix + "/" + curState;
+        if(newState.find("/") == string::npos) newState = prefix + "/" + newState;
       }
       int curStateNo = addState(curState);
       int newStateNo = addState(newState);
