@@ -2,7 +2,7 @@
 
 &copy; Clemens Hagenbuchner, 2017
 
-__Source-Files:__ 
+**Source-Files:** 
 [Main][mainsrc]  
 [Turing Machine class][tmsrc]  
 [Tape class][tapesrc]  
@@ -10,11 +10,11 @@ __Source-Files:__
 [5Tupel class][tupelsrc]  
 [Support functions][supsrc]  
 
-__Compile: __ *g++ -std=c++11 -o tm tmsim.cpp*
+**Compile:**  *g++ -std=c++11 -o tm tmsim.cpp*
 
 *c++11* is minimum standard.
 
-__Usage: __ 
+**Usage:**  
 *./tm &lt;programfile&gt; [-show] [-help] [-exit] [-in=&lt;file&gt;] [-tape=&lt;input&gt;] [-speed=&lt;steps/sec&gt;] [-I&lt;folder&gt;] [-ext] [-out=&lt;file&gt;]*
 
 *&lt;programfile&gt;*   specifies the path to the Programfile (Ending: .tm, .txt)  
@@ -39,7 +39,7 @@ __Usage: __
 from internal/write and internal/read you can go on by reading * or $  
 from internal/clear by reading * or _  
 
-__Program-Layout:  __  
+**Program-Layout:**    
 \[#include "&lt;file&gt;"\]  
 name: &lt;name&gt;  
 init: &lt;state&gt;  
