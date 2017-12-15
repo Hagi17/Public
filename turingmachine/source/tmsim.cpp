@@ -3,6 +3,8 @@
 ///
 /// Author: Clemens Hagenbuchner
 /// Last edited: 15.12.17
+///
+/// main project file
 /// 
 /// Information about certain functions used 
 /// from stackOverflow.com and cplusplus.com
@@ -40,8 +42,8 @@ void printLoading(string programFile);
 
 ///
 /// Turing Machine Simulator
-/// Usage: ./tm <programfile> [-show] [-in=<input>] [-help] [-exit] 
-/// [-speed=<steps/sec] [-I<folder>]
+/// Usage: ./tm <programfile> [-show] [-in=<file>] [-help] [-exit] 
+/// [-speed=<steps/sec] [-I<folder>] [-tape=<input>]
 ///
 /// @return 0 on success
 ///
@@ -141,8 +143,9 @@ bool handleResult(bool result, TuringMachine* machine)
 
 void printHelp()
 {
-  cout << "Usage: ./tm <programfile> [-show] [-in=<input>] [-help] [-exit]";
+  cout << "Usage: ./tm <programfile> [-show] [-in=<file>] [-help] [-exit]";
   cout << " [-speed=<steps/sec>] [-I<folder>] [-ext] [-out=<file>]" << endl;
+  cout << "\t[-tape=<input>]"<<endl;
   cout << endl;
   cout << "<programfile>\tspecifies the path to the Programfile (Ending: .tm, .txt)" << endl;
   cout << "-show\t\tprint the current tape after each step." << endl;

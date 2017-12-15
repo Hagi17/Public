@@ -4,23 +4,31 @@
 <head>
 <meta charset="UTF-8">
 <title>Turing Machine Simulator</title>
+<style>
+h1 {text-align: center;}
+</style>
 </head>
 <body>
 <h1>Turing Machine Simulator (C++)</h1>
-&copy; Clemens Hagenbuchner, 2017<br>
+<tt>&copy; Clemens Hagenbuchner, 2017</tt>
+<hr>
+<b>Source-Files: </b><br>
+<a href="https://github.com/Hagi17/Public/tree/master/turingmachine">GitHub Directory</a><br>
+<code>turingmachine.xml</code> is an User Defined Language for Notepad++ (.tm Files)
+<hr> 
+<b>Compiling: </b><br>
+<code>g++ -std=c++11 -o tm tmsim.cpp</code><br>(<code>c++11</code> is minimum standard)
+<hr>
+<b>Usage: </b><br>
+<code>./tm &lt;programfile&gt; [-show] [-help] [-exit] [-I&lt;directory&gt;] [-ext] 
+[-in=&lt;file&gt;] [-out=&lt;file&gt;] [-tape=&lt;input&gt;] [-speed=&lt;steps/sec&gt;]</code>
+<br>
+<br>
 
-<u>Source-Files:</u>  <br>
-<a href="https://github.com/Hagi17/Public/tree/master/turingmachine">GitHub Directory</a><br> 
 <pre>
-Compile: g++ -std=c++11 -o tm tmsim.cpp
-
-c++11 is minimum standard.
-
-Usage: ./tm &lt;programfile> [-show] [-in=&lt;input>] [-help] [-exit] [-speed=&lt;steps/sec>] [-I&lt;folder>] [-ext] [-out=&lt;file>]
-
 &lt;programfile>   specifies the path to the Programfile (Ending: .tm, .txt)
 -show           print the current tape after each step.
--speed=<>       the time for a step when displaying the tape in steps/sec
+-speed=<..>     the time for a step when displaying the tape in steps/sec
 -tape           specify input (characters on tape)
 -help           show this help
 -ext            include internal/read, internal/write and internal/clear
@@ -29,7 +37,7 @@ Usage: ./tm &lt;programfile> [-show] [-in=&lt;input>] [-help] [-exit] [-speed=&l
 -out=&lt;file>     store the input and the final output in the specified file
 -I&lt;folder>      Add <folder> to the Machines searchpath for TM - Files
 
-internal/read: interprets the content of the tape until '$' as a filepath
+internal/read:  interprets the content of the tape until '$' as a filepath
                 and loads the content on to the tape behind that $ (ignores \n)
 internal/write: interprets the content of the tape until '$' as a filepath
                 and stores the tape behind the $ in the file
@@ -37,8 +45,10 @@ internal/clear: clear complete tape
 
 from internal/write and internal/read you can go on by reading * or $
 from internal/clear by reading * or _
-
-Program-Layout:
+</pre>
+<hr>
+<b>Program-Layout:</b><br>
+<pre>
 [#include "&lt;file>"]
 name: &lt;name>
 init: &lt;state>
@@ -63,7 +73,6 @@ The 5-Tupel must be specified for each transition
 
 Sub-TM: for <state>/<newstate> use name/state, where name is the name of the sub-TM
 </pre>
-<br>
-turingmachine.xml is a User Defined Language for Notepad++ for .tm files
+<a href="https://hagi17.github.io/Public/">Main</a>
 </body>
 </html>
