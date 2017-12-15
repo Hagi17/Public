@@ -9,5 +9,5 @@ Interesting Links:
 [Let's Encrypt][2]
 
 [logo]: res/mountain_logo.jpg
-[1]: https://hagi17.github.io/ESP/
+[1]: https://hagi17.github.io/Public/
 [2]: https://letsencrypt.org/getting-started/
