@@ -27,7 +27,8 @@ using namespace std;
 class Transition
 {
   public:
-    Transition(char input, char output, int move, int newState, int curState)
+    Transition(char input, char output, int move, int newState, int curState,
+      bool hasBreakpoint)
     {
       mInput = input;
       mOutput = output;
@@ -37,6 +38,7 @@ class Transition
         mMove = move;
       mNewstate = newState;
       mCurrstate = curState;
+      mHasBreakpoint = hasBreakpoint;
     }
     ~Transition()
     {
@@ -70,9 +72,15 @@ class Transition
       newState = mNewstate;
       move = getMove();
     }
+    bool hasBreakPoint() 
+    {
+      return mHasBreakpoint;
+    }
   private:
     char mMove; 
     char mInput;
+    
+    bool mHasBreakpoint;
     
     char mOutput;
     int mNewstate;

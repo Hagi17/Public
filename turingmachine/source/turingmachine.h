@@ -30,6 +30,16 @@
 
 using namespace std;
 
+typedef enum
+{
+  Halt = 0,
+  Accepted = 1,
+  Error,
+  Warning,
+  BreakPoint,
+  Running
+} RunningState;
+
 class TuringMachine
 {
   public:
@@ -48,6 +58,7 @@ class TuringMachine
       mInternalClear = -1;
       mInternalRead = -1;
       mInternalWrite = -1;
+      mState = Halt;
     }   
     ~TuringMachine()
     {
@@ -77,16 +88,16 @@ class TuringMachine
     {
       return loadFile(programFile, true, onError);
     }
-    bool start(ostream& logConsole, bool& warning)
+    bool start(ostream& logConsole)
     {
       resetState();
       resetHead();
-      return run(logConsole, warning);
+      return run(logConsole);
     }
-    bool run(ostream& logConsole, bool& warning)
+    bool run(ostream& logConsole)
     {
       bool result = true;
-      warning = false;
+      mState = Running;
       int counter = 0;
       if(mShowProcess) logConsole << printTape();
       while(!isAccepted(mCurrentState) && isState(mCurrentState))
@@ -94,21 +105,32 @@ class TuringMachine
         counter++;
         if(counter > WarningStateCount) 
         {
-          warning = true;
+          mState = Warning;
           return result;
         }
         operateExtension();
         char write = EMPTY;
+        bool breakPoint = false;
         int newState;
         int move = 0;
         result = mStates[mCurrentState]->operate(mTape->read(), write, 
-          mCurrentState, move);
-        if(!result) break;
+          mCurrentState, move, breakPoint);
+        if(!result) 
+        {
+          mState = Halt;
+          break;
+        }
         mTape->write(write);
         showProcess(logConsole);
         mTape->moveHead(move);
         showProcess(logConsole);
+        if(breakPoint)
+        {
+          mState = BreakPoint;
+          break;
+        }
       }
+      if(isAccepted(mCurrentState)) mState = Accepted;
       if(mShowProcess) logConsole << '\r';
       return (result && isAccepted(mCurrentState));
     }
@@ -154,6 +176,11 @@ class TuringMachine
     {
       mTape->saveTape(path, input);
     }
+    
+    RunningState machineState()
+    {
+      return mState;
+    }
   private:
     bool mShowProcess;
     int mCurrentState;
@@ -163,6 +190,8 @@ class TuringMachine
     int mInternalClear;
     int mInternalRead;
     int mInternalWrite;
+    
+    RunningState mState;
     
     Tape* mTape;
     
@@ -266,7 +295,7 @@ class TuringMachine
           result = parseTransition(line, name, primary);
           if(!result) 
           {
-            onError.file += " (*,*,-) occured ";
+            onError.file += " (s,*,*,-,s) occured ";
             break;
           }
         }
@@ -291,6 +320,12 @@ class TuringMachine
       stringsup::replace(tupel, ",,",",comma");
       vector<string> parts {stringsup::explode(tupel, ',')};
       if(parts.size() != 5) return false;
+      bool breakPoint = false;
+      if(parts[4].back() == '!')
+      {
+        breakPoint = true;
+        parts[4] = parts[4].substr(0, parts[4].length() - 1);
+      }
       string curState = parts[0];
       string newState = parts[4];
       if(!primary)
@@ -305,10 +340,10 @@ class TuringMachine
       if(parts[1].size() != 1 || parts[2].size() != 1 || 
         parts[3].size() != 1) return false;
       if(parts[1][0] == WILDCARD && parts[2][0] == WILDCARD && 
-        parts[3][0] == NO_MOVE) return false;
-    // this would lead to a endless loop
+        parts[3][0] == NO_MOVE && parts[0] == parts[4]) return false;
+    // this would lead to a endless loop (same state, no movement, take all)
       Transition* way = new Transition((parts[1])[0],(parts[2])[0],
-        (parts[3])[0],newStateNo, curStateNo);
+        (parts[3])[0],newStateNo, curStateNo, breakPoint);
       if(way->moveChar() != (parts[3])[0])
       {
         delete way;

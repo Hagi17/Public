@@ -33,7 +33,7 @@ int preExit(bool exitDirect, ErrorInfo info);
 void printHeader(string version);
 void printCursor(int fieldCount = 60);
 void printHelp();
-bool handleResult(bool result, bool warning, TuringMachine* machine);
+bool handleResult(bool result, TuringMachine* machine);
 void handleError(ErrorInfo info);
 string readFile(string path);
 void printLoading(string programFile);
@@ -86,13 +86,11 @@ int main(int argc, char* argv[])
   
   printCursor(fieldCount);
   
-  bool result = false;
-  bool warning = false;
-  do
+  bool result = machine->start(cout);
+  while(handleResult(result, machine))
   {
-    result = machine->start(cout, warning);
+    result = machine->run(cout);
   }
-  while(handleResult(result, warning, machine));
   
   if(saveOnExit) machine->saveTape(saveFile, input);
   
@@ -104,7 +102,7 @@ int main(int argc, char* argv[])
 
 void handleError(ErrorInfo info)
 {
-  if(info.error == IO_ERROR)
+  if(info.error == IO_ERROR && info.file.compare("-") != 0)
   {
     if(info.lineno < 0)
       cout << info.file << " couldn't be read!" << endl;
@@ -116,14 +114,22 @@ void handleError(ErrorInfo info)
   }
 }
 
-bool handleResult(bool result, bool warning, TuringMachine* machine)
+bool handleResult(bool result, TuringMachine* machine)
 {
-  if(warning)
+  if(machine->machineState() == Warning)
   {
     char questChar;
     cout << "The machine seems to be stuck! Ignore (n) or Abort (y) ? ";
     cin >> questChar;
     if(questChar == 'n') return true;
+    cout << "Aborted!" << endl;
+    result = false;
+  }
+  else if(machine->machineState() == BreakPoint)
+  {
+    char bPchar;
+    cin >> bPchar;
+    if(bPchar == 'n') return true;
     cout << "Aborted!" << endl;
     result = false;
   }
@@ -182,6 +188,9 @@ void printHelp()
   cout << "'*' reads any character, '_' reads an empty field" << endl;
   cout << "'*' writes no character, '_' writes an empty field" << endl;
   cout << endl;
+  cout << "A ! at the end of a transition indicates a breakpoint, where the";
+  cout << " machine halts and waits for input;"<<endl<<"with n the program goes on.";
+  cout << endl << endl;
   cout << "Sub-TM:\tfor <state>/<newstate> use name/state, where name is the name of the sub-TM" << endl;
 }
 

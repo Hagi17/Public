@@ -118,6 +118,9 @@ class Tape
       }
       tape.insert(tape.begin() + padLeftCount, mTape.begin()+leftIndex, 
         mTape.begin()+rightIndex);
+      stringsup::replace(tape, "\n"," ");
+      stringsup::replace(tape, "\r"," ");
+      stringsup::replace(tape, "\b"," ");
       tape.append(maxIndex - rightIndex, EMPTY);
       return tape;
     }
@@ -134,7 +137,8 @@ class Tape
         while(getline(file, line))
         {
           mTape.insert(mTape.begin() + pos, line.begin(), line.end());
-          pos+=line.size();
+          mTape.push_back('\n');
+          pos+=line.size()+1;
         }
         mTape.push_back('$');
         file.close();

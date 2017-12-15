@@ -34,7 +34,8 @@ class State
         mActions.pop_back();
       }
     }
-    bool operate(char readChar, char& writeChar, int& newState, int& move)
+    bool operate(char readChar, char& writeChar, int& newState, int& move,
+      bool& breakPoint)
     {
       int index = 0;
       int wildCardIndex = -1;
@@ -44,6 +45,7 @@ class State
         if(tupel->inputChar() == readChar)
         {
           tupel->operate(writeChar, newState, move);
+          if(tupel->hasBreakPoint()) breakPoint = true;
           return true;
         }
         if(tupel->inputChar() == WILDCARD)
@@ -56,6 +58,7 @@ class State
       if(index == -1 && wildCardIndex > -1)
       {
         mActions[wildCardIndex]->operate(writeChar, newState, move);
+        if(mActions[wildCardIndex]->hasBreakPoint()) breakPoint = true;
         return true;
       }
       return false;
