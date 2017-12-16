@@ -2,7 +2,7 @@
 
 &copy; Clemens Hagenbuchner, 2017
 
-**Source-Files:** 
+**Source-Files:**  
 [Main][mainsrc]  
 [Turing Machine class][tmsrc]  
 [Tape class][tapesrc]  
@@ -18,7 +18,7 @@
 *./tm &lt;programfile&gt; [-show] [-help] [-exit] [-in=&lt;file&gt;] [-tape=&lt;input&gt;] [-speed=&lt;steps/sec&gt;] [-I&lt;folder&gt;] [-ext] [-out=&lt;file&gt;]*
 
 *&lt;programfile&gt;*   specifies the path to the Programfile (Ending: .tm, .txt)  
-*-show *          print the current tape after each step.  
+*-show*           print the current tape after each step.  
 *-speed=&lt;&gt;*       the time for a step when displaying the tape in steps/sec  
 *-tape*           specify input (characters on tape)  
 *-help*           show this help  
@@ -39,12 +39,14 @@
 from internal/write and internal/read you can go on by reading * or $  
 from internal/clear by reading * or _  
 
+---
+
 **Program-Layout:**    
 \[#include "&lt;file&gt;"\]  
 name: &lt;name&gt;  
 init: &lt;state&gt;  
 accept: &lt;state&gt;[,&lt;state&gt;]  
-&lt;state&gt;,&lt;input&gt;,&lt;output&gt;,&lt;move&gt;,&lt;newstate&gt;  
+&lt;state&gt;,&lt;input&gt;,&lt;output&gt;,&lt;move&gt;,&lt;newstate&gt;[!]  
 //comments will be ignored  
 
 *#include &lt;file&gt;* includes a Sub-TM (as many as needed)  
@@ -58,11 +60,19 @@ The 5-Tupel must be specified for each transition
 *&lt;output&gt;*        single character to be written onto the tape  
 *&lt;move&gt;*          Move the Head: &lt; (go left), &gt; (go right) or - (stay)  
 *&lt;newstate&gt;*      next state; any case-sensitive string  
+*!*                      indicates a breakpoint, where the machine will halt
 
 '\*' reads any character, '\_' reads an empty field  
 '\*' writes no character, '\_' writes an empty field  
 
 Sub-TM: for &lt;state&gt;/&lt;newstate&gt; use name/state, where name is the name of the sub-TM
+
+---
+
+Under /code you will find some TuringMachine-Programs:  
+Copy some characters (0,1,o,z,_) to the right [CopyBinary](code/copybinary.tm)  
+Invert a binary number [Invert](code/not.tm)  
+Shift a binary number one place to the right [rshift](code/rshift.tm)  
 
 [mainsrc]: source/tmsim.cpp  
 [tmsrc]: source/turingmachine.h  

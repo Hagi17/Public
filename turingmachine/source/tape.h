@@ -128,12 +128,11 @@ class Tape
     void readFile()
     {
       string path = readFileNameFromTape();
-      moveHead(1);
       ifstream file(path);
       if(file.is_open())
       {
         string line;
-        int pos = mHeadPos;
+        int pos = mHeadPos+1;
         while(getline(file, line))
         {
           mTape.insert(mTape.begin() + pos, line.begin(), line.end());
@@ -143,6 +142,7 @@ class Tape
         mTape.push_back('$');
         file.close();
       }
+      moveHead(1);
     }
     
     void writeFile()

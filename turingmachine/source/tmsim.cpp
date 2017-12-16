@@ -21,7 +21,7 @@
 #include <conio.h>
 #endif
 
-#define VERSION "1.0.1"
+#define VERSION "1.0.2a"
 #define IO_ERROR 2
 
 using namespace std;
@@ -282,7 +282,10 @@ string readFile(string path)
   {
     string line;
     while(getline(file, line))
+    {
       content += line;
+      content += '\n';
+    }
     file.close();
   }
   return content;

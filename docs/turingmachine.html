@@ -37,7 +37,7 @@ Originally created as an extra gadget for a homework at university.<br>
 -exit           don't ask for enter at the end of the program.
 -in=&lt;file>      set the content of file as input on the tape
 -out=&lt;file>     store the input and the final output in the specified file
--I&lt;folder>      Add <folder> to the Machines searchpath for TM - Files
+-I&lt;folder>      Add &lt;folder&gt; to the Machines searchpath for TM - Files
 
 internal/read:  interprets the content of the tape until '$' as a filepath
                 and loads the content on to the tape behind that $ (ignores \n)
@@ -55,8 +55,8 @@ from internal/clear by reading * or _
 name: &lt;name>
 init: &lt;state>
 accept: &lt;state>[,&lt;state>]
-&lt;state>,&lt;input>,&lt;output>,<move>,<newstate>
-\/\/comments will be ignored
+&lt;state>,&lt;input>,&lt;output>,&lt;move&gt;,&lt;newstate&gt;[!]
+//comments will be ignored
 
 #include &lt;file> include a Sub-TM (as many as needed)
 Name            indicates the Name of the Program (important when used as Sub-TM).
@@ -67,13 +67,14 @@ The 5-Tupel must be specified for each transition
 &lt;state>         current state; any case-sensitive string
 &lt;input>         if this single character is read, the transition will be triggered
 &lt;output>        single character to be written onto the tape
-&lt;move>          Move the Head: < (go left), > (go right) or - (stay)
+&lt;move>          Move the Head: &lt; (go left), &gt; (go right) or - (stay)
 &lt;newstate>      next state; any case-sensitive string
+!                  indicates a breakpoint, where the machine will halt
 
 '*' reads any character, '_' reads an empty field
 '*' writes no character, '_' writes an empty field
 
-Sub-TM: for <state>/<newstate> use name/state, where name is the name of the sub-TM
+Sub-TM: for &lt;state&gt;/&lt;newstate&gt; use name/state, where name is the name of the sub-TM
 </pre>
 <a href="https://hagi17.github.io/Public/">Main</a>
 </body>
