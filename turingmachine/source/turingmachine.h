@@ -2,7 +2,7 @@
 /// Turing Machine Simulator in C++
 ///
 /// Author: Clemens Hagenbuchner
-/// Last edited: 15.12.17
+/// Last edited: 16.12.17
 /// 
 /// Turing Machine class
 ///
@@ -340,7 +340,7 @@ class TuringMachine
       if(parts[1].size() != 1 || parts[2].size() != 1 || 
         parts[3].size() != 1) return false;
       if(parts[1][0] == WILDCARD && parts[2][0] == WILDCARD && 
-        parts[3][0] == NO_MOVE && parts[0] == parts[4]) return false;
+        parts[3][0] == NO_MOVE && curState.compare(newState) == 0) return false;
     // this would lead to a endless loop (same state, no movement, take all)
       Transition* way = new Transition((parts[1])[0],(parts[2])[0],
         (parts[3])[0],newStateNo, curStateNo, breakPoint);
