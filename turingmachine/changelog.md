@@ -2,13 +2,15 @@
 
 ---
 
-#### Version 1.0.2a
+### Version 1.0.2a
 
 __16.12.17__
 
 - Fixed Bug in internal/read and preseting Tape with File
 
-#### Version 1.0.1
+---
+
+### Version 1.0.1
 
 __16.12.17__
 
