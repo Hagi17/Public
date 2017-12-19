@@ -6,6 +6,9 @@
 
 __19.12.17__
 
+- Fixed a bug when including a Sub-Sub-TM without using AS
+
+
 - Added *#include* *INTERNAL*
 - Added *#include* *AS*
 - Added optional *&lt;internal&gt;* to 5-Tupel

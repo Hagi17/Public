@@ -3,6 +3,34 @@
 
 //no correction for double characters! (needs to implemented, quite complex)
 
+#include "lshiftAZ.tm" AS lshA
+#include "lshiftAZ.tm" AS lshB
+#include "lshiftAZ.tm" AS lshC
+#include "lshiftAZ.tm" AS lshD
+#include "lshiftAZ.tm" AS lshE
+#include "lshiftAZ.tm" AS lshF
+#include "lshiftAZ.tm" AS lshG
+#include "lshiftAZ.tm" AS lshH
+#include "lshiftAZ.tm" AS lshI
+#include "lshiftAZ.tm" AS lshJ
+#include "lshiftAZ.tm" AS lshK
+#include "lshiftAZ.tm" AS lshL
+#include "lshiftAZ.tm" AS lshM
+#include "lshiftAZ.tm" AS lshN
+#include "lshiftAZ.tm" AS lshO
+#include "lshiftAZ.tm" AS lshP
+#include "lshiftAZ.tm" AS lshQ
+#include "lshiftAZ.tm" AS lshR
+#include "lshiftAZ.tm" AS lshS
+#include "lshiftAZ.tm" AS lshT
+#include "lshiftAZ.tm" AS lshU
+#include "lshiftAZ.tm" AS lshV
+#include "lshiftAZ.tm" AS lshW
+#include "lshiftAZ.tm" AS lshX
+#include "lshiftAZ.tm" AS lshY
+#include "lshiftAZ.tm" AS lshZ
+
+
 name: checkMonoKey
 init: begin
 accept: finish
@@ -16,10 +44,14 @@ doneA,_,$,>,checkForB
 doneA,$,$,>,checkForB
 doneA,*,*,<,doneA
 
-checkDoubleA,A,_,>,error_invalidkey
-checkDoubleA,a,_,>,error_invalidkey
+checkDoubleA,A,_,>,lshA/begin
+checkDoubleA,a,_,>,lshA/begin
 checkDoubleA,_,_,<,doneA
 checkDoubleA,*,*,>,checkDoubleA
+
+lshA/finish,*,*,<,recheckA
+recheckA,$,$,>,begin
+recheckA,*,*,<,recheckA
 
 checkForB,B,B,>,checkDoubleB
 checkForB,b,B,>,checkDoubleB
@@ -30,10 +62,14 @@ doneB,_,$,>,checkForC
 doneB,$,$,>,checkForC
 doneB,*,*,<,doneB
 
-checkDoubleB,B,_,>,error_invalidkey
-checkDoubleB,b,_,>,error_invalidkey
+checkDoubleB,B,_,>,lshB/begin
+checkDoubleB,b,_,>,lshB/begin
 checkDoubleB,_,_,<,doneB
 checkDoubleB,*,*,>,checkDoubleB
+
+lshB/finish,*,*,<,recheckB
+recheckB,$,$,>,checkForB
+recheckB,*,*,<,recheckB
 
 checkForC,C,C,>,checkDoubleC
 checkForC,c,C,>,checkDoubleC
@@ -44,10 +80,14 @@ doneC,_,$,>,checkForD
 doneC,$,$,>,checkForD
 doneC,*,*,<,doneC
 
-checkDoubleC,C,_,>,error_invalidkey
-checkDoubleC,c,_,>,error_invalidkey
+checkDoubleC,C,_,>,lshC/begin
+checkDoubleC,c,_,>,lshC/begin
 checkDoubleC,_,_,<,doneC
 checkDoubleC,*,*,>,checkDoubleC
+
+lshC/finish,*,*,<,recheckC
+recheckC,$,$,>,checkForC
+recheckC,*,*,<,recheckC
 
 checkForD,D,D,>,checkDoubleD
 checkForD,d,D,>,checkDoubleD
@@ -58,10 +98,14 @@ doneD,_,$,>,checkForE
 doneD,$,$,>,checkForE
 doneD,*,*,<,doneD
 
-checkDoubleD,D,_,>,error_invalidkey
-checkDoubleD,d,_,>,error_invalidkey
+checkDoubleD,D,_,>,lshD/begin
+checkDoubleD,d,_,>,lshD/begin
 checkDoubleD,_,_,<,doneD
 checkDoubleD,*,*,>,checkDoubleD
+
+lshD/finish,*,*,<,recheckD
+recheckD,$,$,>,checkForD
+recheckD,*,*,<,recheckD
 
 checkForE,E,E,>,checkDoubleE
 checkForE,e,E,>,checkDoubleE
@@ -72,10 +116,14 @@ doneE,_,$,>,checkForF
 doneE,$,$,>,checkForF
 doneE,*,*,<,doneE
 
-checkDoubleE,E,_,>,error_invalidkey
-checkDoubleE,e,_,>,error_invalidkey
+checkDoubleE,E,_,>,lshE/begin
+checkDoubleE,e,_,>,lshE/begin
 checkDoubleE,_,_,<,doneE
 checkDoubleE,*,*,>,checkDoubleE
+
+lshE/finish,*,*,<,recheckE
+recheckE,$,$,>,checkForE
+recheckE,*,*,<,recheckE
 
 checkForF,F,F,>,checkDoubleF
 checkForF,f,F,>,checkDoubleF
@@ -86,10 +134,14 @@ doneF,_,$,>,checkForG
 doneF,$,$,>,checkForG
 doneF,*,*,<,doneF
 
-checkDoubleF,F,_,>,error_invalidkey
-checkDoubleF,f,_,>,error_invalidkey
+checkDoubleF,F,_,>,lshF/begin
+checkDoubleF,f,_,>,lshF/begin
 checkDoubleF,_,_,<,doneF
 checkDoubleF,*,*,>,checkDoubleF
+
+lshF/finish,*,*,<,recheckF
+recheckF,$,$,>,checkForF
+recheckF,*,*,<,recheckF
 
 checkForG,G,G,>,checkDoubleG
 checkForG,g,G,>,checkDoubleG
@@ -100,10 +152,14 @@ doneG,_,$,>,checkForH
 doneG,$,$,>,checkForH
 doneG,*,*,<,doneG
 
-checkDoubleG,G,_,>,error_invalidkey
-checkDoubleG,g,_,>,error_invalidkey
+checkDoubleG,G,_,>,lshG/begin
+checkDoubleG,g,_,>,lshG/begin
 checkDoubleG,_,_,<,doneG
 checkDoubleG,*,*,>,checkDoubleG
+
+lshG/finish,*,*,<,recheckG
+recheckG,$,$,>,checkForG
+recheckG,*,*,<,recheckG
 
 checkForH,H,H,>,checkDoubleH
 checkForH,h,H,>,checkDoubleH
@@ -114,10 +170,14 @@ doneH,_,$,>,checkForI
 doneH,$,$,>,checkForI
 doneH,*,*,<,doneH
 
-checkDoubleH,H,_,>,error_invalidkey
-checkDoubleH,h,_,>,error_invalidkey
+checkDoubleH,H,_,>,lshH/begin
+checkDoubleH,h,_,>,lshH/begin
 checkDoubleH,_,_,<,doneH
 checkDoubleH,*,*,>,checkDoubleH
+
+lshH/finish,*,*,<,recheckH
+recheckH,$,$,>,checkForH
+recheckH,*,*,<,recheckH
 
 checkForI,I,I,>,checkDoubleI
 checkForI,i,I,>,checkDoubleI
@@ -128,10 +188,14 @@ doneI,_,$,>,checkForJ
 doneI,$,$,>,checkForJ
 doneI,*,*,<,doneI
 
-checkDoubleI,I,_,>,error_invalidkey
-checkDoubleI,i,_,>,error_invalidkey
+checkDoubleI,I,_,>,lshI/begin
+checkDoubleI,i,_,>,lshI/begin
 checkDoubleI,_,_,<,doneI
 checkDoubleI,*,*,>,checkDoubleI
+
+lshI/finish,*,*,<,recheckI
+recheckI,$,$,>,checkForI
+recheckI,*,*,<,recheckI
 
 checkForJ,J,J,>,checkDoubleJ
 checkForJ,j,J,>,checkDoubleJ
@@ -142,10 +206,14 @@ doneJ,_,$,>,checkForK
 doneJ,$,$,>,checkForK
 doneJ,*,*,<,doneJ
 
-checkDoubleJ,J,_,>,error_invalidkey
-checkDoubleJ,j,_,>,error_invalidkey
+checkDoubleJ,J,_,>,lshJ/begin
+checkDoubleJ,j,_,>,lshJ/begin
 checkDoubleJ,_,_,<,doneJ
 checkDoubleJ,*,*,>,checkDoubleJ
+
+lshJ/finish,*,*,<,recheckJ
+recheckJ,$,$,>,checkForJ
+recheckJ,*,*,<,recheckJ
 
 checkForK,K,K,>,checkDoubleK
 checkForK,k,K,>,checkDoubleK
@@ -156,10 +224,14 @@ doneK,_,$,>,checkForL
 doneK,$,$,>,checkForL
 doneK,*,*,<,doneK
 
-checkDoubleK,K,_,>,error_invalidkey
-checkDoubleK,k,_,>,error_invalidkey
+checkDoubleK,K,_,>,lshK/begin
+checkDoubleK,k,_,>,lshK/begin
 checkDoubleK,_,_,<,doneK
 checkDoubleK,*,*,>,checkDoubleK
+
+lshK/finish,*,*,<,recheckK
+recheckK,$,$,>,checkForK
+recheckK,*,*,<,recheckK
 
 checkForL,L,L,>,checkDoubleL
 checkForL,l,L,>,checkDoubleL
@@ -170,10 +242,14 @@ doneL,_,$,>,checkForM
 doneL,$,$,>,checkForM
 doneL,*,*,<,doneL
 
-checkDoubleL,L,_,>,error_invalidkey
-checkDoubleL,l,_,>,error_invalidkey
+checkDoubleL,L,_,>,lshL/begin
+checkDoubleL,l,_,>,lshL/begin
 checkDoubleL,_,_,<,doneL
 checkDoubleL,*,*,>,checkDoubleL
+
+lshL/finish,*,*,<,recheckL
+recheckL,$,$,>,checkForL
+recheckL,*,*,<,recheckL
 
 checkForM,M,M,>,checkDoubleM
 checkForM,m,M,>,checkDoubleM
@@ -184,10 +260,14 @@ doneM,_,$,>,checkForN
 doneM,$,$,>,checkForN
 doneM,*,*,<,doneM
 
-checkDoubleM,M,_,>,error_invalidkey
-checkDoubleM,m,_,>,error_invalidkey
+checkDoubleM,M,_,>,lshM/begin
+checkDoubleM,m,_,>,lshM/begin
 checkDoubleM,_,_,<,doneM
 checkDoubleM,*,*,>,checkDoubleM
+
+lshM/finish,*,*,<,recheckM
+recheckM,$,$,>,checkForM
+recheckM,*,*,<,recheckM
 
 checkForN,N,N,>,checkDoubleN
 checkForN,n,N,>,checkDoubleN
@@ -198,10 +278,14 @@ doneN,_,$,>,checkForO
 doneN,$,$,>,checkForO
 doneN,*,*,<,doneN
 
-checkDoubleN,N,_,>,error_invalidkey
-checkDoubleN,n,_,>,error_invalidkey
+checkDoubleN,N,_,>,lshN/begin
+checkDoubleN,n,_,>,lshN/begin
 checkDoubleN,_,_,<,doneN
 checkDoubleN,*,*,>,checkDoubleN
+
+lshN/finish,*,*,<,recheckN
+recheckN,$,$,>,checkForN
+recheckN,*,*,<,recheckN
 
 checkForO,O,O,>,checkDoubleO
 checkForO,o,O,>,checkDoubleO
@@ -212,10 +296,14 @@ doneO,_,$,>,checkForP
 doneO,$,$,>,checkForP
 doneO,*,*,<,doneO
 
-checkDoubleO,O,_,>,error_invalidkey
-checkDoubleO,o,_,>,error_invalidkey
+checkDoubleO,O,_,>,lshO/begin
+checkDoubleO,o,_,>,lshO/begin
 checkDoubleO,_,_,<,doneO
 checkDoubleO,*,*,>,checkDoubleO
+
+lshO/finish,*,*,<,recheckO
+recheckO,$,$,>,checkForO
+recheckO,*,*,<,recheckO
 
 checkForP,P,P,>,checkDoubleP
 checkForP,p,P,>,checkDoubleP
@@ -226,10 +314,14 @@ doneP,_,$,>,checkForQ
 doneP,$,$,>,checkForQ
 doneP,*,*,<,doneP
 
-checkDoubleP,P,_,>,error_invalidkey
-checkDoubleP,p,_,>,error_invalidkey
+checkDoubleP,P,_,>,lshP/begin
+checkDoubleP,p,_,>,lshP/begin
 checkDoubleP,_,_,<,doneP
 checkDoubleP,*,*,>,checkDoubleP
+
+lshP/finish,*,*,<,recheckP
+recheckP,$,$,>,checkForP
+recheckP,*,*,<,recheckP
 
 checkForQ,Q,Q,>,checkDoubleQ
 checkForQ,q,Q,>,checkDoubleQ
@@ -240,10 +332,14 @@ doneQ,_,$,>,checkForR
 doneQ,$,$,>,checkForR
 doneQ,*,*,<,doneQ
 
-checkDoubleQ,Q,_,>,error_invalidkey
-checkDoubleQ,q,_,>,error_invalidkey
+checkDoubleQ,Q,_,>,lshQ/begin
+checkDoubleQ,q,_,>,lshQ/begin
 checkDoubleQ,_,_,<,doneQ
 checkDoubleQ,*,*,>,checkDoubleQ
+
+lshQ/finish,*,*,<,recheckQ
+recheckQ,$,$,>,checkForQ
+recheckQ,*,*,<,recheckQ
 
 checkForR,R,R,>,checkDoubleR
 checkForR,r,R,>,checkDoubleR
@@ -254,10 +350,13 @@ doneR,_,$,>,checkForS
 doneR,$,$,>,checkForS
 doneR,*,*,<,doneR
 
-checkDoubleR,R,_,>,error_invalidkey
-checkDoubleR,r,_,>,error_invalidkey
+checkDoubleR,R,_,>,lshR/begin
+checkDoubleR,r,_,>,lshR/begin
 checkDoubleR,_,_,<,doneR
 checkDoubleR,*,*,>,checkDoubleR
+lshR/finish,*,*,<,recheckR
+recheckR,$,$,>,checkForR
+recheckR,*,*,<,recheckR
 
 checkForS,S,S,>,checkDoubleS
 checkForS,s,S,>,checkDoubleS
@@ -268,10 +367,13 @@ doneS,_,$,>,checkForT
 doneS,$,$,>,checkForT
 doneS,*,*,<,doneS
 
-checkDoubleS,S,_,>,error_invalidkey
-checkDoubleS,s,_,>,error_invalidkey
+checkDoubleS,S,_,>,lshS/begin
+checkDoubleS,s,_,>,lshS/begin
 checkDoubleS,_,_,<,doneS
 checkDoubleS,*,*,>,checkDoubleS
+lshS/finish,*,*,<,recheckS
+recheckS,$,$,>,checkForS
+recheckS,*,*,<,recheckS
 
 checkForT,T,T,>,checkDoubleT
 checkForT,t,T,>,checkDoubleT
@@ -282,10 +384,14 @@ doneT,_,$,>,checkForU
 doneT,$,$,>,checkForU
 doneT,*,*,<,doneT
 
-checkDoubleT,T,_,>,error_invalidkey
-checkDoubleT,t,_,>,error_invalidkey
+checkDoubleT,T,_,>,lshT/begin
+checkDoubleT,t,_,>,lshT/begin
 checkDoubleT,_,_,<,doneT
 checkDoubleT,*,*,>,checkDoubleT
+
+lshT/finish,*,*,<,recheckT
+recheckT,$,$,>,checkForT
+recheckT,*,*,<,recheckT
 
 checkForU,U,U,>,checkDoubleU
 checkForU,u,U,>,checkDoubleU
@@ -296,10 +402,14 @@ doneU,_,$,>,checkForV
 doneU,$,$,>,checkForV
 doneU,*,*,<,doneU
 
-checkDoubleU,U,_,>,error_invalidkey
-checkDoubleU,u,_,>,error_invalidkey
+checkDoubleU,U,_,>,lshU/begin
+checkDoubleU,u,_,>,lshU/begin
 checkDoubleU,_,_,<,doneU
 checkDoubleU,*,*,>,checkDoubleU
+
+lshU/finish,*,*,<,recheckU
+recheckU,$,$,>,checkForU
+recheckU,*,*,<,recheckU
 
 checkForV,V,V,>,checkDoubleV
 checkForV,v,V,>,checkDoubleV
@@ -310,10 +420,14 @@ doneV,_,$,>,checkForW
 doneV,$,$,>,checkForW
 doneV,*,*,<,doneV
 
-checkDoubleV,V,_,>,error_invalidkey
-checkDoubleV,v,_,>,error_invalidkey
+checkDoubleV,V,_,>,lshV/begin
+checkDoubleV,v,_,>,lshV/begin
 checkDoubleV,_,_,<,doneV
 checkDoubleV,*,*,>,checkDoubleV
+
+lshV/finish,*,*,<,recheckV
+recheckV,$,$,>,checkForV
+recheckV,*,*,<,recheckV
 
 checkForW,W,W,>,checkDoubleW
 checkForW,w,W,>,checkDoubleW
@@ -324,10 +438,14 @@ doneW,_,$,>,checkForX
 doneW,$,$,>,checkForX
 doneW,*,*,<,doneW
 
-checkDoubleW,W,_,>,error_invalidkey
-checkDoubleW,w,_,>,error_invalidkey
+checkDoubleW,W,_,>,lshW/begin
+checkDoubleW,w,_,>,lshW/begin
 checkDoubleW,_,_,<,doneW
 checkDoubleW,*,*,>,checkDoubleW
+
+lshW/finish,*,*,<,recheckW
+recheckW,$,$,>,checkForW
+recheckW,*,*,<,recheckW
 
 checkForX,X,X,>,checkDoubleX
 checkForX,x,X,>,checkDoubleX
@@ -338,10 +456,14 @@ doneX,_,$,>,checkForY
 doneX,$,$,>,checkForY
 doneX,*,*,<,doneX
 
-checkDoubleX,X,_,>,error_invalidkey
-checkDoubleX,x,_,>,error_invalidkey
+checkDoubleX,X,_,>,lshX/begin
+checkDoubleX,x,_,>,lshX/begin
 checkDoubleX,_,_,<,doneX
 checkDoubleX,*,*,>,checkDoubleX
+
+lshX/finish,*,*,<,recheckX
+recheckX,$,$,>,checkForX
+recheckX,*,*,<,recheckX
 
 checkForY,Y,Y,>,checkDoubleY
 checkForY,y,Y,>,checkDoubleY
@@ -352,10 +474,14 @@ doneY,_,$,>,checkForZ
 doneY,$,$,>,checkForZ
 doneY,*,*,<,doneY
 
-checkDoubleY,Y,_,>,error_invalidkey
-checkDoubleY,y,_,>,error_invalidkey
+checkDoubleY,Y,_,>,lshY/begin
+checkDoubleY,y,_,>,lshY/begin
 checkDoubleY,_,_,<,doneY
 checkDoubleY,*,*,>,checkDoubleY
+
+lshY/finish,*,*,<,recheckY
+recheckY,$,$,>,checkForY
+recheckY,*,*,<,recheckY
 
 checkForZ,Z,Z,>,checkDoubleZ
 checkForZ,z,Z,>,checkDoubleZ
@@ -366,7 +492,11 @@ doneZ,_,$,>,finish
 doneZ,$,$,>,finish
 doneZ,*,*,<,doneZ
 
-checkDoubleZ,Z,_,>,error_invalidkey
-checkDoubleZ,z,_,>,error_invalidkey
+checkDoubleZ,Z,_,>,lshZ/begin
+checkDoubleZ,z,_,>,lshZ/begin
 checkDoubleZ,_,_,<,doneZ
 checkDoubleZ,*,*,>,checkDoubleZ
+
+lshZ/finish,*,*,<,recheckZ
+recheckZ,$,$,>,checkForZ
+recheckZ,*,*,<,recheckZ

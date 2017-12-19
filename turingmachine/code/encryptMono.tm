@@ -1,6 +1,8 @@
 //encrypt the plaintext using monoalphabetic encryption
 //input: plaintext$key
 
+//sub-TM!
+
 name: encryptMono
 init: begin
 accept: finish
@@ -74,8 +76,10 @@ readPlain,.,&,<,setDot
 readPlain,,,&,<,setKomma
 readPlain,-,&,<,setMinus
 readPlain,;,&,<,setSemicolon
+readPlain, ,&,<,setSpace
 readPlain,*,&,<,setBlank
 
+setSpace,&, ,>,readPlain
 setDot,&,.,>,readPlain
 setKomma,&,,,>,readPlain
 setMinus,&,-,>,readPlain

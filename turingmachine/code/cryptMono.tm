@@ -4,6 +4,7 @@
 //output: cipher&$key or plaintext$key
 
 //errorstate: error_nokey
+//            error_format
 
 #include "checkMonoKey.tm"
 #include "encryptMono.tm"
@@ -14,8 +15,12 @@ init: begin
 accept: finish
 
 begin,$,$,>,checkMonoKey/begin
-begin,_,_,<,readBack
+begin,_,_,>,checkif
 begin,*,*,>,begin
+
+checkif,_,_,<,ungo
+checkif,*,*,>,begin
+ungo,_,_,<,readBack
 
 readBack,$,$,>,checkMonoKey/begin
 readBack,_,_,>,error_nokey

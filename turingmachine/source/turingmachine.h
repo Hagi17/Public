@@ -407,12 +407,11 @@ class TuringMachine
       bool p = (prefix.length() > 0);
       if(subTmCall && ip)
         state = importPrefix + "/" + state;
-      else
+      else if(!subTmCall)
       {
         if(!newPrefix && p) state = prefix+"/"+state;
         if(ip) state = importPrefix + "/" + state;
       }
-      
       return addState(state);
     }
     
