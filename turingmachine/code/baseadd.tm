@@ -1,7 +1,9 @@
 //baseadd
 //b=a -> b=(a+b)
 
-#include "rshift.tm"
+#include "rshift.tm" AS rsh1
+#include "rshift.tm" AS rsh2
+#include "rshift.tm" AS rsh3
 
 name: baseadd
 init: begin
@@ -24,12 +26,12 @@ goadd,1,1,>,goadd
 goadd,0,0,>,goadd
 goadd,*,*,<,add
 
-add,=,&,>,rshift/begin
+add,=,=,>,rsh1/begin
 add,0,o,<,back
 add,1,z,<,inc
 
 inc,1,0,<,inc
-inc,=,=,>,rshift/begin
+inc,=,=,>,rsh2/begin
 inc,0,1,<,back
 
 back,=,=,<,work
@@ -44,15 +46,11 @@ gomask,*,*,<,mask
 
 mask,0,z,<,back
 mask,1,o,<,back
-mask,=,%,>,rshift/begin
+mask,=,=,>,rsh3/begin
 
-rshift/finish,*,z,<,test
-test,=,=,>,set1
-test,&,=,>,mask1
-test,%,=,<,work
-
-set1,z,1,<,back
-mask1,z,o,<,back
+rsh1/finish,*,o,<,back
+rsh2/finish,*,1,<,back
+rsh3/finish,*,z,<,back
 
 parse,=,=,>,parse
 parse,o,1,>,parse
