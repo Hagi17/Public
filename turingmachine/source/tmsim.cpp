@@ -2,7 +2,7 @@
 /// Turing Machine Simulator in C++
 ///
 /// Author: Clemens Hagenbuchner
-/// Last edited: 15.12.17
+/// Last edited: 19.12.17
 ///
 /// main project file
 /// 
@@ -21,7 +21,7 @@
 #include <conio.h>
 #endif
 
-#define VERSION "1.0.2a"
+#define VERSION "1.0.3a"
 #define IO_ERROR 2
 
 using namespace std;
@@ -152,7 +152,7 @@ void printHelp()
   cout << "-speed=<>\tthe time for a step when displaying the tape in steps/sec" << endl;
   cout << "-tape\t\tspecify input (characters on tape)" << endl;
   cout << "-help\t\tshow this help" << endl;
-  cout << "-ext\t\tinclude internal/read, internal/write and internal/clear" << endl;
+  cout << "-ext\t\tinclude internal functions" << endl;
   cout << "-exit\t\tdon't ask for enter at the end of the program.";
   cout << endl;
   cout << "-in=<file>\tset the content of file as input on the tape" << endl;
@@ -165,18 +165,21 @@ void printHelp()
   cout << "internal/write: interprets the content of the tape until '$' as a filepath" << endl;
   cout << "\t\tand stores the tape behind the $ in the file" << endl;
   cout << "internal/clear: clear complete tape" << endl;
+  cout << "internal/goLeft: go to the left end of the Tape" << endl;
+  cout << "internal/goRight: go to the right end of the Tape" << endl;
+  cout << "internal/setAsterix: set a * on the Tape" << endl;
   cout << endl;
-  cout << "from internal/write and internal/read you can go on by reading * or $" << endl;
-  cout << "from internal/clear by reading * or _" << endl << endl;
   cout << "Program-Layout: " << endl;
-  cout << "[#include \"<file>\"]" << endl;
+  cout << "[#include \"<file>\" [AS <prefix>]]" << endl;
   cout << "name: <name>" << endl;
   cout << "init: <state>" << endl;
   cout << "accept: <state>[,<state>]" << endl;
-  cout << "<state>,<input>,<output>,<move>,<newstate>" << endl;
+  cout << "<state>,<input>,<output>,<move>,[<internal>,]<newstate>" << endl;
   cout << "//comments will be ignored" << endl;
   cout << endl;
-  cout << "#include <file>\tinclude a Sub-TM (as many as needed)" << endl;
+  cout << "#include <file> [AS <prefix>]\tinclude a Sub-TM (as many as needed)" << endl;
+  cout << "\t\tprefix overrides the internal name of the file, this way you can add one file multiple times" << endl;
+  cout << "\t\twith #include INTERNAL you can force to load the internal functions" << endl;
   cout << "Name\t\tindicates the Name of the Program (important when used as Sub-TM)." << endl;
   cout << "init\t\tindicates the start State of the Program." << endl;
   cout << "accept\t\tindicates the accepted states of the Program." << endl;
@@ -186,7 +189,9 @@ void printHelp()
   cout << "<input>\t\tif this single character is read, the transition will be triggered" << endl;
   cout << "<output>\tsingle character to be written onto the tape"<< endl;
   cout << "<move>\t\tMove the Head: < (go left), > (go right) or - (stay)" << endl;
+  cout << "<internal>\tInternal Function to be executed before the State-Transition" << endl;
   cout << "<newstate>\tnext state; any case-sensitive string"<<endl;
+  cout << "\t\tNewstate can also be an internal function" << endl;
   cout << endl;
   cout << "'*' reads any character, '_' reads an empty field" << endl;
   cout << "'*' writes no character, '_' writes an empty field" << endl;
@@ -194,7 +199,7 @@ void printHelp()
   cout << "A ! at the end of a transition indicates a breakpoint, where the";
   cout << " machine halts and waits for input;"<<endl<<"with n the program goes on.";
   cout << endl << endl;
-  cout << "Sub-TM:\tfor <state>/<newstate> use name/state, where name is the name of the sub-TM" << endl;
+  cout << "Sub-TM:\tfor <state>/<newstate> use name/state, where name is the name of the sub-TM (or prefix if AS used)" << endl;
 }
 
 void printCursor(int fieldCount)

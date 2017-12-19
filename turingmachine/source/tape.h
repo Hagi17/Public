@@ -2,7 +2,7 @@
 /// Turing Machine Simulator in C++
 ///
 /// Author: Clemens Hagenbuchner
-/// Last edited: 15.12.17
+/// Last edited: 19.12.17
 /// 
 /// Input/Output Tape
 ///
@@ -51,7 +51,10 @@ class Tape
         moveHead(move - 1);
       }      
     }
-    
+    void forceWrite(char toWrite)
+    {
+      mTape[mHeadPos] = toWrite;
+    }
     void write(char toWrite)
     {
       if(toWrite == WILDCARD) return; //don't change tape (wildcard)
@@ -95,6 +98,10 @@ class Tape
     void resetHead()
     {
       mHeadPos = 0;
+    }
+    void setHeadAtEnd()
+    {
+      mHeadPos = mTape.size() - 1;
     }
     string printTape()
     {

@@ -58,6 +58,9 @@ class TuringMachine
       mInternalClear = -1;
       mInternalRead = -1;
       mInternalWrite = -1;
+      mInternalGoLeft = -1;
+      mInternalGoRight = -1;
+      mInternalSetAsterix = -1;
       mState = Halt;
     }   
     ~TuringMachine()
@@ -81,12 +84,15 @@ class TuringMachine
       mInternalClear = addState("internal/clear");
       mInternalRead = addState("internal/read");
       mInternalWrite = addState("internal/write");
+      mInternalGoLeft = addState("internal/goLeft");
+      mInternalGoRight = addState("internal/goRight");
+      mInternalSetAsterix = addState("internal/setAsterix");
     }
     
     bool loadProgram(string programFile, 
       ErrorInfo& onError)
     {
-      return loadFile(programFile, true, onError);
+      return loadFile(programFile, "", true, onError);
     }
     bool start(ostream& logConsole)
     {
@@ -108,12 +114,13 @@ class TuringMachine
           mState = Warning;
           return result;
         }
-        operateExtension();
+        char read = mTape->read();
+        operateExtension(read);
         char write = EMPTY;
         bool breakPoint = false;
         int newState;
         int move = 0;
-        result = mStates[mCurrentState]->operate(mTape->read(), write, 
+        result = mStates[mCurrentState]->operate(read, write, 
           mCurrentState, move, breakPoint);
         if(!result) 
         {
@@ -190,6 +197,9 @@ class TuringMachine
     int mInternalClear;
     int mInternalRead;
     int mInternalWrite;
+    int mInternalGoLeft;
+    int mInternalGoRight;
+    int mInternalSetAsterix;
     
     RunningState mState;
     
@@ -200,16 +210,21 @@ class TuringMachine
     vector<string> knownStates;
     vector<string> includedDirectories;
     
-    bool operateExtension()
+    void operateExtension(char read)
     {
-      if(mCurrentState == mInternalClear)
+      int intF = mStates[mCurrentState]->InternalFunction(read);
+      if(mCurrentState == mInternalClear || intF == mInternalClear)
         mTape->clear();
-      else if(mCurrentState == mInternalRead)
+      if(mCurrentState == mInternalRead || intF == mInternalRead)
         mTape->readFile();
-      else if(mCurrentState == mInternalWrite)
+      if(mCurrentState == mInternalWrite || intF == mInternalWrite)
         mTape->writeFile();
-      else return false;
-      return true;
+      if(mCurrentState == mInternalGoLeft || intF == mInternalGoLeft)
+        mTape->resetHead();
+      if(mCurrentState == mInternalGoRight || intF == mInternalGoRight)
+        mTape->setHeadAtEnd();
+      if(mCurrentState == mInternalSetAsterix || intF == mInternalSetAsterix)
+        mTape->forceWrite('*');
     }
     
     void showProcess(ostream& logConsole)
@@ -225,8 +240,8 @@ class TuringMachine
 #endif 
     }
     
-    bool loadFile(string path, bool primary,
-      ErrorInfo& onError)
+    bool loadFile(string path, string prefix, bool primary, 
+      ErrorInfo& onError, bool newPrefix = false)
     {
       bool result = true;
       onError.lineno = -1; // for error messages
@@ -234,6 +249,7 @@ class TuringMachine
       string name = path;
       string line;
       vector<string> includeFiles;
+      vector<string> importPrefixes;
       string folder = stringsup::getFolderPath(path);
       //check if this file exists in any of the included Directorys
       stringsup::testFilePaths(path, includedDirectories);
@@ -277,14 +293,34 @@ class TuringMachine
             continue;
           }
           if(line.substr(0,9).compare("#include ") == 0)
-          {//sub tm
+          {//sub tm   #include <> (AS prefix)
             string includeFile = line.substr(9);
-            stringsup::ltrim(includeFile);
-            if(includeFile.front() == '"' && includeFile.back() == '"')
+            string incPrefix = prefix;
+            auto findex = includeFile.find(" AS ");
+            if(findex != string::npos)
+            {
+              string usingprefix = includeFile.substr(findex+4);
+              stringsup::trim(usingprefix);
+              includeFile = includeFile.substr(0, findex);
+              stringsup::trim(includeFile);
+              if(incPrefix.length() > 0)
+                incPrefix = incPrefix + "/" + usingprefix;
+              else incPrefix = usingprefix;
+            }
+            else stringsup::ltrim(includeFile);
+            if(includeFile == "INTERNAL")
+              loadExtension();
+            else if(includeFile.front() == '"' && includeFile.back() == '"')
+            {
               includeFiles.push_back(
                 includeFile.substr(1, includeFile.size() - 2));
+              importPrefixes.push_back(incPrefix);
+            }
             else if(includeFile.front() != '"' && includeFile.back() != '"')
+            {
               includeFiles.push_back(includeFile);
+              importPrefixes.push_back(incPrefix);
+            }
             else 
             {
               result = false;
@@ -292,7 +328,7 @@ class TuringMachine
             }
             continue;
           }
-          result = parseTransition(line, name, primary);
+          result = parseTransition(line, name, prefix, primary, newPrefix);
           if(!result) 
           {
             onError.file += " (s,*,*,-,s) occured ";
@@ -309,18 +345,29 @@ class TuringMachine
       int index = 0;
       for(index = 0; index < includeFiles.size(); index++)
       {
-        result = loadFile(includeFiles[index], false, onError);
+        string iPrefix = importPrefixes[index];
+        result = loadFile(includeFiles[index], iPrefix, 
+          false, onError, (prefix.compare(iPrefix) != 0));
         if(!result) break;
       }
       return result;
     }
     
-    bool parseTransition(string tupel, string prefix, bool primary)
+    bool parseTransition(string tupel, string prefix, string importPrefix, 
+      bool primary, bool newPrefix)
     {
+      int curStateNo = -1;
+      int newStateNo = -1;
+      int internStateNo = -2;
       stringsup::replace(tupel, ",,",",comma");
       vector<string> parts {stringsup::explode(tupel, ',')};
-      if(parts.size() != 5) return false;
+      if(parts.size() < 5) return false;
       bool breakPoint = false;
+      if(parts.size() > 5)
+      {//set internal, set correct newstate
+        internStateNo = addState(parts[4]);
+        parts[4] = parts[5];
+      }
       if(parts[4].back() == '!')
       {
         breakPoint = true;
@@ -328,13 +375,10 @@ class TuringMachine
       }
       string curState = parts[0];
       string newState = parts[4];
-      if(!primary)
-      {
-        if(curState.find("/") == string::npos) curState = prefix + "/" + curState;
-        if(newState.find("/") == string::npos) newState = prefix + "/" + newState;
-      }
-      int curStateNo = addState(curState);
-      int newStateNo = addState(newState);
+      curStateNo = prepareState(curState, prefix, importPrefix, primary, 
+        newPrefix);
+      newStateNo = prepareState(newState, prefix, importPrefix, primary, 
+        newPrefix);
       if(parts[1].compare("comma") == 0) parts[1] = ',';
       if(parts[2].compare("comma") == 0) parts[2] = ',';
       if(parts[1].size() != 1 || parts[2].size() != 1 || 
@@ -343,7 +387,7 @@ class TuringMachine
         parts[3][0] == NO_MOVE && curState.compare(newState) == 0) return false;
     // this would lead to a endless loop (same state, no movement, take all)
       Transition* way = new Transition((parts[1])[0],(parts[2])[0],
-        (parts[3])[0],newStateNo, curStateNo, breakPoint);
+        (parts[3])[0],newStateNo, curStateNo, breakPoint, internStateNo);
       if(way->moveChar() != (parts[3])[0])
       {
         delete way;
@@ -351,6 +395,25 @@ class TuringMachine
       }
       mStates[curStateNo]->addTransition(way);
       return true;
+    }
+    
+    int prepareState(string state, string prefix, string importPrefix, 
+      bool primary, bool newPrefix)
+    {
+      if(primary) return addState(state);
+      auto result = state.find("/");
+      bool subTmCall = (result != string::npos);
+      bool ip = (importPrefix.length() > 0);
+      bool p = (prefix.length() > 0);
+      if(subTmCall && ip)
+        state = importPrefix + "/" + state;
+      else
+      {
+        if(!newPrefix && p) state = prefix+"/"+state;
+        if(ip) state = importPrefix + "/" + state;
+      }
+      
+      return addState(state);
     }
     
     int addState(string name)

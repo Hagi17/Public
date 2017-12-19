@@ -28,6 +28,10 @@
 *-out=&lt;file&gt;*     store the input and the final output in the specified file  
 *-I&lt;folder&gt;*      Add &lt;folder&gt; to the Machines searchpath for TM - Files  
 
+---
+
+**Internal Functions**
+
 *internal/read:* interprets the content of the tape until '$' as a filepath  
                 and loads the content on to the tape behind that $ (ignores \n)
                 
@@ -36,20 +40,26 @@
                 
 *internal/clear:* clear complete tape  
 
-from internal/write and internal/read you can go on by reading * or $  
-from internal/clear by reading * or _  
+*internal/goLeft:* go to the left end of the tape
+
+*internal/goRight:* go to the right end of the tape
+
+*internal/setAsterix:* write an \* onto the Tape
 
 ---
 
 **Program-Layout:**    
-\[#include "&lt;file&gt;"\]  
+\[#include "&lt;file&gt;" \[AS &lt;prefix&gt;\]\]  
+\[#include INTERNAL\]
 name: &lt;name&gt;  
 init: &lt;state&gt;  
-accept: &lt;state&gt;[,&lt;state&gt;]  
-&lt;state&gt;,&lt;input&gt;,&lt;output&gt;,&lt;move&gt;,&lt;newstate&gt;[!]  
+accept: &lt;state&gt;\[,&lt;state&gt;\]  
+&lt;state&gt;,&lt;input&gt;,&lt;output&gt;,&lt;move&gt;,\[&lt;internal&gt;\]&lt;newstate&gt;\[!\]  
 //comments will be ignored  
 
 *#include &lt;file&gt;* includes a Sub-TM (as many as needed)  
+   with AS &lt;prefix&gt; a override prefix for this TM can be specified, this way multiple instances of a TM can be loaded and used  
+*#include INTERNAL* includes the internal functions  
 *Name*            indicates the Name of the Program (important when used as Sub-TM).  
 *init*            indicates the start State of the Program.  
 *accept*          indicates the accepted states of the Program.  
@@ -59,13 +69,15 @@ The 5-Tupel must be specified for each transition
 *&lt;input&gt;*         if this single character is read, the transition will be triggered  
 *&lt;output&gt;*        single character to be written onto the tape  
 *&lt;move&gt;*          Move the Head: &lt; (go left), &gt; (go right) or - (stay)  
+*&lt;internal&gt;*      Execute an internal Function before the state-Transition  
 *&lt;newstate&gt;*      next state; any case-sensitive string  
 *!*                      indicates a breakpoint, where the machine will halt
 
 '\*' reads any character, '\_' reads an empty field  
 '\*' writes no character, '\_' writes an empty field  
 
-Sub-TM: for &lt;state&gt;/&lt;newstate&gt; use name/state, where name is the name of the sub-TM
+Sub-TM: for &lt;state&gt;/&lt;newstate&gt; use name/state, where name is the name of the sub-TM or the specified prefix  
+Internal Functions:  they can also be specified as newstates, that way you need a transition from that state  
 
 ---
 

@@ -2,6 +2,17 @@
 
 ---
 
+### Version 1.0.3a
+
+__19.12.17__
+
+- Added *#include* *INTERNAL*
+- Added *#include* *AS*
+- Added optional *&lt;internal&gt;* to 5-Tupel
+- Added some new internal functions.
+
+---
+
 ### Version 1.0.2a
 
 __16.12.17__
