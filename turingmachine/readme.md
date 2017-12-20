@@ -77,6 +77,7 @@ The 5-Tupel must be specified for each transition
 '\*' reads any character, '\_' reads an empty field  
 '\*' writes no character, '\_' writes an empty field  
 *%tmpl%* will be replaced by the specified template character for this instance (standard: '\_')  
+'ic' before the input Character specifies that both upper and lower case will be read  
 
 All commentlines before any other line (except for empty lines) will be displayed 
 when running the TM File as Main. 

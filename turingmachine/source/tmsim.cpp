@@ -21,7 +21,7 @@
 #include <conio.h>
 #endif
 
-#define VERSION "1.0.4a"
+#define VERSION "1.0.4b"
 #define IO_ERROR 2
 
 using namespace std;

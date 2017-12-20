@@ -312,7 +312,7 @@ class TuringMachine
           {//sub tm   #include <> (AS prefix)
             string includeFile = line.substr(9);
             result = parseInclude(line.substr(9), prefix, includeFiles,
-                importPrefixes, templateChar);
+                importPrefixes, templateChar, templ);
             if(!result) break;
             else continue;
           }
@@ -343,7 +343,7 @@ class TuringMachine
     }
     
     bool parseInclude(string cntnt, string prefix,vector<string>& includeFiles,
-      vector<string>& importPrefixes, vector<char>& templateChar)
+      vector<string>& importPrefixes, vector<char>& templateChar, char tmplChar)
     {//line without #include
       string incPrefix = prefix;
       char templChar = EMPTY;
@@ -362,7 +362,8 @@ class TuringMachine
           tcind = templStr.find(")");
           if(tcind != string::npos) templStr = templStr.substr(0, tcind);
           stringsup::trim(templStr);
-          templChar = templStr.front();
+          if(templStr.compare("%tmpl%")==0) templChar = tmplChar;
+          else templChar = templStr.front();
         }
         
         stringsup::trim(usingprefix);
@@ -404,6 +405,7 @@ class TuringMachine
       vector<string> parts {stringsup::explode(tupel, ',')};
       if(parts.size() < 5) return false;
       bool breakPoint = false;
+      bool ignoreCase = false;
       if(parts.size() > 5)
       {//set internal, set correct newstate
         internStateNo = addState(parts[4]);
@@ -422,6 +424,8 @@ class TuringMachine
         newPrefix);
       if(parts[1].compare("comma") == 0) parts[1] = ',';
       if(parts[2].compare("comma") == 0) parts[2] = ',';
+      if(ignoreCase = (parts[1].substr(0,2).compare("ic") == 0)) 
+        parts[1] = parts[1].substr(2);
       if(parts[1].compare("%tmpl%") == 0) parts[1] = templateChar;
       if(parts[2].compare("%tmpl%") == 0) parts[2] = templateChar;
       if(parts[1].size() != 1 || parts[2].size() != 1 || 
@@ -430,7 +434,8 @@ class TuringMachine
         parts[3][0] == NO_MOVE && curState.compare(newState) == 0) return false;
     // this would lead to a endless loop (same state, no movement, take all)
       Transition* way = new Transition((parts[1])[0],(parts[2])[0],
-        (parts[3])[0],newStateNo, curStateNo, breakPoint, internStateNo);
+        (parts[3])[0],newStateNo, curStateNo, breakPoint, internStateNo, 
+        ignoreCase);
       if(way->moveChar() != (parts[3])[0])
       {
         delete way;

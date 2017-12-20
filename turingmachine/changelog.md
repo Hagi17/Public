@@ -2,6 +2,13 @@
 
 ---
 
+### Version 1.0.4b
+
+__20.12.17__
+
+- Added "ic" prefix for input (ignore Case)
+- Extended template support
+
 ### Version 1.0.4a
 
 __20.12.17__

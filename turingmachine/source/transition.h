@@ -2,7 +2,7 @@
 /// Turing Machine Simulator in C++
 ///
 /// Author: Clemens Hagenbuchner
-/// Last edited: 19.12.17
+/// Last edited: 20.12.17
 /// 
 /// class for encupsulation of a 5-Tupel (Transition)
 ///
@@ -28,7 +28,7 @@ class Transition
 {
   public:
     Transition(char input, char output, int move, int newState, int curState,
-      bool hasBreakpoint, int intF = -2)
+      bool hasBreakpoint, int intF = -2, bool ignoreCase = false)
     {
       mInput = input;
       mOutput = output;
@@ -40,24 +40,11 @@ class Transition
       mCurrstate = curState;
       mIntF = intF;
       mHasBreakpoint = hasBreakpoint;
+      mIgnoreCase = ignoreCase;
     }
     ~Transition()
     {
       
-    }
-    char inputChar()
-    {
-      return mInput;
-    }
-    char getOutput()
-    {
-      return mOutput;
-    }
-    int getMove()
-    {
-      if(mMove == NO_MOVE) return 0;
-      if(mMove == MOVE_RIGHT) return 1;
-      if(mMove == MOVE_LEFT) return -1;
     }
     char moveChar()
     {
@@ -81,11 +68,31 @@ class Transition
     {
       return mHasBreakpoint;
     }
+    bool acceptsChar(char input)
+    {
+      if(mInput == input) return true;
+      if(mIgnoreCase && (toupper(input) == toupper(mInput)))
+        return true;
+      if(acceptsAny()) return true;
+      return false;
+    }
+    bool acceptsAny()
+    {
+      return mInput == WILDCARD;
+    }
   private:
+  
+    int getMove()
+    {
+      if(mMove == NO_MOVE) return 0;
+      if(mMove == MOVE_RIGHT) return 1;
+      if(mMove == MOVE_LEFT) return -1;
+    }
     char mMove; 
     char mInput;
     
     bool mHasBreakpoint;
+    bool mIgnoreCase;
     
     char mOutput;
     int mNewstate;

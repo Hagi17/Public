@@ -59,7 +59,7 @@ internal/setAsterix: write an * onto the Tape
 name: &lt;name>
 init: &lt;state>
 accept: &lt;state>[,&lt;state>]
-&lt;state>,&lt;input>,&lt;output>,&lt;move&gt;,[&lt;internal&gt;,]&lt;newstate&gt;[!]
+&lt;state>,&lt;[ic]input>,&lt;output>,&lt;move&gt;,[&lt;internal&gt;,]&lt;newstate&gt;[!]
 //comments will be ignored
 
 #include &lt;file> include a Sub-TM (as many as needed)
@@ -82,6 +82,7 @@ The 5-Tupel must be specified for each transition
 '*' reads any character, '_' reads an empty field
 '*' writes no character, '_' writes an empty field
 %tmpl% will be replaced by the specified template character for this instance
+ic before the input Character specifies that both upper and lower case will be read
 
 All commentlines before any other line (except for empty lines) will be displayed 
 when running the TM File as Main. 
