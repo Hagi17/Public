@@ -2,7 +2,7 @@
 /// Turing Machine Simulator in C++
 ///
 /// Author: Clemens Hagenbuchner
-/// Last edited: 16.12.17
+/// Last edited: 20.12.17
 /// 
 /// Turing Machine class
 ///
@@ -188,6 +188,11 @@ class TuringMachine
     {
       return mState;
     }
+  
+    string getHeadComment()
+    {
+      return mHeadComment;
+    }
   private:
     bool mShowProcess;
     int mCurrentState;
@@ -200,6 +205,8 @@ class TuringMachine
     int mInternalGoLeft;
     int mInternalGoRight;
     int mInternalSetAsterix;
+    
+    string mHeadComment;
     
     RunningState mState;
     
@@ -241,18 +248,22 @@ class TuringMachine
     }
     
     bool loadFile(string path, string prefix, bool primary, 
-      ErrorInfo& onError, bool newPrefix = false)
+      ErrorInfo& onError, bool newPrefix = false, char templ = EMPTY)
     {
       bool result = true;
+      bool nonCommentLine = false;
       onError.lineno = -1; // for error messages
       onError.file = path;
       string name = path;
       string line;
       vector<string> includeFiles;
       vector<string> importPrefixes;
+      vector<char> templateChar;
       string folder = stringsup::getFolderPath(path);
+      
       //check if this file exists in any of the included Directorys
       stringsup::testFilePaths(path, includedDirectories);
+      
       ifstream prg (path);
       if(prg.is_open())
       {
@@ -263,11 +274,16 @@ class TuringMachine
         {
           onError.lineno++;
           stringsup::trim(line);
-          string five = line.substr(0, 5);
-          if(line.substr(0,2).compare("//") == 0)//Kommentar
-            continue;
           if(line.empty())
             continue;
+          string five = line.substr(0, 5);
+          if(line[0] == '/' && line[1] == '/')//line.substr(0,2).compare("//") == 0)//Kommentar
+          {
+            if(primary && !nonCommentLine)
+              mHeadComment += line.substr(2) + "\n";
+            continue;
+          }
+          nonCommentLine = true;
           if(five.compare("name:") == 0)
           {
             name = line.substr(5);
@@ -295,40 +311,13 @@ class TuringMachine
           if(line.substr(0,9).compare("#include ") == 0)
           {//sub tm   #include <> (AS prefix)
             string includeFile = line.substr(9);
-            string incPrefix = prefix;
-            auto findex = includeFile.find(" AS ");
-            if(findex != string::npos)
-            {
-              string usingprefix = includeFile.substr(findex+4);
-              stringsup::trim(usingprefix);
-              includeFile = includeFile.substr(0, findex);
-              stringsup::trim(includeFile);
-              if(incPrefix.length() > 0)
-                incPrefix = incPrefix + "/" + usingprefix;
-              else incPrefix = usingprefix;
-            }
-            else stringsup::ltrim(includeFile);
-            if(includeFile == "INTERNAL")
-              loadExtension();
-            else if(includeFile.front() == '"' && includeFile.back() == '"')
-            {
-              includeFiles.push_back(
-                includeFile.substr(1, includeFile.size() - 2));
-              importPrefixes.push_back(incPrefix);
-            }
-            else if(includeFile.front() != '"' && includeFile.back() != '"')
-            {
-              includeFiles.push_back(includeFile);
-              importPrefixes.push_back(incPrefix);
-            }
-            else 
-            {
-              result = false;
-              break;
-            }
-            continue;
+            result = parseInclude(line.substr(9), prefix, includeFiles,
+                importPrefixes, templateChar);
+            if(!result) break;
+            else continue;
           }
-          result = parseTransition(line, name, prefix, primary, newPrefix);
+          result = parseTransition(line, name, prefix, primary, newPrefix,
+            templ);
           if(!result) 
           {
             onError.file += " (s,*,*,-,s) occured ";
@@ -347,14 +336,66 @@ class TuringMachine
       {
         string iPrefix = importPrefixes[index];
         result = loadFile(includeFiles[index], iPrefix, 
-          false, onError, (prefix.compare(iPrefix) != 0));
+          false, onError, (prefix.compare(iPrefix) != 0), templateChar[index]);
         if(!result) break;
       }
       return result;
     }
     
+    bool parseInclude(string cntnt, string prefix,vector<string>& includeFiles,
+      vector<string>& importPrefixes, vector<char>& templateChar)
+    {//line without #include
+      string incPrefix = prefix;
+      char templChar = EMPTY;
+      //check for AS
+      auto findex = cntnt.find(" AS ");
+      if(findex != string::npos)
+      {
+        string usingprefix = cntnt.substr(findex+4);
+        
+        //check for template
+        auto tcind = usingprefix.find("(");
+        if(tcind != string::npos)
+        {
+          string templStr = usingprefix.substr(tcind+1);
+          usingprefix = usingprefix.substr(0, tcind);
+          tcind = templStr.find(")");
+          if(tcind != string::npos) templStr = templStr.substr(0, tcind);
+          stringsup::trim(templStr);
+          templChar = templStr.front();
+        }
+        
+        stringsup::trim(usingprefix);
+        cntnt = cntnt.substr(0, findex);
+        stringsup::trim(cntnt);
+        if(incPrefix.length() > 0)
+          incPrefix = incPrefix + "/" + usingprefix;
+        else incPrefix = usingprefix;
+      }
+      else stringsup::ltrim(cntnt);
+      
+      if(cntnt == "INTERNAL")
+        loadExtension();
+      else if(cntnt.front() == '"' && cntnt.back() == '"')
+      {
+        includeFiles.push_back(
+          cntnt.substr(1, cntnt.size() - 2));
+        importPrefixes.push_back(incPrefix);
+        templateChar.push_back(templChar);
+      }
+      else if(cntnt.front() != '"' && cntnt.back() != '"')
+      {
+        includeFiles.push_back(cntnt);
+        importPrefixes.push_back(incPrefix);
+        templateChar.push_back(templChar);
+      }
+      else 
+        return false;
+      return true;
+    }
+    
     bool parseTransition(string tupel, string prefix, string importPrefix, 
-      bool primary, bool newPrefix)
+      bool primary, bool newPrefix, char templateChar)
     {
       int curStateNo = -1;
       int newStateNo = -1;
@@ -381,6 +422,8 @@ class TuringMachine
         newPrefix);
       if(parts[1].compare("comma") == 0) parts[1] = ',';
       if(parts[2].compare("comma") == 0) parts[2] = ',';
+      if(parts[1].compare("%tmpl%") == 0) parts[1] = templateChar;
+      if(parts[2].compare("%tmpl%") == 0) parts[2] = templateChar;
       if(parts[1].size() != 1 || parts[2].size() != 1 || 
         parts[3].size() != 1) return false;
       if(parts[1][0] == WILDCARD && parts[2][0] == WILDCARD && 
@@ -412,6 +455,7 @@ class TuringMachine
         if(!newPrefix && p) state = prefix+"/"+state;
         if(ip) state = importPrefix + "/" + state;
       }
+      
       return addState(state);
     }
     

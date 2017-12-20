@@ -1,6 +1,8 @@
 //baseadd
 //b=a -> b=(a+b)
 
+//example for using #include <> AS <>
+
 #include "rshift.tm" AS rsh1
 #include "rshift.tm" AS rsh2
 #include "rshift.tm" AS rsh3

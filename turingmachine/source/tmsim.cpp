@@ -2,7 +2,7 @@
 /// Turing Machine Simulator in C++
 ///
 /// Author: Clemens Hagenbuchner
-/// Last edited: 19.12.17
+/// Last edited: 20.12.17
 ///
 /// main project file
 /// 
@@ -21,7 +21,7 @@
 #include <conio.h>
 #endif
 
-#define VERSION "1.0.3a"
+#define VERSION "1.0.4a"
 #define IO_ERROR 2
 
 using namespace std;
@@ -39,6 +39,7 @@ bool handleResult(bool result, TuringMachine* machine);
 void handleError(ErrorInfo info);
 string readFile(string path);
 void printLoading(string programFile);
+void showTMInfo(string comment);
 
 ///
 /// Turing Machine Simulator
@@ -82,6 +83,7 @@ int main(int argc, char* argv[])
     errorInfo.error = IO_ERROR;
     return preExit(exitDirect, errorInfo);
   }
+  showTMInfo(machine->getHeadComment());
   
   getInput(input); //read input if not any specified
   machine->loadInput(input);
@@ -100,6 +102,13 @@ int main(int argc, char* argv[])
   return preExit(exitDirect, errorInfo);
   return 0;
   
+}
+
+void showTMInfo(string comment)
+{
+  if(comment.empty()) return;
+  cout << "TM-Info: " << endl;
+  cout << comment << endl;
 }
 
 void handleError(ErrorInfo info)
@@ -170,15 +179,16 @@ void printHelp()
   cout << "internal/setAsterix: set a * on the Tape" << endl;
   cout << endl;
   cout << "Program-Layout: " << endl;
-  cout << "[#include \"<file>\" [AS <prefix>]]" << endl;
+  cout << "[#include \"<file>\" [AS <prefix>[(template)]]]" << endl;
   cout << "name: <name>" << endl;
   cout << "init: <state>" << endl;
   cout << "accept: <state>[,<state>]" << endl;
   cout << "<state>,<input>,<output>,<move>,[<internal>,]<newstate>" << endl;
   cout << "//comments will be ignored" << endl;
   cout << endl;
-  cout << "#include <file> [AS <prefix>]\tinclude a Sub-TM (as many as needed)" << endl;
+  cout << "#include <file> [AS <prefix>[(template)]]\tinclude a Sub-TM (as many as needed)" << endl;
   cout << "\t\tprefix overrides the internal name of the file, this way you can add one file multiple times" << endl;
+  cout << "\t\twith (template) you can set the template character to be used in this instance of the tm." << endl;
   cout << "\t\twith #include INTERNAL you can force to load the internal functions" << endl;
   cout << "Name\t\tindicates the Name of the Program (important when used as Sub-TM)." << endl;
   cout << "init\t\tindicates the start State of the Program." << endl;
@@ -195,6 +205,7 @@ void printHelp()
   cout << endl;
   cout << "'*' reads any character, '_' reads an empty field" << endl;
   cout << "'*' writes no character, '_' writes an empty field" << endl;
+  cout << "%tmpl% will be replaced by the set template character at the #include, (standard: _)" << endl;
   cout << endl;
   cout << "A ! at the end of a transition indicates a breakpoint, where the";
   cout << " machine halts and waits for input;"<<endl<<"with n the program goes on.";

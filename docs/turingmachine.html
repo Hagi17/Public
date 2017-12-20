@@ -54,7 +54,7 @@ internal/setAsterix: write an * onto the Tape
 <hr>
 <b>Program-Layout:</b><br>
 <pre>
-[#include "&lt;file>" [AS &lt;prefix>]]
+[#include "&lt;file>" [AS &lt;prefix>[(template)]]]
 [#include INTERNAL]
 name: &lt;name>
 init: &lt;state>
@@ -64,6 +64,7 @@ accept: &lt;state>[,&lt;state>]
 
 #include &lt;file> include a Sub-TM (as many as needed)
    with AS &lt;prefix> a override name for the TM program can be specified
+   with (template) a template character for this TM instance can be specified
 #include INTERNAL  includes the internal functions
 Name            indicates the Name of the Program (important when used as Sub-TM).
 init            indicates the start State of the Program.
@@ -80,6 +81,10 @@ The 5-Tupel must be specified for each transition
 
 '*' reads any character, '_' reads an empty field
 '*' writes no character, '_' writes an empty field
+%tmpl% will be replaced by the specified template character for this instance
+
+All commentlines before any other line (except for empty lines) will be displayed 
+when running the TM File as Main. 
 
 Sub-TM: for &lt;state&gt;/&lt;newstate&gt; use name/state, where name is the name of the sub-TM or the specified prefix
 

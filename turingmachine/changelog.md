@@ -2,6 +2,15 @@
 
 ---
 
+### Version 1.0.4a
+
+__20.12.17__
+
+- Added support for using template characters in TM Programs
+- Added HeadComment: first Comment in main TM-File will be displayed before running
+
+---
+
 ### Version 1.0.3a
 
 __19.12.17__

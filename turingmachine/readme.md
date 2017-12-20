@@ -49,7 +49,7 @@
 ---
 
 **Program-Layout:**    
-\[#include "&lt;file&gt;" \[AS &lt;prefix&gt;\]\]  
+\[#include "&lt;file&gt;" \[AS &lt;prefix&gt;\[(template character)\]\]\]  
 \[#include INTERNAL\]
 name: &lt;name&gt;  
 init: &lt;state&gt;  
@@ -58,7 +58,8 @@ accept: &lt;state&gt;\[,&lt;state&gt;\]
 //comments will be ignored  
 
 *#include &lt;file&gt;* includes a Sub-TM (as many as needed)  
-   with AS &lt;prefix&gt; a override prefix for this TM can be specified, this way multiple instances of a TM can be loaded and used  
+   with AS &lt;prefix&gt; a override prefix for this TM can be specified, this way multiple instances of a TM can be loaded and used 
+   with (template character) a template character for this TM-Program instance can be specified   
 *#include INTERNAL* includes the internal functions  
 *Name*            indicates the Name of the Program (important when used as Sub-TM).  
 *init*            indicates the start State of the Program.  
@@ -75,6 +76,10 @@ The 5-Tupel must be specified for each transition
 
 '\*' reads any character, '\_' reads an empty field  
 '\*' writes no character, '\_' writes an empty field  
+*%tmpl%* will be replaced by the specified template character for this instance (standard: '\_')  
+
+All commentlines before any other line (except for empty lines) will be displayed 
+when running the TM File as Main. 
 
 Sub-TM: for &lt;state&gt;/&lt;newstate&gt; use name/state, where name is the name of the sub-TM or the specified prefix  
 Internal Functions:  they can also be specified as newstates, that way you need a transition from that state  
@@ -85,6 +90,8 @@ Under /code you will find some TuringMachine-Programs:
 Copy some characters (0,1,o,z,_) to the right [CopyBinary](code/copybinary.tm)  
 Invert a binary number [Invert](code/not.tm)  
 Shift a binary number one place to the right [rshift](code/rshift.tm)  
+Shift a text one place to the left [lshift](code/lshiftAZ.tm)  
+Encrypt or Decrypt a Text using Monoalphabetic Encryption [CryptMono](code/cryptMono.tm)  
 
 [mainsrc]: source/tmsim.cpp  
 [tmsrc]: source/turingmachine.h  
