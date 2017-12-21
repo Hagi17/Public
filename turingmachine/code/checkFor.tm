@@ -1,6 +1,8 @@
 //check for single occurence of %tmpl%, remove all others and shift left
 //goes back to left end (or $)
 
+//example for %tmpl% and ic usage
+
 #include "lshiftAZ.tm" AS lsh
 
 name: checkFor

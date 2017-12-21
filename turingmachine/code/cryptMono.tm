@@ -2,7 +2,10 @@
 //input: plaintext$key for encryption
 //       cipher&$key for decryption
 //output: cipher&$key or plaintext$key
-
+//
+// no & and no $ in the plaintext!, 
+// . , - ; will be copied, all other non alphabetic Characters will be replaced by _
+//
 //errorstate: error_nokey
 //            error_format
 

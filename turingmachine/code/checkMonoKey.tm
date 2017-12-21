@@ -1,6 +1,8 @@
 //check key for 26 characters and no double characters
 //pointer to first place, before that there is a $
 
+//example for %tmpl% usage
+
 #include "checkFor.tm" AS checkA(A)
 #include "checkFor.tm" AS checkB(B)
 #include "checkFor.tm" AS checkC(C)
