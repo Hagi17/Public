@@ -2,7 +2,7 @@
 /// Turing Machine Simulator in C++
 ///
 /// Author: Clemens Hagenbuchner
-/// Last edited: 15.12.17
+/// Last edited: 21.12.17
 /// 
 /// Additional string-functions (trim, replace, explode)
 /// and ErrorInfo struct
@@ -40,20 +40,20 @@ class stringsup
   
   static vector<string> explode(string& s, const char& c)
   {
-    string buff{""};
+    string buff;
     vector<string> v;
     
     for(auto n:s)
     {
       if(n != c) buff+=n; else
-      if(n == c && buff != "") { v.push_back(buff); buff = ""; }
+      if(n == c && !buff.empty()) { v.push_back(buff); buff = ""; }
     }
-    if(buff != "") v.push_back(buff);
+    if(!buff.empty()) v.push_back(buff);
     
     return v;
   }
   
-  static string getFolderPath(string filePath)
+  static string getFolderPath(const string &filePath)
   {
     size_t found = filePath.find_last_of("/\\");
     return filePath.substr(0,found);
@@ -71,7 +71,7 @@ class stringsup
     path = plainPath;
   }
   
-  static bool exists(string filepath)
+  static bool exists(const string &filepath)
   {
     ifstream file(filepath);
     return file.good();

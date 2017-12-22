@@ -2,7 +2,7 @@
 /// Turing Machine Simulator in C++
 ///
 /// Author: Clemens Hagenbuchner
-/// Last edited: 20.12.17
+/// Last edited: 21.12.17
 /// 
 /// class for encupsulation of a State
 ///
@@ -20,7 +20,7 @@ using namespace std;
 class State
 {
   public:
-  
+
     State(string name)
     {
       mName = name;
@@ -28,7 +28,7 @@ class State
     }
     ~State()
     {
-      while(mActions.size() > 0)
+      while(!mActions.empty())
       {
         delete mActions.back();
         mActions.pop_back();

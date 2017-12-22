@@ -74,6 +74,9 @@ The 5-Tupel must be specified for each transition
 *&lt;newstate&gt;*      next state; any case-sensitive string  
 *!*                      indicates a breakpoint, where the machine will halt
 
+A *!* before the statename indicates a fixed state, this statename won't be changed when 
+loaded as Sub-TM or #include AS  
+
 '\*' reads any character, '\_' reads an empty field  
 '\*' writes no character, '\_' writes an empty field  
 *%tmpl%* will be replaced by the specified template character for this instance (standard: '\_')  
@@ -93,6 +96,7 @@ Invert a binary number [Invert](code/not.tm)
 Shift a binary number one place to the right [rshift](code/rshift.tm)  
 Shift a text one place to the left [lshift](code/lshiftAZ.tm)  
 Encrypt or Decrypt a Text using Monoalphabetic Encryption [CryptMono](code/cryptMono.tm)  
+Encrypt or Decrypt a Text using [ENIGMA](code/enigma/enigma.tm)  
 
 [mainsrc]: source/tmsim.cpp  
 [tmsrc]: source/turingmachine.h  

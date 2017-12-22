@@ -2,7 +2,7 @@
 /// Turing Machine Simulator in C++
 ///
 /// Author: Clemens Hagenbuchner
-/// Last edited: 19.12.17
+/// Last edited: 21.12.17
 /// 
 /// Input/Output Tape
 ///
@@ -82,13 +82,13 @@ class Tape
       mHeadPos = 0;
     }
     
-    void saveTape(string path, string input)
+    void saveTape(const string &path, const string &input)
     {
       ofstream file(path);
       if(file.is_open())
       {
         file << input << endl;
-        string content = "";
+        string content;
         content.append(mTape.begin(),mTape.end());
         file << content;
         file.close();
@@ -109,7 +109,7 @@ class Tape
     }
     string printTape(int sizeOfFields)
     {
-      string tape = "";
+      string tape;
       int halfsize = sizeOfFields >> 1;
       int leftIndex = mHeadPos - halfsize;
       int maxIndex = leftIndex + sizeOfFields;
@@ -159,7 +159,7 @@ class Tape
       ofstream file(path);
       if(file.is_open())
       {
-        string content = "";
+        string content;
         content.append(mTape.begin()+mHeadPos,mTape.end());
         size_t found = content.find("$");
         if (found!= string::npos)
@@ -186,7 +186,7 @@ class Tape
 
     string readFileNameFromTape()
     {
-      string file = "";
+      string file;
       while(mHeadPos < mTape.size() && mTape[mHeadPos] != '$')
       {
         file+=mTape[mHeadPos];

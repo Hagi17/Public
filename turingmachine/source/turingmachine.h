@@ -2,7 +2,7 @@
 /// Turing Machine Simulator in C++
 ///
 /// Author: Clemens Hagenbuchner
-/// Last edited: 20.12.17
+/// Last edited: 22.12.17
 /// 
 /// Turing Machine class
 ///
@@ -66,7 +66,7 @@ class TuringMachine
     ~TuringMachine()
     {
       delete mTape;
-      while(mStates.size() > 0)
+      while(!mStates.empty())
       {
         delete mStates.back();
         mStates.pop_back();
@@ -284,13 +284,13 @@ class TuringMachine
             continue;
           }
           nonCommentLine = true;
-          if(five.compare("name:") == 0)
+          if(five == "name:")
           {
             name = line.substr(5);
             stringsup::ltrim(name);
             continue;
           }
-          if(five.compare("init:") == 0)
+          if(five == "init:")
           {
             if(!primary) continue;
             string statename = line.substr(5);
@@ -298,7 +298,7 @@ class TuringMachine
             mStartState = addState(statename);
             continue;
           }
-          if(line.substr(0,7).compare("accept:") == 0)
+          if(line.substr(0, 7) == "accept:")
           {//set accepted states
             if(!primary) continue;
             string states = line.substr(7);
@@ -308,7 +308,7 @@ class TuringMachine
               mAcceptedStates.push_back(addState(tmpState));
             continue;
           }
-          if(line.substr(0,9).compare("#include ") == 0)
+          if(line.substr(0, 9) == "#include ")
           {//sub tm   #include <> (AS prefix)
             string includeFile = line.substr(9);
             result = parseInclude(line.substr(9), prefix, includeFiles,
@@ -336,7 +336,7 @@ class TuringMachine
       {
         string iPrefix = importPrefixes[index];
         result = loadFile(includeFiles[index], iPrefix, 
-          false, onError, (prefix.compare(iPrefix) != 0), templateChar[index]);
+          false, onError, (prefix != iPrefix), templateChar[index]);
         if(!result) break;
       }
       return result;
@@ -354,15 +354,15 @@ class TuringMachine
         string usingprefix = cntnt.substr(findex+4);
         
         //check for template
-        auto tcind = usingprefix.find("(");
+        auto tcind = usingprefix.find('(');
         if(tcind != string::npos)
         {
           string templStr = usingprefix.substr(tcind+1);
           usingprefix = usingprefix.substr(0, tcind);
-          tcind = templStr.find(")");
+          tcind = templStr.find(')');
           if(tcind != string::npos) templStr = templStr.substr(0, tcind);
           stringsup::trim(templStr);
-          if(templStr.compare("%tmpl%")==0) templChar = tmplChar;
+          if(templStr == "%tmpl%") templChar = tmplChar;
           else templChar = templStr.front();
         }
         
@@ -422,18 +422,18 @@ class TuringMachine
         newPrefix);
       newStateNo = prepareState(newState, prefix, importPrefix, primary, 
         newPrefix);
-      if(parts[1].compare("comma") == 0) parts[1] = ',';
-      if(parts[2].compare("comma") == 0) parts[2] = ',';
-      if(ignoreCase = (parts[1].substr(0,2).compare("ic") == 0)) 
+      if(parts[1] == "comma") parts[1] = ',';
+      if(parts[2] == "comma") parts[2] = ',';
+      if((ignoreCase = (parts[1].substr(0, 2) == "ic")))
         parts[1] = parts[1].substr(2);
-      if(parts[1].compare("%tmpl%") == 0) parts[1] = templateChar;
-      if(parts[2].compare("%tmpl%") == 0) parts[2] = templateChar;
+      if(parts[1] == "%tmpl%") parts[1] = templateChar;
+      if(parts[2] == "%tmpl%") parts[2] = templateChar;
       if(parts[1].size() != 1 || parts[2].size() != 1 || 
         parts[3].size() != 1) return false;
       if(parts[1][0] == WILDCARD && parts[2][0] == WILDCARD && 
-        parts[3][0] == NO_MOVE && curState.compare(newState) == 0) return false;
+        parts[3][0] == NO_MOVE && curState == newState) return false;
     // this would lead to a endless loop (same state, no movement, take all)
-      Transition* way = new Transition((parts[1])[0],(parts[2])[0],
+      auto* way = new Transition((parts[1])[0],(parts[2])[0],
         (parts[3])[0],newStateNo, curStateNo, breakPoint, internStateNo, 
         ignoreCase);
       if(way->moveChar() != (parts[3])[0])
@@ -448,8 +448,14 @@ class TuringMachine
     int prepareState(string state, string prefix, string importPrefix, 
       bool primary, bool newPrefix)
     {
+      if(state.empty()) return -1;//fehler, kein state ohne namen
+      if(state[0] == '!') //indicate fix state name
+      {
+        state = state.substr(1);
+        return addState(state);
+      }
       if(primary) return addState(state);
-      auto result = state.find("/");
+      auto result = state.find('/');
       bool subTmCall = (result != string::npos);
       bool ip = (importPrefix.length() > 0);
       bool p = (prefix.length() > 0);
@@ -478,8 +484,7 @@ class TuringMachine
 
     bool isState(int state)
     {
-      if(state < 0 || state >= mStates.size()) return false;
-      return true;
+      return (state >= 0 && state < mStates.size());
     }
     bool isAccepted(int state)
     {

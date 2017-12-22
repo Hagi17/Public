@@ -21,7 +21,7 @@
 #include <conio.h>
 #endif
 
-#define VERSION "1.0.4b"
+#define VERSION "1.0.5a"
 #define IO_ERROR 2
 
 using namespace std;
@@ -32,14 +32,14 @@ bool getParameter(int argc, char* argv[], TuringMachine* machine,
 bool askForPath(string& programFile);
 void getInput(string& input);
 int preExit(bool exitDirect, ErrorInfo info);
-void printHeader(string version);
+void printHeader(const string &version);
 void printCursor(int fieldCount = 60);
 void printHelp();
 bool handleResult(bool result, TuringMachine* machine);
 void handleError(ErrorInfo info);
 string readFile(string path);
 void printLoading(string programFile);
-void showTMInfo(string comment);
+void showTMInfo(const string &comment);
 
 ///
 /// Turing Machine Simulator
@@ -55,20 +55,20 @@ int main(int argc, char* argv[])
   bool showProcess = false;
   bool exitDirect = false;
   bool saveOnExit = false;
-  string saveFile = "";
-  string programFile = "";
-  string input = "";
+  string saveFile;
+  string programFile;
+  string input;
   ErrorInfo errorInfo;
-  
-  TuringMachine* machine = new TuringMachine();
+
+  auto* machine = new TuringMachine();
   
   printHeader(VERSION);
   
   getParameter(argc, argv, machine, programFile, input, exitDirect, saveOnExit,
     saveFile);
   
-  if(programFile.compare("?help") == 0 || 
-    programFile.compare("-help") == 0)
+  if(programFile == "?help" ||
+          programFile == "-help")
   {
     printHelp();
     delete machine;  
@@ -104,7 +104,7 @@ int main(int argc, char* argv[])
   
 }
 
-void showTMInfo(string comment)
+void showTMInfo(const string &comment)
 {
   if(comment.empty()) return;
   cout << "TM-Info: " << endl;
@@ -113,7 +113,7 @@ void showTMInfo(string comment)
 
 void handleError(ErrorInfo info)
 {
-  if(info.error == IO_ERROR && info.file.compare("-") != 0)
+  if(info.error == IO_ERROR && info.file != "-")
   {
     if(info.lineno < 0)
       cout << info.file << " couldn't be read!" << endl;
@@ -207,6 +207,7 @@ void printHelp()
   cout << "'*' writes no character, '_' writes an empty field" << endl;
   cout << "%tmpl% will be replaced by the set template character at the #include, (standard: _)" << endl;
   cout << endl;
+  cout << "A ! before a statename indicates that this statename should not be changed (In Sub-TM or include AS)." << endl;
   cout << "A ! at the end of a transition indicates a breakpoint, where the";
   cout << " machine halts and waits for input;"<<endl<<"with n the program goes on.";
   cout << endl << endl;
@@ -215,13 +216,13 @@ void printHelp()
 
 void printCursor(int fieldCount)
 {
-  string cursor = "";
+  string cursor;
   cursor.append(fieldCount >> 1,' ');
   cursor.append(1,'V');
   cout << cursor << endl;
 }
 
-void printHeader(string version)
+void printHeader(const string &version)
 {
   cout << "Turing Machine Simulator" << endl;
   cout << "Version " << version << endl;
@@ -261,26 +262,26 @@ bool getParameter(int argc, char* argv[], TuringMachine* machine,
   for(index = 2; index < argc; index++)
   {
     string arg = argv[index];
-    if (arg.compare("-show") == 0)
+    if (arg == "-show")
       showProcess = true;
-    else if(arg.compare("-help") == 0)
+    else if(arg == "-help")
       programFile = "?help";
-    else if(arg.compare("-exit") == 0)
+    else if(arg == "-exit")
       exitDirect = true;
-    else if(arg.substr(0,5).compare("-out=") == 0)
+    else if(arg.substr(0, 5) == "-out=")
     {
       saveOnExit=true;
       saveFile = arg.substr(5);
     }
-    else if (arg.substr(0,4).compare("-in=") == 0)
+    else if (arg.substr(0, 4) == "-in=")
       input = readFile(arg.substr(4));
-    else if(arg.substr(0,6).compare("-tape=") == 0)
+    else if(arg.substr(0, 6) == "-tape=")
       input = arg.substr(6);
-    else if (arg.substr(0,7).compare("-speed=") == 0)
+    else if (arg.substr(0, 7) == "-speed=")
       speed = stoi(arg.substr(7));//set speed
-    else if(arg.substr(0,2).compare("-I") == 0)
+    else if(arg.substr(0, 2) == "-I")
       machine->addIncludeFolder(arg.substr(2));
-    else if(arg.compare("-ext") == 0)
+    else if(arg == "-ext")
       machine->loadExtension();
   }
   machine->setShowProcess(showProcess);
@@ -293,7 +294,7 @@ bool getParameter(int argc, char* argv[], TuringMachine* machine,
 string readFile(string path)
 {
   ifstream file(path);
-  string content = "";
+  string content;
   if(file.is_open())
   {
     string line;
@@ -311,12 +312,12 @@ bool askForPath(string& programFile)
 {
   cout << "Please enter the path to the TM-Program to be loaded or -: ";
   getline(cin, programFile);
-  return (programFile.compare("-") == 0 || programFile.compare("") == 0);
+  return (programFile == "-" || programFile.empty());
 }
 
 void getInput(string& input)
 {
-  if (input.compare("") == 0)
+  if (input == "")
   {
     cout << "Input for run: ";
     getline(cin, input);

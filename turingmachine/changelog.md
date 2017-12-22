@@ -2,6 +2,22 @@
 
 ---
 
+### Version 1.0.5a
+
+__22.12.17__
+
+- Added Identifier for fixed state names
+
+---
+
+### Version 1.0.4c
+
+__21.12.17__
+
+- Simplified Source 
+
+--- 
+
 ### Version 1.0.4b
 
 __20.12.17__
