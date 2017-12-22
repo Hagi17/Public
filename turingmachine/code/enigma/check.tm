@@ -32,6 +32,7 @@ go,icW,W,>,go
 go,icX,X,>,go
 go,icY,Y,>,go
 go,icZ,Z,>,go
+go,*,*,>,go
 
 go,$,$,<,gofinish
 

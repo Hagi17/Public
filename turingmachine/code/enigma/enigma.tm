@@ -2,9 +2,11 @@
 //input: plain$$rotor1$rotor2$....%reverserotor
 //in plain: only uppercase letters, but special characters are allowed (except $ and % and &, max. 2 _)
 //
-//Rotor-Anomaly: place / before the letter, if / is at front, place it at the end
+//Rotor-Anomaly: place / after the letter
 //
 //checked with Paper enigma
+//
+//doesn't have a plugboard
 
 #include "rotateAll.tm"
 #include "forwardEncrypt.tm"
@@ -25,7 +27,7 @@ check/finish,$,$,-,finish
 //rotate before encrypt (otherwise: nextstate: encrypt)
 check/finish,*,*,-,rotateAll/begin
 
-//encrypt each letter and turn the rotors afterwards (or before encrypting)?
+//turn the rotors before encrypting
 
 forwardEncrypt/finish,*,*,>,checkend
 checkend,$,$,<,toupper/go
@@ -70,7 +72,5 @@ bitback,*,*,-,encrypt
 
 encrypt,$,$,<,toupper/go
 encrypt,*,*,-,forwardEncrypt/begin
-
-//check anomaly
 
 toupper/finish,*,*,-,finish
