@@ -7,6 +7,7 @@
 //checked with Paper enigma
 //
 //doesn't have a plugboard
+//rotation anomalie not completly correct
 
 #include "rotateAll.tm"
 #include "forwardEncrypt.tm"
