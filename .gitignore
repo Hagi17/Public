@@ -1,0 +1,7 @@
+*.exe
+*.cmake
+*.bin
+\Cmake*
+\.idea\*
+\cmake*
+CMake*
