@@ -8,10 +8,10 @@ set(CMAKE_DEPENDS_GENERATOR "MinGW Makefiles")
 set(CMAKE_MAKEFILE_DEPENDS
   "CMakeCache.txt"
   "../CMakeLists.txt"
-  "CMakeFiles/3.9.4/CMakeCCompiler.cmake"
-  "CMakeFiles/3.9.4/CMakeCXXCompiler.cmake"
-  "CMakeFiles/3.9.4/CMakeRCCompiler.cmake"
-  "CMakeFiles/3.9.4/CMakeSystem.cmake"
+  "CMakeFiles/3.9.6/CMakeCCompiler.cmake"
+  "CMakeFiles/3.9.6/CMakeCXXCompiler.cmake"
+  "CMakeFiles/3.9.6/CMakeRCCompiler.cmake"
+  "CMakeFiles/3.9.6/CMakeSystem.cmake"
   "CMakeFiles/feature_tests.c"
   "CMakeFiles/feature_tests.cxx"
   "C:/Program Files/JetBrains/CLion 2017.2.3/bin/cmake/share/cmake-3.9/Modules/CMakeCCompiler.cmake.in"
@@ -35,7 +35,6 @@ set(CMAKE_MAKEFILE_DEPENDS
   "C:/Program Files/JetBrains/CLion 2017.2.3/bin/cmake/share/cmake-3.9/Modules/CMakeFindCodeBlocks.cmake"
   "C:/Program Files/JetBrains/CLion 2017.2.3/bin/cmake/share/cmake-3.9/Modules/CMakeGenericSystem.cmake"
   "C:/Program Files/JetBrains/CLion 2017.2.3/bin/cmake/share/cmake-3.9/Modules/CMakeLanguageInformation.cmake"
-  "C:/Program Files/JetBrains/CLion 2017.2.3/bin/cmake/share/cmake-3.9/Modules/CMakeMinGWFindMake.cmake"
   "C:/Program Files/JetBrains/CLion 2017.2.3/bin/cmake/share/cmake-3.9/Modules/CMakeParseImplicitLinkInfo.cmake"
   "C:/Program Files/JetBrains/CLion 2017.2.3/bin/cmake/share/cmake-3.9/Modules/CMakeRCCompiler.cmake.in"
   "C:/Program Files/JetBrains/CLion 2017.2.3/bin/cmake/share/cmake-3.9/Modules/CMakeRCInformation.cmake"
@@ -115,12 +114,12 @@ set(CMAKE_MAKEFILE_OUTPUTS
 
 # Byproducts of CMake generate step:
 set(CMAKE_MAKEFILE_PRODUCTS
-  "CMakeFiles/3.9.4/CMakeSystem.cmake"
-  "CMakeFiles/3.9.4/CMakeCCompiler.cmake"
-  "CMakeFiles/3.9.4/CMakeCXXCompiler.cmake"
-  "CMakeFiles/3.9.4/CMakeRCCompiler.cmake"
-  "CMakeFiles/3.9.4/CMakeCCompiler.cmake"
-  "CMakeFiles/3.9.4/CMakeCXXCompiler.cmake"
+  "CMakeFiles/3.9.6/CMakeSystem.cmake"
+  "CMakeFiles/3.9.6/CMakeCCompiler.cmake"
+  "CMakeFiles/3.9.6/CMakeCXXCompiler.cmake"
+  "CMakeFiles/3.9.6/CMakeRCCompiler.cmake"
+  "CMakeFiles/3.9.6/CMakeCCompiler.cmake"
+  "CMakeFiles/3.9.6/CMakeCXXCompiler.cmake"
   "CMakeFiles/CMakeDirectoryInformation.cmake"
   )
 

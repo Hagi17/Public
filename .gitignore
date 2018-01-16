@@ -5,3 +5,7 @@
 \.idea\*
 \cmake*
 CMake*
+CMakeOutput.log
+CMakeCache.txt
+Makefile.cmake
+workspace.xml
