@@ -97,6 +97,9 @@ Shift a binary number one place to the right [rshift](code/rshift.tm)
 Shift a text one place to the left [lshift](code/lshiftAZ.tm)  
 Encrypt or Decrypt a Text using Monoalphabetic Encryption [CryptMono](code/cryptMono.tm)  
 Encrypt or Decrypt a Text using [ENIGMA](code/enigma/enigma.tm)  
+Increment/Decrement a binary number [Increment](code/increment.tm) / [Decrement](code/decrement.tm)  
+Multiply two binary numbers [Multiply](code/multiplyr.tm)  
+Add two binary numbers [Add](code/addr.tm)  
 
 [mainsrc]: source/tmsim.cpp  
 [tmsrc]: source/turingmachine.h  
