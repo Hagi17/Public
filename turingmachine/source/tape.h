@@ -12,6 +12,7 @@
 
 #include <deque>
 #include <string>
+#include <iostream>
 
 #ifndef WILDCARD
 #define WILDCARD '*'
@@ -73,6 +74,26 @@ class Tape
     {
       mTape.clear();
       mTape.insert(mTape.begin(), input.begin(), input.end());
+    }
+    void loadHexInput(string path)
+    {
+      mTape.clear();
+      ifstream file(path);
+      string content;
+      if(file.is_open())
+      {
+        string line;
+        while(getline(file, line))
+          content += line;
+        file.close();
+      }
+      unsigned int index = 0;
+      for(index = 0; index < content.length(); index+=2)
+      {
+        string twoByte = "0x"+content.substr(index,2);
+        char c = (char)stoul(twoByte, NULL, 16);
+        mTape.push_back(c);
+      }
     }
     
     void clear()

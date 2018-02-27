@@ -2,7 +2,7 @@
 /// Turing Machine Simulator in C++
 ///
 /// Author: Clemens Hagenbuchner
-/// Last edited: 22.12.17
+/// Last edited: 27.02.18
 /// 
 /// Turing Machine class
 ///
@@ -87,6 +87,8 @@ class TuringMachine
       mInternalGoLeft = addState("internal/goLeft");
       mInternalGoRight = addState("internal/goRight");
       mInternalSetAsterix = addState("internal/setAsterix");
+      mInternalCopy = addState("internal/copy");
+      mInternalParse = addState("internal/parse");
     }
     
     bool loadProgram(string programFile, 
@@ -118,7 +120,6 @@ class TuringMachine
         operateExtension(read);
         char write = EMPTY;
         bool breakPoint = false;
-        int newState;
         int move = 0;
         result = mStates[mCurrentState]->operate(read, write, 
           mCurrentState, move, breakPoint);
@@ -153,6 +154,10 @@ class TuringMachine
     void loadInput(string input)
     {
       mTape->loadInput(input);
+    }
+    void loadHexInput(string file)
+    {
+      mTape->loadHexInput(file);
     }
     void resetHead()
     {
@@ -198,6 +203,7 @@ class TuringMachine
     int mCurrentState;
     
     int mStartState;
+    char mTmpCopied;
     
     int mInternalClear;
     int mInternalRead;
@@ -205,6 +211,8 @@ class TuringMachine
     int mInternalGoLeft;
     int mInternalGoRight;
     int mInternalSetAsterix;
+    int mInternalCopy;
+    int mInternalParse;
     
     string mHeadComment;
     
@@ -232,6 +240,10 @@ class TuringMachine
         mTape->setHeadAtEnd();
       if(mCurrentState == mInternalSetAsterix || intF == mInternalSetAsterix)
         mTape->forceWrite('*');
+      if(mCurrentState == mInternalCopy || intF == mInternalCopy)
+        mTmpCopied = mTape->read();
+      if(mCurrentState == mInternalParse || intF == mInternalParse)
+        mTape->forceWrite(mTmpCopied);
     }
     
     void showProcess(ostream& logConsole)
@@ -267,6 +279,7 @@ class TuringMachine
       ifstream prg (path);
       if(prg.is_open())
       {
+        //check if it contains it?
         includedDirectories.push_back(folder);
         onError.lineno = 0;
         
@@ -331,10 +344,13 @@ class TuringMachine
       
       if(!result) return result;
       
-      int index = 0;
+      unsigned int index = 0;
       for(index = 0; index < includeFiles.size(); index++)
       {
         string iPrefix = importPrefixes[index];
+#ifdef ADVANCED_OUTPUT
+        cout<<"loading "<<includeFiles[index]<<" as "<<iPrefix<<"("<<templateChar[index]<<")"<<endl;
+#endif
         result = loadFile(includeFiles[index], iPrefix, 
           false, onError, (prefix != iPrefix), templateChar[index]);
         if(!result) break;
@@ -428,6 +444,10 @@ class TuringMachine
         parts[1] = parts[1].substr(2);
       if(parts[1] == "%tmpl%") parts[1] = templateChar;
       if(parts[2] == "%tmpl%") parts[2] = templateChar;
+      if(parts[1][0] == '0' && parts[1][1] == 'x') 
+        parts[1] = (char)stoul(parts[1], NULL, 16);
+      if(parts[2][0] == '0' && parts[2][1] == 'x') 
+        parts[2] = (char)stoul(parts[2], NULL, 16);
       if(parts[1].size() != 1 || parts[2].size() != 1 || 
         parts[3].size() != 1) return false;
       if(parts[1][0] == WILDCARD && parts[2][0] == WILDCARD && 
@@ -472,14 +492,14 @@ class TuringMachine
     
     int addState(string name)
     {
-      auto result = find(knownStates.begin(), knownStates.end(), name);
-      if(result == knownStates.end())
+      auto result = find(knownStates.rbegin(), knownStates.rend(), name);
+      if(result == knownStates.rend())
       {
         knownStates.push_back(name);
         mStates.push_back(new State(name));
         return knownStates.size() - 1;
       }
-      else return (result - knownStates.begin());
+      else return (knownStates.rend() - result - 1);
     }
 
     bool isState(int state)

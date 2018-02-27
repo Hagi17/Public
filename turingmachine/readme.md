@@ -25,8 +25,13 @@
 *-ext*            include internal/read, internal/write and internal/clear  
 *-exit*           don't ask for enter at the end of the program.  
 *-in=&lt;file&gt;*      set the content of file as input on the tape  
+*-in2=&lt;file&gt;*      set the content of file as input on the tape (no \n)  
 *-out=&lt;file&gt;*     store the input and the final output in the specified file  
+*-hex=&lt;file&gt;*     set the content of a hex-style file as input on the tape  
 *-I&lt;folder&gt;*      Add &lt;folder&gt; to the Machines searchpath for TM - Files  
+
+**hex-style file:**  
+all characters are encoded in hex, using two ascii letters or digits: ff00f4...   
 
 ---
 
@@ -45,6 +50,10 @@
 *internal/goRight:* go to the right end of the tape
 
 *internal/setAsterix:* write an \* onto the Tape
+
+*internal/copy:* copy the current character into a internal memory
+
+*internal/parse:* write the character stored in the internal memory onto the tape
 
 ---
 
@@ -81,6 +90,7 @@ loaded as Sub-TM or #include AS
 '\*' writes no character, '\_' writes an empty field  
 *%tmpl%* will be replaced by the specified template character for this instance (standard: '\_')  
 'ic' before the input Character specifies that both upper and lower case will be read  
+input and output can also be specified in hex-notation  
 
 All commentlines before any other line (except for empty lines) will be displayed 
 when running the TM File as Main. 

@@ -2,6 +2,16 @@
 
 ---
 
+### Version 1.1.0
+
+__27.02.18__
+
+- Added Option to use Hex-Format for input/output
+- Added internal/copy and internal/parse for easier copying of characters on the tape
+- Added Command Line Argument -hex to load Input from HEX-Style File
+- Added Command Line Argument -in2 to load from Input file without the \n
+- Reversed search if state is known (for better performance)
+
 ### Version 1.0.5a
 
 __22.12.17__

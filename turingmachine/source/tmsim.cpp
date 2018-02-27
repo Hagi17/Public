@@ -8,6 +8,8 @@
 /// 
 /// Information about certain functions used 
 /// from stackOverflow.com and cplusplus.com
+/// 
+/// use -D ADVANCED_OUTPUT for more detailed output during loading
 ///
 
 #include <iostream>
@@ -21,14 +23,14 @@
 #include <conio.h>
 #endif
 
-#define VERSION "1.0.5a"
+#define VERSION "1.1.0"
 #define IO_ERROR 2
 
 using namespace std;
 
 bool getParameter(int argc, char* argv[], TuringMachine* machine, 
     string& programFile, string& input, bool& exitDirect, bool& saveOnExit,
-    string& saveFile);
+    string& saveFile, bool& hexfile);
 bool askForPath(string& programFile);
 void getInput(string& input);
 int preExit(bool exitDirect, ErrorInfo info);
@@ -38,6 +40,7 @@ void printHelp();
 bool handleResult(bool result, TuringMachine* machine);
 void handleError(ErrorInfo info);
 string readFile(string path);
+string readFile2(string path);
 void printLoading(string programFile);
 void showTMInfo(const string &comment);
 
@@ -52,20 +55,20 @@ void showTMInfo(const string &comment);
 int main(int argc, char* argv[])
 {
   int fieldCount = 60;
-  bool showProcess = false;
   bool exitDirect = false;
   bool saveOnExit = false;
   string saveFile;
   string programFile;
   string input;
   ErrorInfo errorInfo;
+  bool hexfile = false;
 
   auto* machine = new TuringMachine();
   
   printHeader(VERSION);
   
   getParameter(argc, argv, machine, programFile, input, exitDirect, saveOnExit,
-    saveFile);
+    saveFile, hexfile);
   
   if(programFile == "?help" ||
           programFile == "-help")
@@ -85,8 +88,18 @@ int main(int argc, char* argv[])
   }
   showTMInfo(machine->getHeadComment());
   
-  getInput(input); //read input if not any specified
-  machine->loadInput(input);
+  if(hexfile)
+  {
+#ifdef ADVANCED_OUTPUT
+    cout << "Reading Hex-File" << endl;
+#endif
+    machine->loadHexInput(input);
+  }
+  else
+  {
+    getInput(input); //read input if not any specified
+    machine->loadInput(input);
+  }
   
   printCursor(fieldCount);
   
@@ -165,7 +178,9 @@ void printHelp()
   cout << "-exit\t\tdon't ask for enter at the end of the program.";
   cout << endl;
   cout << "-in=<file>\tset the content of file as input on the tape" << endl;
-  cout << "-out=<file>\tstore the input and the final output in the specified file";
+  cout << "-in2=<file>\tsame as -in but ignoring \n" << endl;
+  cout << "-out=<file>\tstore the input and the final output in the specified file" << endl;
+  cout << "-hex=<file>\tload the input from the file, where the characters are encoded as hex";
   cout << endl;
   cout << "-I<folder>\tAdd <folder> to the Machines searchpath for TM - Files";
   cout << endl << endl;
@@ -177,6 +192,8 @@ void printHelp()
   cout << "internal/goLeft: go to the left end of the Tape" << endl;
   cout << "internal/goRight: go to the right end of the Tape" << endl;
   cout << "internal/setAsterix: set a * on the Tape" << endl;
+  cout << "internal/copy: store the current character internally" << endl;
+  cout << "internal/paste: write the internally stored character" << endl;
   cout << endl;
   cout << "Program-Layout: " << endl;
   cout << "[#include \"<file>\" [AS <prefix>[(template)]]]" << endl;
@@ -206,6 +223,7 @@ void printHelp()
   cout << "'*' reads any character, '_' reads an empty field" << endl;
   cout << "'*' writes no character, '_' writes an empty field" << endl;
   cout << "%tmpl% will be replaced by the set template character at the #include, (standard: _)" << endl;
+  cout << "comma will be replace by ','"<<endl;
   cout << endl;
   cout << "A ! before a statename indicates that this statename should not be changed (In Sub-TM or include AS)." << endl;
   cout << "A ! at the end of a transition indicates a breakpoint, where the";
@@ -248,7 +266,7 @@ int preExit(bool exitDirect, ErrorInfo info)
 
 bool getParameter(int argc, char* argv[], TuringMachine* machine, 
     string& programFile, string& input, bool& exitDirect, bool& saveOnExit,
-    string& saveFile)
+    string& saveFile, bool& hexfile)
 {
   if (argc < 2)
   {//ask for filepath
@@ -273,8 +291,15 @@ bool getParameter(int argc, char* argv[], TuringMachine* machine,
       saveOnExit=true;
       saveFile = arg.substr(5);
     }
+    else if(arg.substr(0,5) == "-hex=")
+    {
+      input = arg.substr(5);
+      hexfile = true;
+    }
     else if (arg.substr(0, 4) == "-in=")
       input = readFile(arg.substr(4));
+    else if (arg.substr(0, 5) == "-in2=")
+      input = readFile2(arg.substr(5));
     else if(arg.substr(0, 6) == "-tape=")
       input = arg.substr(6);
     else if (arg.substr(0, 7) == "-speed=")
@@ -303,6 +328,20 @@ string readFile(string path)
       content += line;
       content += '\n';
     }
+    file.close();
+  }
+  return content;
+}
+
+string readFile2(string path)
+{
+  ifstream file(path);
+  string content;
+  if(file.is_open())
+  {
+    string line;
+    while(getline(file, line))
+      content += line;
     file.close();
   }
   return content;

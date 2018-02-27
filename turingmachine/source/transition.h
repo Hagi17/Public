@@ -82,6 +82,7 @@ class Transition
       if(mMove == NO_MOVE) return 0;
       if(mMove == MOVE_RIGHT) return 1;
       if(mMove == MOVE_LEFT) return -1;
+      return 0;
     }
     char mMove; 
     char mInput;
