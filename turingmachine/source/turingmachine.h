@@ -2,7 +2,7 @@
 /// Turing Machine Simulator in C++
 ///
 /// Author: Clemens Hagenbuchner
-/// Last edited: 27.02.18
+/// Last edited: 28.02.18
 /// 
 /// Turing Machine class
 ///
@@ -16,6 +16,7 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
+#include <cstdio>
 
 #ifdef __WIN32__
   #include <windows.h>
@@ -61,6 +62,10 @@ class TuringMachine
       mInternalGoLeft = -1;
       mInternalGoRight = -1;
       mInternalSetAsterix = -1;
+      mInternalCopy = -1;
+      mInternalParse = -1;
+      mInternalStdin = -1;
+      mInternalStdout = -1;
       mState = Halt;
     }   
     ~TuringMachine()
@@ -89,6 +94,8 @@ class TuringMachine
       mInternalSetAsterix = addState("internal/setAsterix");
       mInternalCopy = addState("internal/copy");
       mInternalParse = addState("internal/parse");
+      mInternalStdin = addState("internal/stdin");
+      mInternalStdout = addState("internal/stdout");
     }
     
     bool loadProgram(string programFile, 
@@ -188,7 +195,14 @@ class TuringMachine
     {
       mTape->saveTape(path, input);
     }
-    
+    void setStdIn(string inFile)
+    {
+      mStdInFile = inFile;
+    }
+    void setStdOut(string outFile)
+    {
+      mStdOutFile = outFile;
+    }
     RunningState machineState()
     {
       return mState;
@@ -213,8 +227,13 @@ class TuringMachine
     int mInternalSetAsterix;
     int mInternalCopy;
     int mInternalParse;
+    int mInternalStdin;
+    int mInternalStdout;
     
     string mHeadComment;
+    string mStdInFile;
+    string mStdOutFile;
+    const string mTempFile = "tmp.txt";
     
     RunningState mState;
     
@@ -225,7 +244,7 @@ class TuringMachine
     vector<string> knownStates;
     vector<string> includedDirectories;
     
-    void operateExtension(char read)
+    void operateExtension(char& read)
     {
       int intF = mStates[mCurrentState]->InternalFunction(read);
       if(mCurrentState == mInternalClear || intF == mInternalClear)
@@ -244,6 +263,49 @@ class TuringMachine
         mTmpCopied = mTape->read();
       if(mCurrentState == mInternalParse || intF == mInternalParse)
         mTape->forceWrite(mTmpCopied);
+      if(mCurrentState == mInternalStdin || intF == mInternalStdin)
+      {
+        ifstream file(mStdInFile);
+        ofstream tFile(mTempFile);
+        char chIn = 0;
+        if(file.is_open())
+        {
+          if(file.get(chIn))
+          {
+            mTape->forceWrite(chIn);
+            read = chIn;
+            
+          }
+          if(tFile.is_open())
+          {
+              string line;
+              while(getline(file, line))
+              {
+                tFile << line;
+                tFile << endl;
+              }
+              tFile.close();
+              file.close();
+              std::rename(mTempFile.c_str(), mStdInFile.c_str());
+          }
+          else
+            file.close();
+        }
+        else if(tFile.is_open()) 
+        {
+          tFile.close();
+          std::remove(mTempFile.c_str());
+        }
+      }
+      if(mCurrentState == mInternalStdout || intF == mInternalStdout)
+      {
+        ofstream file(mStdOutFile, ofstream::app);
+        if(file.is_open())
+        {
+          file.put(read);
+        }
+        file.close();
+      }
     }
     
     void showProcess(ostream& logConsole)
@@ -260,7 +322,7 @@ class TuringMachine
     }
     
     bool loadFile(string path, string prefix, bool primary, 
-      ErrorInfo& onError, bool newPrefix = false, char templ = EMPTY)
+      ErrorInfo& onError, bool newPrefix = false, char templ = EMPTY, unsigned long templNr = 1)
     {
       bool result = true;
       bool nonCommentLine = false;
@@ -271,6 +333,7 @@ class TuringMachine
       vector<string> includeFiles;
       vector<string> importPrefixes;
       vector<char> templateChar;
+      vector<unsigned long> templateNr;
       string folder = stringsup::getFolderPath(path);
       
       //check if this file exists in any of the included Directorys
@@ -322,15 +385,15 @@ class TuringMachine
             continue;
           }
           if(line.substr(0, 9) == "#include ")
-          {//sub tm   #include <> (AS prefix)
+          {//sub tm   #include <> (AS prefix(templ,nr))
             string includeFile = line.substr(9);
             result = parseInclude(line.substr(9), prefix, includeFiles,
-                importPrefixes, templateChar, templ);
+                importPrefixes, templateChar, templateNr, templ, templNr);
             if(!result) break;
             else continue;
           }
           result = parseTransition(line, name, prefix, primary, newPrefix,
-            templ);
+            templ, templNr);
           if(!result) 
           {
             onError.file += " (s,*,*,-,s) occured ";
@@ -352,17 +415,18 @@ class TuringMachine
         cout<<"loading "<<includeFiles[index]<<" as "<<iPrefix<<"("<<templateChar[index]<<")"<<endl;
 #endif
         result = loadFile(includeFiles[index], iPrefix, 
-          false, onError, (prefix != iPrefix), templateChar[index]);
+          false, onError, (prefix != iPrefix), templateChar[index], templateNr[index]);
         if(!result) break;
       }
       return result;
     }
     
     bool parseInclude(string cntnt, string prefix,vector<string>& includeFiles,
-      vector<string>& importPrefixes, vector<char>& templateChar, char tmplChar)
+      vector<string>& importPrefixes, vector<char>& templateChar, vector<unsigned long>& templateNr, char tmplChar, unsigned long tmplNr)
     {//line without #include
       string incPrefix = prefix;
       char templChar = EMPTY;
+      unsigned long templNr = 1;
       //check for AS
       auto findex = cntnt.find(" AS ");
       if(findex != string::npos)
@@ -377,6 +441,25 @@ class TuringMachine
           usingprefix = usingprefix.substr(0, tcind);
           tcind = templStr.find(')');
           if(tcind != string::npos) templStr = templStr.substr(0, tcind);
+          //split
+          tcind = templStr.find(',');
+          if(tcind != string::npos)
+          {
+            string tmpNrStr = templStr.substr(tcind+1);
+            templStr = templStr.substr(0,tcind);
+            stringsup::trim(tmpNrStr);
+            if(tmpNrStr == "%nr%") templNr = tmplNr;
+            else 
+            {
+              try
+              {
+                templNr = stoul(tmpNrStr, NULL, 10);
+              }
+              catch(...)
+              {
+              }
+            }
+          }
           stringsup::trim(templStr);
           if(templStr == "%tmpl%") templChar = tmplChar;
           else templChar = templStr.front();
@@ -399,12 +482,14 @@ class TuringMachine
           cntnt.substr(1, cntnt.size() - 2));
         importPrefixes.push_back(incPrefix);
         templateChar.push_back(templChar);
+        templateNr.push_back(templNr);
       }
       else if(cntnt.front() != '"' && cntnt.back() != '"')
       {
         includeFiles.push_back(cntnt);
         importPrefixes.push_back(incPrefix);
         templateChar.push_back(templChar);
+        templateNr.push_back(templNr);
       }
       else 
         return false;
@@ -412,11 +497,12 @@ class TuringMachine
     }
     
     bool parseTransition(string tupel, string prefix, string importPrefix, 
-      bool primary, bool newPrefix, char templateChar)
+      bool primary, bool newPrefix, char templateChar, unsigned long templateSteps)
     {
       int curStateNo = -1;
       int newStateNo = -1;
       int internStateNo = -2;
+      unsigned long steps = 1;
       stringsup::replace(tupel, ",,",",comma");
       vector<string> parts {stringsup::explode(tupel, ',')};
       if(parts.size() < 5) return false;
@@ -448,13 +534,28 @@ class TuringMachine
         parts[1] = (char)stoul(parts[1], NULL, 16);
       if(parts[2][0] == '0' && parts[2][1] == 'x') 
         parts[2] = (char)stoul(parts[2], NULL, 16);
-      if(parts[1].size() != 1 || parts[2].size() != 1 || 
-        parts[3].size() != 1) return false;
+      if(parts[3].size() != 1)
+      {//number of moves
+        if(parts[3].size() == 2 && parts[3][1] == '%')
+          steps = templateSteps;
+        else
+        {
+          try
+          {
+            steps = stoul(parts[3].substr(1),NULL,10);
+          }
+          catch(...)
+          {
+            return false;
+          }
+        }
+      }
+      if(parts[1].size() != 1 || parts[2].size() != 1) return false;
       if(parts[1][0] == WILDCARD && parts[2][0] == WILDCARD && 
         parts[3][0] == NO_MOVE && curState == newState) return false;
     // this would lead to a endless loop (same state, no movement, take all)
       auto* way = new Transition((parts[1])[0],(parts[2])[0],
-        (parts[3])[0],newStateNo, curStateNo, breakPoint, internStateNo, 
+        (parts[3])[0],steps,newStateNo, curStateNo, breakPoint, internStateNo, 
         ignoreCase);
       if(way->moveChar() != (parts[3])[0])
       {
@@ -504,7 +605,7 @@ class TuringMachine
 
     bool isState(int state)
     {
-      return (state >= 0 && state < mStates.size());
+      return (state >= 0 && state < (int)mStates.size());
     }
     bool isAccepted(int state)
     {

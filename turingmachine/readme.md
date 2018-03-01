@@ -15,7 +15,7 @@
 *c++11* is minimum standard.
 
 **Usage:**  
-*./tm &lt;programfile&gt; [-show] [-help] [-exit] [-in=&lt;file&gt;] [-tape=&lt;input&gt;] [-speed=&lt;steps/sec&gt;] [-I&lt;folder&gt;] [-ext] [-out=&lt;file&gt;]*
+*./tm &lt;programfile&gt; [-show] [-help] [-exit] [-in=&lt;file&gt;] [-tape=&lt;input&gt;] [-speed=&lt;steps/sec&gt;] [-I&lt;folder&gt;] [-out=&lt;file&gt;] [...]*
 
 *&lt;programfile&gt;*   specifies the path to the Programfile (Ending: .tm, .txt)  
 *-show*           print the current tape after each step.  
@@ -29,6 +29,8 @@
 *-out=&lt;file&gt;*     store the input and the final output in the specified file  
 *-hex=&lt;file&gt;*     set the content of a hex-style file as input on the tape  
 *-I&lt;folder&gt;*      Add &lt;folder&gt; to the Machines searchpath for TM - Files  
+*-stdin=&lt;file&gt;*   set the filepath as standad input source (internal/stdin)  
+*-stdout=&lt;file&gt;*  set the filepath as standard output destination (internal/stdout)  
 
 **hex-style file:**  
 all characters are encoded in hex, using two ascii letters or digits: ff00f4...   
@@ -53,17 +55,22 @@ all characters are encoded in hex, using two ascii letters or digits: ff00f4...
 
 *internal/copy:* copy the current character into a internal memory
 
-*internal/parse:* write the character stored in the internal memory onto the tape
+*internal/parse:* write the character stored in the internal memory onto the tape  
+
+*internal/stdin:* read a character from the std input  
+
+*internal/stdout:* write the current character to the output  
+
 
 ---
 
 **Program-Layout:**    
-\[#include "&lt;file&gt;" \[AS &lt;prefix&gt;\[(template character)\]\]\]  
+\[#include "&lt;file&gt;" \[AS &lt;prefix&gt;\[(template character, template movenr = %)\]\]\]  
 \[#include INTERNAL\]
 name: &lt;name&gt;  
 init: &lt;state&gt;  
 accept: &lt;state&gt;\[,&lt;state&gt;\]  
-&lt;state&gt;,&lt;input&gt;,&lt;output&gt;,&lt;move&gt;,\[&lt;internal&gt;\]&lt;newstate&gt;\[!\]  
+&lt;state&gt;,&lt;input&gt;,&lt;output&gt;,&lt;move&gt;n,\[&lt;internal&gt;\]&lt;newstate&gt;\[!\]  
 //comments will be ignored  
 
 *#include &lt;file&gt;* includes a Sub-TM (as many as needed)  
@@ -78,7 +85,7 @@ The 5-Tupel must be specified for each transition
 *&lt;state&gt;*         current state; any case-sensitive string  
 *&lt;input&gt;*         if this single character is read, the transition will be triggered  
 *&lt;output&gt;*        single character to be written onto the tape  
-*&lt;move&gt;*          Move the Head: &lt; (go left), &gt; (go right) or - (stay)  
+*&lt;move&gt;*          Move the Head: &lt; (go left), &gt; (go right) or - (stay), &lt;&amp;&gt; can be followed by a number or % to increase the number of fields moved over  
 *&lt;internal&gt;*      Execute an internal Function before the state-Transition  
 *&lt;newstate&gt;*      next state; any case-sensitive string  
 *!*                      indicates a breakpoint, where the machine will halt

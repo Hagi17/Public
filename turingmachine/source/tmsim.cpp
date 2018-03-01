@@ -166,8 +166,8 @@ bool handleResult(bool result, TuringMachine* machine)
 void printHelp()
 {
   cout << "Usage: ./tm <programfile> [-show] [-in=<file>] [-help] [-exit]";
-  cout << " [-speed=<steps/sec>] [-I<folder>] [-ext] [-out=<file>]" << endl;
-  cout << "\t[-tape=<input>]"<<endl;
+  cout << " [-speed=<steps/sec>] [-I<folder>] [-out=<file>]" << endl;
+  cout << "\t[-tape=<input>] [...]"<<endl;
   cout << endl;
   cout << "<programfile>\tspecifies the path to the Programfile (Ending: .tm, .txt)" << endl;
   cout << "-show\t\tprint the current tape after each step." << endl;
@@ -183,53 +183,11 @@ void printHelp()
   cout << "-hex=<file>\tload the input from the file, where the characters are encoded as hex";
   cout << endl;
   cout << "-I<folder>\tAdd <folder> to the Machines searchpath for TM - Files";
+  cout << endl;
+  cout << "-stdin=<file>\tset a certain file as standard input source (internal/stdin)" << endl;
+  cout << "-stdout=<file>\tset a certain file as standard output (internal/stout)" << endl;
   cout << endl << endl;
-  cout << "internal/read: interprets the content of the tape until '$' as a filepath" << endl;
-  cout << "\t\tand loads the content on to the tape behind that $ (ignores \\n)" << endl;
-  cout << "internal/write: interprets the content of the tape until '$' as a filepath" << endl;
-  cout << "\t\tand stores the tape behind the $ in the file" << endl;
-  cout << "internal/clear: clear complete tape" << endl;
-  cout << "internal/goLeft: go to the left end of the Tape" << endl;
-  cout << "internal/goRight: go to the right end of the Tape" << endl;
-  cout << "internal/setAsterix: set a * on the Tape" << endl;
-  cout << "internal/copy: store the current character internally" << endl;
-  cout << "internal/paste: write the internally stored character" << endl;
-  cout << endl;
-  cout << "Program-Layout: " << endl;
-  cout << "[#include \"<file>\" [AS <prefix>[(template)]]]" << endl;
-  cout << "name: <name>" << endl;
-  cout << "init: <state>" << endl;
-  cout << "accept: <state>[,<state>]" << endl;
-  cout << "<state>,<input>,<output>,<move>,[<internal>,]<newstate>" << endl;
-  cout << "//comments will be ignored" << endl;
-  cout << endl;
-  cout << "#include <file> [AS <prefix>[(template)]]\tinclude a Sub-TM (as many as needed)" << endl;
-  cout << "\t\tprefix overrides the internal name of the file, this way you can add one file multiple times" << endl;
-  cout << "\t\twith (template) you can set the template character to be used in this instance of the tm." << endl;
-  cout << "\t\twith #include INTERNAL you can force to load the internal functions" << endl;
-  cout << "Name\t\tindicates the Name of the Program (important when used as Sub-TM)." << endl;
-  cout << "init\t\tindicates the start State of the Program." << endl;
-  cout << "accept\t\tindicates the accepted states of the Program." << endl;
-  cout << endl;
-  cout << "The 5-Tupel must be specified for each transition" << endl;
-  cout << "<state>\t\tcurrent state; any case-sensitive string" << endl;
-  cout << "<input>\t\tif this single character is read, the transition will be triggered" << endl;
-  cout << "<output>\tsingle character to be written onto the tape"<< endl;
-  cout << "<move>\t\tMove the Head: < (go left), > (go right) or - (stay)" << endl;
-  cout << "<internal>\tInternal Function to be executed before the State-Transition" << endl;
-  cout << "<newstate>\tnext state; any case-sensitive string"<<endl;
-  cout << "\t\tNewstate can also be an internal function" << endl;
-  cout << endl;
-  cout << "'*' reads any character, '_' reads an empty field" << endl;
-  cout << "'*' writes no character, '_' writes an empty field" << endl;
-  cout << "%tmpl% will be replaced by the set template character at the #include, (standard: _)" << endl;
-  cout << "comma will be replace by ','"<<endl;
-  cout << endl;
-  cout << "A ! before a statename indicates that this statename should not be changed (In Sub-TM or include AS)." << endl;
-  cout << "A ! at the end of a transition indicates a breakpoint, where the";
-  cout << " machine halts and waits for input;"<<endl<<"with n the program goes on.";
-  cout << endl << endl;
-  cout << "Sub-TM:\tfor <state>/<newstate> use name/state, where name is the name of the sub-TM (or prefix if AS used)" << endl;
+  cout << "For more information, read the readme file" << endl;
 }
 
 void printCursor(int fieldCount)
@@ -302,6 +260,10 @@ bool getParameter(int argc, char* argv[], TuringMachine* machine,
       input = readFile2(arg.substr(5));
     else if(arg.substr(0, 6) == "-tape=")
       input = arg.substr(6);
+    else if(arg.substr(0, 7) == "-stdin=")
+      machine->setStdIn(arg.substr(7));
+    else if(arg.substr(0, 8) == "-stdout=")
+      machine->setStdOut(arg.substr(8));
     else if (arg.substr(0, 7) == "-speed=")
       speed = stoi(arg.substr(7));//set speed
     else if(arg.substr(0, 2) == "-I")

@@ -2,7 +2,7 @@
 /// Turing Machine Simulator in C++
 ///
 /// Author: Clemens Hagenbuchner
-/// Last edited: 21.12.17
+/// Last edited: 28.02.17
 /// 
 /// class for encupsulation of a State
 ///
@@ -38,7 +38,8 @@ class State
     {
       int index = 0;
       int wildCardIndex = -1;
-      for(index = 0; index < mActions.size(); index++)
+      int mActionsSize = (int)mActions.size();
+      for(index = 0; index < mActionsSize; index++)
       {
         Transition* tupel = mActions[index];
         if(tupel->acceptsAny())
@@ -46,7 +47,7 @@ class State
         else if(tupel->acceptsChar(readChar))
           return tupel->InternalFunction();
       }
-      if(index >= mActions.size())
+      if(index >= mActionsSize)
         index = -1;
       if(index == -1 && wildCardIndex > -1)
       {
@@ -54,12 +55,13 @@ class State
       }
       return -2;
     }
-    bool operate(char readChar, char& writeChar, int& newState, int& move,
+    bool operate(char readChar, char& writeChar, int& newState, int& move, 
       bool& breakPoint)
     {
       int index = 0;
       int wildCardIndex = -1;
-      for(index = 0; index < mActions.size(); index++)
+      int mActionsSize = (int)mActions.size();
+      for(index = 0; index < mActionsSize; index++)
       {
         Transition* tupel = mActions[index];
         if(tupel->acceptsAny())
@@ -71,7 +73,7 @@ class State
           return true;
         }
       }
-      if(index >= mActions.size())
+      if(index >= mActionsSize)
         index = -1;
       if(index == -1 && wildCardIndex > -1)
       {

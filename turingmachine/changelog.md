@@ -2,6 +2,14 @@
 
 ---
 
+### Version 1.1.1
+
+__28.02.18__
+
+- Added option to move head more than one field
+- Introduced internal/stdin and internal/stdout
+- Added Command Line Argument -stdin and -stdout
+
 ### Version 1.1.0
 
 __27.02.18__

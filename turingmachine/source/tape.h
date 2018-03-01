@@ -2,7 +2,7 @@
 /// Turing Machine Simulator in C++
 ///
 /// Author: Clemens Hagenbuchner
-/// Last edited: 21.12.17
+/// Last edited: 28.02.17
 /// 
 /// Input/Output Tape
 ///
@@ -48,7 +48,7 @@ class Tape
       if(move > 0)
       {
         mHeadPos++;
-        if(mHeadPos >= mTape.size()) extendTapeRight();
+        if(mHeadPos >= (int)mTape.size()) extendTapeRight();
         moveHead(move - 1);
       }      
     }
@@ -63,7 +63,7 @@ class Tape
     }
     char read()
     {
-      while(mHeadPos >= mTape.size()) extendTapeRight();
+      while(mHeadPos >= (int)mTape.size()) extendTapeRight();
       return mTape[mHeadPos];
     }
     void setPrintTapeFieldCount(int count)
@@ -136,7 +136,7 @@ class Tape
       int maxIndex = leftIndex + sizeOfFields;
       int rightIndex = maxIndex;
       int padLeftCount = 0;
-      if(maxIndex > mTape.size()) rightIndex = mTape.size();
+      if(maxIndex > (int)mTape.size()) rightIndex = mTape.size();
       
       if(leftIndex < 0)
       {
@@ -208,12 +208,13 @@ class Tape
     string readFileNameFromTape()
     {
       string file;
-      while(mHeadPos < mTape.size() && mTape[mHeadPos] != '$')
+      int tapeSize = mTape.size();
+      while(mHeadPos < tapeSize && mTape[mHeadPos] != '$')
       {
         file+=mTape[mHeadPos];
         mHeadPos++;
       }
-      if(mHeadPos >= mTape.size())
+      if(mHeadPos >= tapeSize)
         mTape.push_back('$');
       return file;
     }

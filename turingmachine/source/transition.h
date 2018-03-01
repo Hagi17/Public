@@ -2,7 +2,7 @@
 /// Turing Machine Simulator in C++
 ///
 /// Author: Clemens Hagenbuchner
-/// Last edited: 21.12.17
+/// Last edited: 28.02.17
 /// 
 /// class for encupsulation of a 5-Tupel (Transition)
 ///
@@ -27,7 +27,7 @@ using namespace std;
 class Transition
 {
   public:
-    Transition(char input, char output, char move, int newState, int curState,
+    Transition(char input, char output, char move, unsigned long steps, int newState, int curState,
       bool hasBreakpoint, int intF = -2, bool ignoreCase = false)
     {
       mInput = input;
@@ -36,6 +36,7 @@ class Transition
         mMove = NO_MOVE;
       else
         mMove = move;
+      mSteps = steps;
       mNewstate = newState;
       mCurrstate = curState;
       mIntF = intF;
@@ -59,6 +60,8 @@ class Transition
       writeChar = mOutput;
       newState = mNewstate;
       move = getMove();
+      if(move > 0) move = (int)mSteps;
+      else if(move < 0) move = - ((int)mSteps);
     }
     bool hasBreakPoint() 
     {
@@ -86,6 +89,7 @@ class Transition
     }
     char mMove; 
     char mInput;
+    unsigned long mSteps;
     
     bool mHasBreakpoint;
     bool mIgnoreCase;
