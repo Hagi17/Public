@@ -22,25 +22,32 @@ Originally created as an extra gadget for a homework at university.<br>
 <code>g++ -std=c++11 -o tm tmsim.cpp</code><br>(<code>c++11</code> is minimum standard)
 <hr>
 <b>Usage: </b><br>
-<code>./tm &lt;programfile&gt; [-show] [-help] [-exit] [-I&lt;directory&gt;] [-ext] 
-[-in=&lt;file&gt;] [-out=&lt;file&gt;] [-tape=&lt;input&gt;] [-speed=&lt;steps/sec&gt;]</code>
+<code>./tm &lt;programfile&gt; [-show] [-help] [-exit] [-in=&lt;file&gt;] [-I&lt;folder&gt;] [-out=&lt;file&gt;] [...]</code>
 <br>
 <br>
 
 <pre>
-&lt;programfile>   specifies the path to the Programfile (Ending: .tm, .txt)
+&lt;programfile&gt;   specifies the path to the Programfile (Ending: .tm, .txt)
 -show           print the current tape after each step.
--speed=<..>     the time for a step when displaying the tape in steps/sec
+-speed=&lt;..&gt;     the time for a step when displaying the tape in steps/sec
 -tape           specify input (characters on tape)
 -help           show this help
--ext            include internal/read, internal/write and internal/clear
+-ext            include <a href="#intf">internal functions</a>
 -exit           don't ask for enter at the end of the program.
--in=&lt;file>      set the content of file as input on the tape
--out=&lt;file>     store the input and the final output in the specified file
--I&lt;folder>      Add &lt;folder&gt; to the Machines searchpath for TM - Files
+-in=&lt;file&gt;      set the content of file as input on the tape
+-in2=&lt;file&gt;     set the content of file as input on the tape (no \n)
+-hex=&lt;file&gt;     set the content of a <a href="#hexstyle">hex-style</a> file as input on the tape 
+-out=&lt;file&gt;     store the input and the final output in the specified file
+-I&lt;folder&gt;      Add &lt;folder&gt; to the Machines searchpath for TM - Files
+-stdin=&lt;file&gt;   set the filepath as standad input source (internal/stdin)  
+-stdout=&lt;file&gt;  set the filepath as standard output destination (internal/stdout)  
+-log=&lt;file&gt;     set a file as logging output (all accessed states will be logged)  
+
+<a name="hexstyle">hex-style file:</a> 
+all characters are encoded in hex, using two ascii letters or digits: ff00f4...   
 
 
-Internal Functions:
+<a name="intf">Internal Functions:</a>
 
 internal/read:  interprets the content of the tape until '$' as a filepath
                 and loads the content on to the tape behind that $ (ignores \n)
@@ -50,16 +57,22 @@ internal/clear: clear complete tape
 internal/goLeft: go to the left end of the tape
 internal/goRight: go to the right end of the tape
 internal/setAsterix: write an * onto the Tape
+internal/copy: copy the current character into a internal memory
+internal/parse: write the character stored in the internal memory onto the tape  
+internal/stdin: read a character from the std input  
+internal/stdout: write the current character to the output  
+internal/showon: enable tape and state output on the console  
+internal/showoff: disable tape and state output on the console  
 </pre>
 <hr>
 <b>Program-Layout:</b><br>
 <pre>
-[#include "&lt;file>" [AS &lt;prefix>[(template)]]]
+[#include "&lt;file>" [AS &lt;prefix>[(template,template_move)]]]
 [#include INTERNAL]
 name: &lt;name>
 init: &lt;state>
 accept: &lt;state>[,&lt;state>]
-&lt;state>,&lt;[ic]input>,&lt;output>,&lt;move&gt;,[&lt;internal&gt;,]&lt;newstate&gt;[!]
+&lt;state>,&lt;[ic]input>,&lt;output>,&lt;move&gt;[count],[&lt;internal&gt;,]&lt;newstate&gt;[!]
 //comments will be ignored
 
 #include &lt;file> include a Sub-TM (as many as needed)
@@ -86,6 +99,8 @@ loaded as Sub-TM or #include AS.
 '*' writes no character, '_' writes an empty field
 %tmpl% will be replaced by the specified template character for this instance
 ic before the input Character specifies that both upper and lower case will be read
+count sets the number of fields, which the head will move over in this transition, % sets the template_move
+input and output can also be specified in hex-notation (0x00)
 
 All commentlines before any other line (except for empty lines) will be displayed 
 when running the TM File as Main. 

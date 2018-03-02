@@ -2,7 +2,7 @@
 /// Turing Machine Simulator in C++
 ///
 /// Author: Clemens Hagenbuchner
-/// Last edited: 28.02.18
+/// Last edited: 02.03.18
 /// 
 /// Turing Machine class
 ///
@@ -51,6 +51,7 @@ class TuringMachine
     TuringMachine()
     {
       mTape = new Tape();
+      mLog = false;
       mShowProcess = false;
       mCurrentState = 0;
       mStartState = 0;
@@ -66,6 +67,8 @@ class TuringMachine
       mInternalParse = -1;
       mInternalStdin = -1;
       mInternalStdout = -1;
+      mInternalShowOn = -1;
+      mInternalShowOff = -1;
       mState = Halt;
     }   
     ~TuringMachine()
@@ -82,7 +85,11 @@ class TuringMachine
     {
       includedDirectories.push_back(path);
     }
-    
+    void setLogFile(string path)
+    {
+      mLogFile = path;
+      mLog = true;
+    }
     void loadExtension()
     {
       if(mInternalClear != -1) return;
@@ -96,6 +103,8 @@ class TuringMachine
       mInternalParse = addState("internal/parse");
       mInternalStdin = addState("internal/stdin");
       mInternalStdout = addState("internal/stdout");
+      mInternalShowOn = addState("internal/showon");
+      mInternalShowOff = addState("internal/showoff");
     }
     
     bool loadProgram(string programFile, 
@@ -111,6 +120,9 @@ class TuringMachine
     }
     bool run(ostream& logConsole)
     {
+      ofstream logfile(mLogFile, ofstream::app);
+      if(logfile.is_open())
+        logfile << "Started with " << printTape() << endl;
       bool result = true;
       mState = Running;
       int counter = 0;
@@ -120,20 +132,33 @@ class TuringMachine
         counter++;
         if(counter > WarningStateCount) 
         {
+          if(logfile.is_open())
+            logfile << "Warning" << endl;
           mState = Warning;
           return result;
         }
         char read = mTape->read();
-        operateExtension(read);
+        operateExtension(read, logfile, logConsole);
         char write = EMPTY;
         bool breakPoint = false;
         int move = 0;
+        if(logfile.is_open())
+          logfile << mStates[mCurrentState]->getName() << "," << read << "," << write << ",";
         result = mStates[mCurrentState]->operate(read, write, 
           mCurrentState, move, breakPoint);
         if(!result) 
         {
+          if(logfile.is_open())
+            logfile << "Error" << endl;
           mState = Halt;
           break;
+        }
+        if(logfile.is_open())
+        {
+          logfile << (move==0?"-":(move>0?">":"<"));
+          if(move > 1) logfile << move;
+          if(move < -1) logfile << -move;
+          logfile << "," << mStates[mCurrentState]->getName() << endl;
         }
         mTape->write(write);
         showProcess(logConsole);
@@ -141,12 +166,18 @@ class TuringMachine
         showProcess(logConsole);
         if(breakPoint)
         {
+          if(logfile.is_open())
+            logfile << "Breakpoint" << endl;
           mState = BreakPoint;
           break;
         }
       }
       if(isAccepted(mCurrentState)) mState = Accepted;
       if(mShowProcess) logConsole << '\r';
+      
+      if(logfile.is_open())
+        logfile << "Stopped (" << isAccepted(mCurrentState) << ")" << endl;
+      logfile.close();
       return (result && isAccepted(mCurrentState));
     }
     void setShowProcess(bool showProcess)
@@ -214,6 +245,7 @@ class TuringMachine
     }
   private:
     bool mShowProcess;
+    bool mLog;
     int mCurrentState;
     
     int mStartState;
@@ -229,10 +261,13 @@ class TuringMachine
     int mInternalParse;
     int mInternalStdin;
     int mInternalStdout;
+    int mInternalShowOn;
+    int mInternalShowOff;
     
     string mHeadComment;
     string mStdInFile;
     string mStdOutFile;
+    string mLogFile;
     const string mTempFile = "tmp.txt";
     
     RunningState mState;
@@ -244,9 +279,19 @@ class TuringMachine
     vector<string> knownStates;
     vector<string> includedDirectories;
     
-    void operateExtension(char& read)
+    void operateExtension(char& read, ofstream& logfile, ostream& logConsole)
     {
       int intF = mStates[mCurrentState]->InternalFunction(read);
+      if(intF == -2) return;
+      if(logfile.is_open())
+          logfile << "extension: " << intF << endl;
+      if(mCurrentState == mInternalShowOn || intF == mInternalShowOn)
+        mShowProcess = true;
+      else if(mCurrentState == mInternalShowOff || intF == mInternalShowOff)
+      {
+        mShowProcess = false;
+        logConsole << endl;
+      }
       if(mCurrentState == mInternalClear || intF == mInternalClear)
         mTape->clear();
       if(mCurrentState == mInternalRead || intF == mInternalRead)

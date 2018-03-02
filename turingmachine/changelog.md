@@ -2,6 +2,13 @@
 
 ---
 
+### Version 1.1.1a
+
+__02.03.18__
+
+- Added internal/showon and internal/showoff
+- Added Command Line Argument -log
+
 ### Version 1.1.1
 
 __28.02.18__

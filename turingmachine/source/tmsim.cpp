@@ -2,7 +2,7 @@
 /// Turing Machine Simulator in C++
 ///
 /// Author: Clemens Hagenbuchner
-/// Last edited: 20.12.17
+/// Last edited: 02.03.17
 ///
 /// main project file
 /// 
@@ -186,6 +186,7 @@ void printHelp()
   cout << endl;
   cout << "-stdin=<file>\tset a certain file as standard input source (internal/stdin)" << endl;
   cout << "-stdout=<file>\tset a certain file as standard output (internal/stout)" << endl;
+  cout << "-log=<file>\tset a log file for the program execution" << endl;
   cout << endl << endl;
   cout << "For more information, read the readme file" << endl;
 }
@@ -254,6 +255,8 @@ bool getParameter(int argc, char* argv[], TuringMachine* machine,
       input = arg.substr(5);
       hexfile = true;
     }
+    else if(arg.substr(0,5) == "-log=")
+      machine->setLogFile(arg.substr(5));
     else if (arg.substr(0, 4) == "-in=")
       input = readFile(arg.substr(4));
     else if (arg.substr(0, 5) == "-in2=")

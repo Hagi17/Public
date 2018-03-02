@@ -31,6 +31,7 @@
 *-I&lt;folder&gt;*      Add &lt;folder&gt; to the Machines searchpath for TM - Files  
 *-stdin=&lt;file&gt;*   set the filepath as standad input source (internal/stdin)  
 *-stdout=&lt;file&gt;*  set the filepath as standard output destination (internal/stdout)  
+*-log=&lt;file&gt;*     set a file as logging output (all accessed states will be logged)  
 
 **hex-style file:**  
 all characters are encoded in hex, using two ascii letters or digits: ff00f4...   
@@ -61,6 +62,10 @@ all characters are encoded in hex, using two ascii letters or digits: ff00f4...
 
 *internal/stdout:* write the current character to the output  
 
+*internal/showon:* enable tape and state output on the console  
+
+*internal/showoff:* disable tape and state output on the console  
+
 
 ---
 
@@ -70,7 +75,7 @@ all characters are encoded in hex, using two ascii letters or digits: ff00f4...
 name: &lt;name&gt;  
 init: &lt;state&gt;  
 accept: &lt;state&gt;\[,&lt;state&gt;\]  
-&lt;state&gt;,&lt;input&gt;,&lt;output&gt;,&lt;move&gt;n,\[&lt;internal&gt;\]&lt;newstate&gt;\[!\]  
+&lt;state&gt;,&lt;input&gt;,&lt;output&gt;,&lt;move&gt;\[count\],\[&lt;internal&gt;\]&lt;newstate&gt;\[!\]  
 //comments will be ignored  
 
 *#include &lt;file&gt;* includes a Sub-TM (as many as needed)  
@@ -117,6 +122,7 @@ Encrypt or Decrypt a Text using [ENIGMA](code/enigma/enigma.tm)
 Increment/Decrement a binary number [Increment](code/increment.tm) / [Decrement](code/decrement.tm)  
 Multiply two binary numbers [Multiply](code/multiplyr.tm)  
 Add two binary numbers [Add](code/addr.tm)  
+Toy-Code Interpreter [Toy](code/toytm/toytm.tm)
 
 [mainsrc]: source/tmsim.cpp  
 [tmsrc]: source/turingmachine.h  
