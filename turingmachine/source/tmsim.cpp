@@ -2,7 +2,7 @@
 /// Turing Machine Simulator in C++
 ///
 /// Author: Clemens Hagenbuchner
-/// Last edited: 02.03.17
+/// Last edited: 07.03.17
 ///
 /// main project file
 /// 
@@ -10,7 +10,40 @@
 /// from stackOverflow.com and cplusplus.com
 /// 
 /// use -D ADVANCED_OUTPUT for more detailed output during loading
+/// use -D DISABLE_LOG to disable the log function completly
+/// use -D DISABLE_EXTENSIONS to disable the internal functions completly
+/// use -D SILENT to disable any output (only output via files)
+/// use -D ENABLE_TOY to enable the -toy argument for toy files
+/// use -D DISABLE_WARNINGS to disable the stop at warnings (certain amount of steps)
+/// use -D DISABLE_WILDCARD to disable wildcard processing
+/// use -D DISABLE_INCLUDE to disable wildcard processing
+/// use -D TAPELIMIT n to limit the tape size to n
+/// use -D TAPE_LEFT_END to make the tape fixed on one side
 ///
+
+
+#ifndef DISABLE_LOG
+  #define ENABLE_LOG
+#endif
+#ifndef DISABLE_EXTENSIONS
+  #define ENABLE_EXTENSIONS
+#endif
+#ifndef DISABLE_WARNINGS
+  #define ENABLE_WARNINGS
+#endif
+#ifndef DISABLE_WILDCARD
+  #define ENABLE_WILDCARD
+#endif
+#ifndef DISABLE_INCLUDE
+  #define ENABLE_INCLUDE
+#endif
+#ifndef SILENT
+  #define ENABLE_OUTPUT
+#endif
+
+//#define ENABLE_TOY
+//#define TAPELIMIT 2048
+//#define TAPE_LEFT_END
 
 #include <iostream>
 #include <vector>
@@ -23,7 +56,7 @@
 #include <conio.h>
 #endif
 
-#define VERSION "1.1.0"
+#define VERSION "1.1.2"
 #define IO_ERROR 2
 
 using namespace std;
@@ -34,15 +67,17 @@ bool getParameter(int argc, char* argv[], TuringMachine* machine,
 bool askForPath(string& programFile);
 void getInput(string& input);
 int preExit(bool exitDirect, ErrorInfo info);
+#ifdef ENABLE_OUTPUT
 void printHeader(const string &version);
 void printCursor(int fieldCount = 60);
 void printHelp();
-bool handleResult(bool result, TuringMachine* machine);
+void printLoading(string programFile);
 void handleError(ErrorInfo info);
+void showTMInfo(const string &comment);
+#endif
+bool handleResult(bool result, TuringMachine* machine);
 string readFile(string path);
 string readFile2(string path);
-void printLoading(string programFile);
-void showTMInfo(const string &comment);
 
 ///
 /// Turing Machine Simulator
@@ -54,31 +89,35 @@ void showTMInfo(const string &comment);
 //
 int main(int argc, char* argv[])
 {
+#ifdef ENABLE_OUTPUT
   int fieldCount = 60;
+#endif
   bool exitDirect = false;
   bool saveOnExit = false;
   string saveFile;
   string programFile;
   string input;
   ErrorInfo errorInfo;
-  bool hexfile = false;
+  bool gotInput = false;
 
   auto* machine = new TuringMachine();
-  
+#ifdef ENABLE_OUTPUT  
   printHeader(VERSION);
+#endif
   
   getParameter(argc, argv, machine, programFile, input, exitDirect, saveOnExit,
-    saveFile, hexfile);
-  
+    saveFile, gotInput);
+
+#ifdef ENABLE_OUTPUT    
   if(programFile == "?help" ||
           programFile == "-help")
   {
     printHelp();
     delete machine;  
     return preExit(exitDirect, errorInfo);
-  }
-  
+  } 
   printLoading(programFile);
+#endif
   
   if(!machine->loadProgram(programFile, errorInfo))
   {
@@ -86,22 +125,19 @@ int main(int argc, char* argv[])
     errorInfo.error = IO_ERROR;
     return preExit(exitDirect, errorInfo);
   }
+#ifdef ENABLE_OUTPUT 
   showTMInfo(machine->getHeadComment());
-  
-  if(hexfile)
-  {
-#ifdef ADVANCED_OUTPUT
-    cout << "Reading Hex-File" << endl;
 #endif
-    machine->loadHexInput(input);
-  }
-  else
+  
+  if(!gotInput)
   {
     getInput(input); //read input if not any specified
     machine->loadInput(input);
   }
   
+#ifdef ENABLE_OUTPUT  
   printCursor(fieldCount);
+#endif
   
   bool result = machine->start(cout);
   while(handleResult(result, machine))
@@ -117,6 +153,7 @@ int main(int argc, char* argv[])
   
 }
 
+#ifdef ENABLE_OUTPUT
 void showTMInfo(const string &comment)
 {
   if(comment.empty()) return;
@@ -137,32 +174,48 @@ void handleError(ErrorInfo info)
     }
   }
 }
+#endif
 
 bool handleResult(bool result, TuringMachine* machine)
 {
   if(machine->machineState() == Warning)
   {
+#ifdef ENABLE_OUTPUT
+  #ifdef ENABLE_WARNINGS
     char questChar;
     cout << "The machine seems to be stuck! Ignore (n) or Abort (y) ? ";
     cin >> questChar;
     if(questChar == 'n') return true;
     cout << "Aborted!" << endl;
     result = false;
+  #else
+    return true;
+  #endif
+#else
+    return true;
+#endif
   }
   else if(machine->machineState() == BreakPoint)
   {
+#ifdef ENABLE_OUTPUT
     char bPchar;
     cin >> bPchar;
     if(bPchar == 'n') return true;
     cout << "Aborted!" << endl;
     result = false;
+#else
+    return true;
+#endif
   }
+#ifdef ENABLE_OUTPUT
   cout << machine->printTape() << endl;
   if(!result) cout << "Input rejected!" << endl;
   else cout << "Accepted!" << endl;
+#endif
   return false;
 }
 
+#ifdef ENABLE_OUTPUT
 void printHelp()
 {
   cout << "Usage: ./tm <programfile> [-show] [-in=<file>] [-help] [-exit]";
@@ -206,6 +259,30 @@ void printHeader(const string &version)
   cout << endl << "© Clemens Hagenbuchner, 2017" << endl;
   cout << endl << "Use -help for more informations.." << endl;
   cout << endl;
+#ifdef ENABLE_LOG
+  cout << "logging available" << endl;
+#endif
+#ifdef ENABLE_EXTENSIONS
+  cout << "internal Functions available" << endl;
+#endif
+#ifdef ENABLE_INCLUDE
+  cout << "Sub TMs available" << endl;
+#endif
+#ifdef ENABLE_TOY
+  cout << "Toy File compatible" << endl;
+#endif
+#ifdef DISABLE_WARNINGS
+  cout << "Warnings disabled, may run infinite" << endl;
+#endif
+#ifdef ENABLE_WILDCARD
+  cout << "Wildcard available" << endl;
+#endif
+#ifdef TAPELIMIT
+  cout << "Tapelimit: " << TAPELIMIT << endl;
+#endif
+#ifdef TAPE_LEFT_END
+  cout << "Tape has fixed left end (may cause problems)" << endl;
+#endif
 }
 
 void printLoading(string programFile)
@@ -213,19 +290,24 @@ void printLoading(string programFile)
   if(programFile.empty()) return;
   cout << "Loading program: " << programFile << endl;
 }
+#endif
 
 int preExit(bool exitDirect, ErrorInfo info)
 {
+#ifdef ENABLE_OUTPUT
   handleError(info);
   cout << "Shutdown (press enter) ";
   if(!exitDirect)
     cin.ignore();
   return info.error;
+#else 
+  return 0;
+#endif
 }
 
 bool getParameter(int argc, char* argv[], TuringMachine* machine, 
     string& programFile, string& input, bool& exitDirect, bool& saveOnExit,
-    string& saveFile, bool& hexfile)
+    string& saveFile, bool& gotInput)
 {
   if (argc < 2)
   {//ask for filepath
@@ -252,11 +334,21 @@ bool getParameter(int argc, char* argv[], TuringMachine* machine,
     }
     else if(arg.substr(0,5) == "-hex=")
     {
+      machine->loadHexInput(arg.substr(5));
       input = arg.substr(5);
-      hexfile = true;
+      gotInput = true;
     }
+#ifdef ENABLE_TOY
+    else if(arg.substr(0,5) == "-toy=")
+    {
+      machine->loadToyFile(arg.substr(5));
+      gotInput = true;
+    }
+#endif
+#ifdef ENABLE_LOG
     else if(arg.substr(0,5) == "-log=")
       machine->setLogFile(arg.substr(5));
+#endif
     else if (arg.substr(0, 4) == "-in=")
       input = readFile(arg.substr(4));
     else if (arg.substr(0, 5) == "-in2=")
@@ -271,8 +363,10 @@ bool getParameter(int argc, char* argv[], TuringMachine* machine,
       speed = stoi(arg.substr(7));//set speed
     else if(arg.substr(0, 2) == "-I")
       machine->addIncludeFolder(arg.substr(2));
+#ifdef ENABLE_EXTENSIONS
     else if(arg == "-ext")
       machine->loadExtension();
+#endif
   }
   machine->setShowProcess(showProcess);
   int sleepTime = 500 / speed;
@@ -314,7 +408,9 @@ string readFile2(string path)
 
 bool askForPath(string& programFile)
 {
+#ifdef ENABLE_OUTPUT
   cout << "Please enter the path to the TM-Program to be loaded or -: ";
+#endif
   getline(cin, programFile);
   return (programFile == "-" || programFile.empty());
 }
@@ -323,8 +419,12 @@ void getInput(string& input)
 {
   if (input == "")
   {
+#ifdef ENABLE_OUTPUT
     cout << "Input for run: ";
+#endif
     getline(cin, input);
   }
+#ifdef ENABLE_OUTPUT
   cout << endl;
+#endif
 }

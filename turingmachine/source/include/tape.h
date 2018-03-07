@@ -14,8 +14,10 @@
 #include <string>
 #include <iostream>
 
-#ifndef WILDCARD
-#define WILDCARD '*'
+#ifdef ENABLE_WILDCARD
+  #ifndef WILDCARD
+    #define WILDCARD '*'
+  #endif
 #endif
 #ifndef EMPTY
 #define EMPTY '_'
@@ -41,12 +43,22 @@ class Tape
     {
       if(move < 0)
       {
+#ifdef TAPELIMIT
+        if(mTape.size() >= TAPELIMIT && mHeadPos == 0) return;
+#endif
         mHeadPos--;
+#ifdef TAPE_LEFT_END
+        if(mHeadPos < 0) mHeadPos = 0;
+#else
         if(mHeadPos < 0) extendTapeLeft();
         moveHead(move + 1);
+#endif
       }
       if(move > 0)
       {
+#ifdef TAPELIMIT
+        if(mTape.size() >= TAPELIMIT && mHeadPos == ((int)mTape.size() - 1)) return;
+#endif
         mHeadPos++;
         if(mHeadPos >= (int)mTape.size()) extendTapeRight();
         moveHead(move - 1);
@@ -58,7 +70,9 @@ class Tape
     }
     void write(char toWrite)
     {
+#ifdef ENABLE_WILDCARD
       if(toWrite == WILDCARD) return; //don't change tape (wildcard)
+#endif
       mTape[mHeadPos] = toWrite;
     }
     char read()
@@ -95,6 +109,43 @@ class Tape
         mTape.push_back(c);
       }
     }
+#ifdef ENABLE_TOY
+    void loadToyInput(string path)
+    {
+      mTape.clear();
+      ifstream file(path);
+      string content;
+      if(file.is_open())
+      {
+        string line;
+        while(getline(file, line))
+        {
+          stringsup::trim(line);
+          //line starts with linenumber (two digits, then one :, then one space, then 4 chars for the command)
+          if(line.length() < 8) continue;
+          if(line[2] != ':' || line[3]!=' ') continue;
+          
+          int linenr = ((line[1]-0x30)+(line[0]-0x30))<<4;
+          unsigned int atleastlong = linenr << 2;
+          
+          while(content.length() <= atleastlong) content+="0000";
+          
+          content[atleastlong] = line[4];
+          content[atleastlong+1] = line[5];
+          content[atleastlong+2] = line[6];
+          content[atleastlong+3] = line[7];
+        }
+        file.close();
+      }
+      unsigned int index = 0;
+      for(index = 0; index < content.length(); index+=2)
+      {
+        string twoByte = "0x"+content.substr(index,2);
+        char c = (char)stoul(twoByte, NULL, 16);
+        mTape.push_back(c);
+      }
+    }
+#endif
     
     void clear()
     {
@@ -194,7 +245,7 @@ class Tape
     int mHeadPos;
     int mFieldCount;
     deque<char> mTape;
-    
+  
     void extendTapeLeft()
     {
       mTape.push_front(EMPTY);
@@ -204,6 +255,7 @@ class Tape
     {
       mTape.push_back(EMPTY);
     }
+
 
     string readFileNameFromTape()
     {

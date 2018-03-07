@@ -14,6 +14,18 @@
 
 *c++11* is minimum standard.
 
+**Defines:**  
+ADVANCED_OUTPUT for more detailed output during loading  
+DISABLE_LOG to disable the log function completly  
+DISABLE_EXTENSIONS to disable the internal functions completly  
+SILENT to disable any output (only output via files)  
+ENABLE_TOY to enable the -toy argument for toy files  
+DISABLE_WARNINGS to disable the stop at warnings (certain amount of steps)  
+DISABLE_WILDCARD to disable wildcard processing  
+DISABLE_INCLUDE to disable wildcard processing  
+TAPELIMIT n to limit the tape size to n  
+TAPE_LEFT_END to make the tape fixed on one side  
+
 **Usage:**  
 *./tm &lt;programfile&gt; [-show] [-help] [-exit] [-in=&lt;file&gt;] [-tape=&lt;input&gt;] [-speed=&lt;steps/sec&gt;] [-I&lt;folder&gt;] [-out=&lt;file&gt;] [...]*
 

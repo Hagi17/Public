@@ -34,6 +34,7 @@ class State
         mActions.pop_back();
       }
     }
+#ifdef ENABLE_EXTENSIONS
     int InternalFunction(char readChar)
     {
       int index = 0;
@@ -55,18 +56,24 @@ class State
       }
       return -2;
     }
+#endif
     bool operate(char readChar, char& writeChar, int& newState, int& move, 
       bool& breakPoint)
     {
       int index = 0;
+#ifdef ENABLE_WILDCARD
       int wildCardIndex = -1;
+#endif
       int mActionsSize = (int)mActions.size();
       for(index = 0; index < mActionsSize; index++)
       {
         Transition* tupel = mActions[index];
+#ifdef ENABLE_WILDCARD
         if(tupel->acceptsAny())
           wildCardIndex = index;
-        else if(tupel->acceptsChar(readChar))
+        else 
+#endif
+        if(tupel->acceptsChar(readChar))
         {
           tupel->operate(writeChar, newState, move);
           if(tupel->hasBreakPoint()) breakPoint = true;
@@ -75,12 +82,14 @@ class State
       }
       if(index >= mActionsSize)
         index = -1;
+#ifdef ENABLE_WILDCARD
       if(index == -1 && wildCardIndex > -1)
       {
         mActions[wildCardIndex]->operate(writeChar, newState, move);
         if(mActions[wildCardIndex]->hasBreakPoint()) breakPoint = true;
         return true;
       }
+#endif
       return false;
     }
     string getName()

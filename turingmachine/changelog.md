@@ -2,6 +2,13 @@
 
 ---
 
+### Version 1.1.2
+
+__07.03.18__
+
+- Added Defines to disable certain parts of the program when compiling
+- Added -toy Argument for toy Files with line numbers
+
 ### Version 1.1.1a
 
 __02.03.18__

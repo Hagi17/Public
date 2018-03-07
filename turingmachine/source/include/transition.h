@@ -39,7 +39,11 @@ class Transition
       mSteps = steps;
       mNewstate = newState;
       mCurrstate = curState;
+#ifdef ENABLE_EXTENSIONS
       mIntF = intF;
+#else
+      mIntF = -2;
+#endif
       mHasBreakpoint = hasBreakpoint;
       mIgnoreCase = ignoreCase;
     }
@@ -51,10 +55,12 @@ class Transition
     {
       return mMove;
     }
+#ifdef ENABLE_EXTENSIONS
     int InternalFunction()
     {
       return mIntF;
     }
+#endif
     void operate(char& writeChar, int& newState, int& move)
     {
       writeChar = mOutput;
@@ -76,7 +82,11 @@ class Transition
     }
     bool acceptsAny()
     {
+#ifdef ENABLE_WILDCARD
       return mInput == WILDCARD;
+#else
+      return false;
+#endif
     }
   private:
   

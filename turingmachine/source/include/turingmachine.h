@@ -2,7 +2,7 @@
 /// Turing Machine Simulator in C++
 ///
 /// Author: Clemens Hagenbuchner
-/// Last edited: 02.03.18
+/// Last edited: 07.03.18
 /// 
 /// Turing Machine class
 ///
@@ -57,6 +57,7 @@ class TuringMachine
       mStartState = 0;
       knownStates.clear();
       includedDirectories.clear();
+#ifdef ENABLE_EXTENSIONS
       mInternalClear = -1;
       mInternalRead = -1;
       mInternalWrite = -1;
@@ -69,6 +70,7 @@ class TuringMachine
       mInternalStdout = -1;
       mInternalShowOn = -1;
       mInternalShowOff = -1;
+#endif
       mState = Halt;
     }   
     ~TuringMachine()
@@ -79,17 +81,19 @@ class TuringMachine
         delete mStates.back();
         mStates.pop_back();
       }
-    }
-    
+    } 
     void addIncludeFolder(string path)
     {
       includedDirectories.push_back(path);
     }
+#ifdef ENABLE_LOG
     void setLogFile(string path)
     {
       mLogFile = path;
       mLog = true;
     }
+#endif
+#ifdef ENABLE_EXTENSIONS
     void loadExtension()
     {
       if(mInternalClear != -1) return;
@@ -106,6 +110,7 @@ class TuringMachine
       mInternalShowOn = addState("internal/showon");
       mInternalShowOff = addState("internal/showoff");
     }
+#endif
     
     bool loadProgram(string programFile, 
       ErrorInfo& onError)
@@ -120,39 +125,60 @@ class TuringMachine
     }
     bool run(ostream& logConsole)
     {
+#ifdef ENABLE_LOG
       ofstream logfile(mLogFile, ofstream::app);
       if(logfile.is_open())
         logfile << "Started with " << printTape() << endl;
+#endif
       bool result = true;
       mState = Running;
+#ifdef ENABLE_WARNINGS
       int counter = 0;
+#endif
+#ifdef ENABLE_OUTPUT
       if(mShowProcess) logConsole << printTape();
+#endif
       while(!isAccepted(mCurrentState) && isState(mCurrentState))
       {
+#ifdef ENABLE_WARNINGS
         counter++;
         if(counter > WarningStateCount) 
         {
+  #ifdef ENABLE_LOG
           if(logfile.is_open())
             logfile << "Warning" << endl;
+  #endif
           mState = Warning;
           return result;
         }
+#endif
         char read = mTape->read();
+#ifdef ENABLE_EXTENSIONS
+  #ifdef ENABLE_LOG
         operateExtension(read, logfile, logConsole);
+  #else
+        operateExtension(read, logConsole);
+  #endif
+#endif
         char write = EMPTY;
         bool breakPoint = false;
         int move = 0;
+#ifdef ENABLE_LOG
         if(logfile.is_open())
           logfile << mStates[mCurrentState]->getName() << "," << read << "," << write << ",";
+#endif
         result = mStates[mCurrentState]->operate(read, write, 
           mCurrentState, move, breakPoint);
         if(!result) 
         {
+#ifdef ENABLE_LOG
           if(logfile.is_open())
             logfile << "Error" << endl;
+#endif
           mState = Halt;
           break;
         }
+#ifdef ENABLE_LOG
         if(logfile.is_open())
         {
           logfile << (move==0?"-":(move>0?">":"<"));
@@ -160,29 +186,42 @@ class TuringMachine
           if(move < -1) logfile << -move;
           logfile << "," << mStates[mCurrentState]->getName() << endl;
         }
+#endif
         mTape->write(write);
+#ifdef ENABLE_OUTPUT
         showProcess(logConsole);
+#endif
         mTape->moveHead(move);
+#ifdef ENABLE_OUTPUT
         showProcess(logConsole);
+#endif
         if(breakPoint)
         {
+#ifdef ENABLE_LOG
           if(logfile.is_open())
             logfile << "Breakpoint" << endl;
+#endif
           mState = BreakPoint;
           break;
         }
       }
       if(isAccepted(mCurrentState)) mState = Accepted;
+#ifdef ENABLE_OUTPUT
       if(mShowProcess) logConsole << '\r';
+#endif
       
+#ifdef ENABLE_LOG
       if(logfile.is_open())
         logfile << "Stopped (" << isAccepted(mCurrentState) << ")" << endl;
       logfile.close();
+#endif
       return (result && isAccepted(mCurrentState));
     }
     void setShowProcess(bool showProcess)
     {
+#ifdef ENABLE_OUTPUT
       mShowProcess = showProcess;
+#endif
     }
     
     void setPrintTapeFieldCount(int count)
@@ -197,6 +236,12 @@ class TuringMachine
     {
       mTape->loadHexInput(file);
     }
+#ifdef ENABLE_TOY
+    void loadToyFile(string file)
+    {
+      mTape->loadToyInput(file);
+    }
+#endif
     void resetHead()
     {
       mTape->resetHead();
@@ -250,7 +295,7 @@ class TuringMachine
     
     int mStartState;
     char mTmpCopied;
-    
+#ifdef ENABLE_EXTENSIONS
     int mInternalClear;
     int mInternalRead;
     int mInternalWrite;
@@ -263,6 +308,7 @@ class TuringMachine
     int mInternalStdout;
     int mInternalShowOn;
     int mInternalShowOff;
+#endif
     
     string mHeadComment;
     string mStdInFile;
@@ -278,13 +324,20 @@ class TuringMachine
     vector<State*> mStates;
     vector<string> knownStates;
     vector<string> includedDirectories;
-    
+#ifdef ENABLE_EXTENSIONS
+  #ifdef ENABLE_LOG
     void operateExtension(char& read, ofstream& logfile, ostream& logConsole)
+  #else
+    void operateExtension(char& read, ostream& logConsole)
+  #endif
     {
       int intF = mStates[mCurrentState]->InternalFunction(read);
       if(intF == -2) return;
+  #ifdef ENABLE_LOG
       if(logfile.is_open())
           logfile << "extension: " << intF << endl;
+  #endif
+  #ifdef ENABLE_OUTPUT
       if(mCurrentState == mInternalShowOn || intF == mInternalShowOn)
         mShowProcess = true;
       else if(mCurrentState == mInternalShowOff || intF == mInternalShowOff)
@@ -292,6 +345,7 @@ class TuringMachine
         mShowProcess = false;
         logConsole << endl;
       }
+  #endif
       if(mCurrentState == mInternalClear || intF == mInternalClear)
         mTape->clear();
       if(mCurrentState == mInternalRead || intF == mInternalRead)
@@ -352,7 +406,9 @@ class TuringMachine
         file.close();
       }
     }
-    
+#endif
+ 
+#ifdef ENABLE_OUTPUT 
     void showProcess(ostream& logConsole)
     {
       if(!mShowProcess) return;
@@ -365,6 +421,7 @@ class TuringMachine
       usleep(sleepTimeInMicroSeconds);
 #endif 
     }
+#endif
     
     bool loadFile(string path, string prefix, bool primary, 
       ErrorInfo& onError, bool newPrefix = false, char templ = EMPTY, unsigned long templNr = 1)
@@ -375,11 +432,13 @@ class TuringMachine
       onError.file = path;
       string name = path;
       string line;
+#ifdef ENABLE_INCLUDE
       vector<string> includeFiles;
       vector<string> importPrefixes;
       vector<char> templateChar;
       vector<unsigned long> templateNr;
       string folder = stringsup::getFolderPath(path);
+#endif
       
       //check if this file exists in any of the included Directorys
       stringsup::testFilePaths(path, includedDirectories);
@@ -388,7 +447,9 @@ class TuringMachine
       if(prg.is_open())
       {
         //check if it contains it?
+#ifdef ENABLE_INCLUDE
         includedDirectories.push_back(folder);
+#endif
         onError.lineno = 0;
         
         while(getline(prg, line))
@@ -431,11 +492,15 @@ class TuringMachine
           }
           if(line.substr(0, 9) == "#include ")
           {//sub tm   #include <> (AS prefix(templ,nr))
+#ifdef ENABLE_INCLUDE
             string includeFile = line.substr(9);
             result = parseInclude(line.substr(9), prefix, includeFiles,
                 importPrefixes, templateChar, templateNr, templ, templNr);
             if(!result) break;
             else continue;
+#else
+            continue;
+#endif
           }
           result = parseTransition(line, name, prefix, primary, newPrefix,
             templ, templNr);
@@ -449,23 +514,25 @@ class TuringMachine
       }
       else
         return false;
-      
+#ifdef ENABLE_INCLUDE      
       if(!result) return result;
       
       unsigned int index = 0;
       for(index = 0; index < includeFiles.size(); index++)
       {
         string iPrefix = importPrefixes[index];
-#ifdef ADVANCED_OUTPUT
+  #ifdef ADVANCED_OUTPUT
         cout<<"loading "<<includeFiles[index]<<" as "<<iPrefix<<"("<<templateChar[index]<<")"<<endl;
-#endif
+  #endif
         result = loadFile(includeFiles[index], iPrefix, 
           false, onError, (prefix != iPrefix), templateChar[index], templateNr[index]);
         if(!result) break;
       }
+#endif
       return result;
     }
-    
+
+#ifdef ENABLE_INCLUDE    
     bool parseInclude(string cntnt, string prefix,vector<string>& includeFiles,
       vector<string>& importPrefixes, vector<char>& templateChar, vector<unsigned long>& templateNr, char tmplChar, unsigned long tmplNr)
     {//line without #include
@@ -519,9 +586,12 @@ class TuringMachine
       }
       else stringsup::ltrim(cntnt);
       
+  #ifdef ENABLE_EXTENSIONS    
       if(cntnt == "INTERNAL")
         loadExtension();
-      else if(cntnt.front() == '"' && cntnt.back() == '"')
+      else 
+  #endif
+      if(cntnt.front() == '"' && cntnt.back() == '"')
       {
         includeFiles.push_back(
           cntnt.substr(1, cntnt.size() - 2));
@@ -540,6 +610,7 @@ class TuringMachine
         return false;
       return true;
     }
+#endif
     
     bool parseTransition(string tupel, string prefix, string importPrefix, 
       bool primary, bool newPrefix, char templateChar, unsigned long templateSteps)
@@ -573,17 +644,21 @@ class TuringMachine
       if(parts[2] == "comma") parts[2] = ',';
       if((ignoreCase = (parts[1].substr(0, 2) == "ic")))
         parts[1] = parts[1].substr(2);
+#ifdef ENABLE_INCLUDE
       if(parts[1] == "%tmpl%") parts[1] = templateChar;
       if(parts[2] == "%tmpl%") parts[2] = templateChar;
+#endif
       if(parts[1][0] == '0' && parts[1][1] == 'x') 
         parts[1] = (char)stoul(parts[1], NULL, 16);
       if(parts[2][0] == '0' && parts[2][1] == 'x') 
         parts[2] = (char)stoul(parts[2], NULL, 16);
       if(parts[3].size() != 1)
       {//number of moves
+#ifdef ENABLE_INCLUDE
         if(parts[3].size() == 2 && parts[3][1] == '%')
           steps = templateSteps;
         else
+#endif
         {
           try
           {
@@ -596,9 +671,11 @@ class TuringMachine
         }
       }
       if(parts[1].size() != 1 || parts[2].size() != 1) return false;
+#ifdef ENABLE_WILDCARD
       if(parts[1][0] == WILDCARD && parts[2][0] == WILDCARD && 
         parts[3][0] == NO_MOVE && curState == newState) return false;
     // this would lead to a endless loop (same state, no movement, take all)
+#endif
       auto* way = new Transition((parts[1])[0],(parts[2])[0],
         (parts[3])[0],steps,newStateNo, curStateNo, breakPoint, internStateNo, 
         ignoreCase);
