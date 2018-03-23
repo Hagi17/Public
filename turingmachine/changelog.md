@@ -2,6 +2,14 @@
 
 ---
 
+### Version 1.2.0
+
+__23.03.18__
+
+- Splitted up in Header and cpp Files
+- deleted Copy constructor and operator=
+- Changed to standard C++17
+
 ### Version 1.1.2
 
 __07.03.18__

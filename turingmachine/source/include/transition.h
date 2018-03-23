@@ -2,19 +2,13 @@
 /// Turing Machine Simulator in C++
 ///
 /// Author: Clemens Hagenbuchner
-/// Last edited: 28.02.17
+/// Last edited: 23.03.18
 /// 
-/// class for encupsulation of a 5-Tupel (Transition)
+/// class for encupsulation of a 5-Tupel (Transition) - header file
 ///
 
 #ifndef _TRANSITION_H_
 #define _TRANSITION_H_
-
-#include <vector>
-#include <deque>
-#include <string>
-#include <iostream>
-#include <algorithm>
 
 #define WILDCARD '*'
 #define EMPTY '_'
@@ -22,92 +16,117 @@
 #define MOVE_LEFT '<'
 #define NO_MOVE '-'
 
-using namespace std;
-
-class Transition
+namespace TM
 {
-  public:
-    Transition(char input, char output, char move, unsigned long steps, int newState, int curState,
-      bool hasBreakpoint, int intF = -2, bool ignoreCase = false)
-    {
-      mInput = input;
-      mOutput = output;
-      if(move != NO_MOVE && move != MOVE_LEFT && move != MOVE_RIGHT)
-        mMove = NO_MOVE;
-      else
-        mMove = move;
-      mSteps = steps;
-      mNewstate = newState;
-      mCurrstate = curState;
-#ifdef ENABLE_EXTENSIONS
-      mIntF = intF;
+  //----------------------------------------------------------------------------
+  // class representing a transition
+  //
+  class Transition
+  {
+    public:
+      //------------------------------------------------------------------------
+      // Standard Constructor
+      // @param input the character to signal the selection of this transition 
+      //          when read
+      // @param output the character to be written on tape if this transition is
+      //          selected
+      // @param move the head-movement in combination with this transition
+      // @param steps the number of steps the head moves
+      // @param newState the next State
+      // @param curState the old State
+      // @param hasBreakPoint indicates if this transition has a breakpoint
+      // @param intF internal function
+      // @param ignoreCase indicates whethter this transition ignores case on 
+      //          input
+      //
+      Transition(const char& input, const char& output, const char& move, 
+        const unsigned long& steps, const int& newState, const int& curState, 
+        const bool& hasBreakpoint, int intF = -2, bool ignoreCase = false);
+      //------------------------------------------------------------------------
+      // Standard Denstructor
+      //
+      virtual ~Transition();
+      //------------------------------------------------------------------------
+      // Standard Copy Constructor
+      //
+      Transition(const Transition& another) = delete;
+      //------------------------------------------------------------------------
+      // Standard operator=
+      //
+      Transition& operator=(const Transition& another) = delete;
+      //------------------------------------------------------------------------
+      // returns the move indicator
+      //
+      const char moveChar() const { return mMove; }
+#ifndef DISABLE_EXTENSIONS
+      //------------------------------------------------------------------------
+      // returns the internal function address
+      //
+      const int InternalFunction() const { return mIntF; }
+#endif
+      //------------------------------------------------------------------------
+      // return the outputs of this transition
+      //
+      void operate(char& writeChar, int& newState, int& move) const;
+      //------------------------------------------------------------------------
+      // returns if this transition has a breakpoint
+      //
+      const bool hasBreakPoint() const { return mHasBreakpoint; }
+      //------------------------------------------------------------------------
+      // returns if this transition accepts the given character
+      //
+      const bool acceptsChar(const char& input) const;
+      //------------------------------------------------------------------------
+      // returns if this transition accepts any character
+      //
+#ifndef DISABLE_WILDCARD
+      const bool acceptsAny() const { return mInput == WILDCARD; }
 #else
-      mIntF = -2;
+      const bool acceptsAny() const { return false; }
 #endif
-      mHasBreakpoint = hasBreakpoint;
-      mIgnoreCase = ignoreCase;
-    }
-    ~Transition()
-    {
-      
-    }
-    char moveChar()
-    {
-      return mMove;
-    }
-#ifdef ENABLE_EXTENSIONS
-    int InternalFunction()
-    {
-      return mIntF;
-    }
-#endif
-    void operate(char& writeChar, int& newState, int& move)
-    {
-      writeChar = mOutput;
-      newState = mNewstate;
-      move = getMove();
-      if(move > 0) move = (int)mSteps;
-      else if(move < 0) move = - ((int)mSteps);
-    }
-    bool hasBreakPoint() 
-    {
-      return mHasBreakpoint;
-    }
-    bool acceptsChar(char input)
-    {
-      if(mInput == input) return true;
-      if(mIgnoreCase && (toupper(input) == toupper(mInput)))
-        return true;
-      return acceptsAny();
-    }
-    bool acceptsAny()
-    {
-#ifdef ENABLE_WILDCARD
-      return mInput == WILDCARD;
-#else
-      return false;
-#endif
-    }
-  private:
-  
-    int getMove()
-    {
-      if(mMove == NO_MOVE) return 0;
-      if(mMove == MOVE_RIGHT) return 1;
-      if(mMove == MOVE_LEFT) return -1;
-      return 0;
-    }
-    char mMove; 
-    char mInput;
-    unsigned long mSteps;
+    private:
+      //------------------------------------------------------------------------
+      // input character
+      //
+      char mInput;
+      //------------------------------------------------------------------------
+      // output character
+      //
+      char mOutput;
+      //------------------------------------------------------------------------
+      // movement indicator (<: left, >: right, -:stay)
+      //
+      char mMove; 
+      //------------------------------------------------------------------------
+      // number of steps
+      //
+      unsigned long mSteps;
+      //------------------------------------------------------------------------
+      // new state
+      //
+      int mNewstate;
+      //------------------------------------------------------------------------
+      // current state
+      //
+      int mCurrstate;
+      //------------------------------------------------------------------------
+      // internal function
+      //
+      int mIntF;
+      //------------------------------------------------------------------------
+      // has breakpoint
+      //
+      bool mHasBreakpoint;
+      //------------------------------------------------------------------------
+      // ignores case on input
+      //
+      bool mIgnoreCase;
     
-    bool mHasBreakpoint;
-    bool mIgnoreCase;
-    
-    char mOutput;
-    int mNewstate;
-    int mCurrstate;
-    int mIntF;
-};
+      //------------------------------------------------------------------------
+      // returns the movement indicator as integer
+      //
+      const int getMove() const;
+  };
+}
 
 #endif

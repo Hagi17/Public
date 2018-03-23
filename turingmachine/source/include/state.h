@@ -2,7 +2,7 @@
 /// Turing Machine Simulator in C++
 ///
 /// Author: Clemens Hagenbuchner
-/// Last edited: 28.02.17
+/// Last edited: 23.03.17
 /// 
 /// class for encupsulation of a State
 ///
@@ -12,98 +12,78 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 
 #include "transition.h"
 
-using namespace std;
+using std::string;
+using std::vector;
+using std::shared_ptr;
 
-class State
+namespace TM
 {
-  public:
+  //----------------------------------------------------------------------------
+  // class representing the current state of the turing machine
+  //
+  class State
+  {
+    public:
+      //------------------------------------------------------------------------
+      // Standard Constructor
+      //
+      State(const string& name);
+      //------------------------------------------------------------------------
+      // Standard Destructor
+      //
+      virtual ~State();
+      //------------------------------------------------------------------------
+      // Standard Copy Constructor
+      //
+      State(const State& another) = delete;
+      //------------------------------------------------------------------------
+      // Standard operator=
+      //
+      State& operator=(const State& another) = delete;
+      //------------------------------------------------------------------------
+      // returns the Internal Function corresponding to the given char 
+      //  (=transition) on the tape
+      //
+#ifndef DISABLE_EXTENSIONS
+      int InternalFunction(const char& readChar);
+#endif
+      //------------------------------------------------------------------------
+      // transend to the next state
+      // @param readChar input character on the tape
+      // @param writeChar (output) character to be written on the tape
+      // @param newState (output) next state
+      // @param move (output) head movement to be executed
+      // @param breakPoint (output) indicates whethter this transition 
+      //         has an active breakPoint
+      //
+      // returns if any transition was made
+      //
+      bool operate(const char& readChar, char& writeChar, int& newState, 
+        int& move, bool& breakPoint);
+      //------------------------------------------------------------------------
+      // return the name of the current state
+      // 
+      const string getName() const { return mName; }
+      //------------------------------------------------------------------------
+      // add a transition to this state
+      //
+      void addTransition(shared_ptr<Transition>& way);
+      
+    private:
+      //------------------------------------------------------------------------
+      // name of the state
+      //
+      string mName;
+      //------------------------------------------------------------------------
+      // list of all transitions
+      //
+      vector<shared_ptr<Transition>> mActions;
+  };
 
-    State(string name)
-    {
-      mName = name;
-      mActions = vector<Transition*>();
-    }
-    ~State()
-    {
-      while(!mActions.empty())
-      {
-        delete mActions.back();
-        mActions.pop_back();
-      }
-    }
-#ifdef ENABLE_EXTENSIONS
-    int InternalFunction(char readChar)
-    {
-      int index = 0;
-      int wildCardIndex = -1;
-      int mActionsSize = (int)mActions.size();
-      for(index = 0; index < mActionsSize; index++)
-      {
-        Transition* tupel = mActions[index];
-        if(tupel->acceptsAny())
-          wildCardIndex = index;
-        else if(tupel->acceptsChar(readChar))
-          return tupel->InternalFunction();
-      }
-      if(index >= mActionsSize)
-        index = -1;
-      if(index == -1 && wildCardIndex > -1)
-      {
-        return mActions[wildCardIndex]->InternalFunction();
-      }
-      return -2;
-    }
-#endif
-    bool operate(char readChar, char& writeChar, int& newState, int& move, 
-      bool& breakPoint)
-    {
-      int index = 0;
-#ifdef ENABLE_WILDCARD
-      int wildCardIndex = -1;
-#endif
-      int mActionsSize = (int)mActions.size();
-      for(index = 0; index < mActionsSize; index++)
-      {
-        Transition* tupel = mActions[index];
-#ifdef ENABLE_WILDCARD
-        if(tupel->acceptsAny())
-          wildCardIndex = index;
-        else 
-#endif
-        if(tupel->acceptsChar(readChar))
-        {
-          tupel->operate(writeChar, newState, move);
-          if(tupel->hasBreakPoint()) breakPoint = true;
-          return true;
-        }
-      }
-      if(index >= mActionsSize)
-        index = -1;
-#ifdef ENABLE_WILDCARD
-      if(index == -1 && wildCardIndex > -1)
-      {
-        mActions[wildCardIndex]->operate(writeChar, newState, move);
-        if(mActions[wildCardIndex]->hasBreakPoint()) breakPoint = true;
-        return true;
-      }
-#endif
-      return false;
-    }
-    string getName()
-    {
-      return mName;
-    }
-    void addTransition(Transition* way)
-    {
-      mActions.push_back(way);
-    }
-  private:
-    string mName;
-    
-    vector<Transition*> mActions;
-};
+}
 
 #endif

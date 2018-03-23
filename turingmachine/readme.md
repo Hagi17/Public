@@ -4,22 +4,30 @@
 
 **Source-Files:**  
 [Main][mainsrc]  
-[Turing Machine class][tmsrc]  
-[Tape class][tapesrc]  
-[State class][statesrc]  
-[5Tupel class][tupelsrc]  
-[Support functions][supsrc]  
+[Turing Machine class][tmsrc_h]  
+[Turing Machine class.cpp][tmsrc_cpp]  
+[Tape class][tapesrc_h]  
+[Tape class.cpp][tapesrc_cpp]  
+[State class][statesrc_h]  
+[State class.cpp][statesrc_cpp]  
+[5Tupel class][tupelsrc_h]  
+[5Tupel class.cpp][tupelsrc_cpp]  
+[Support functions.h][supsrc_h]  
+[Support functions.cpp][supsrc_cpp]  
+[TM Sim Functions.h][tmsimfunc_h]  
+[TM Sim Functions.cpp][tmsimfunc_cpp]  
 
-**Compile:**  *g++ -std=c++11 -o tm tmsim.cpp*
+**Compile:**  *make*
 
-*c++11* is minimum standard.
+*c++17* is minimum standard.
+There are also a makefile target toytm, simpletm and silenttm available.
 
 **Defines:**  
 ADVANCED_OUTPUT for more detailed output during loading  
 DISABLE_LOG to disable the log function completly  
 DISABLE_EXTENSIONS to disable the internal functions completly  
-SILENT to disable any output (only output via files)  
-ENABLE_TOY to enable the -toy argument for toy files  
+DISABLE_OUTPUT to disable any output (only output via files)  
+DISABLE_TOY to disable the -toy argument for toy files  
 DISABLE_WARNINGS to disable the stop at warnings (certain amount of steps)  
 DISABLE_WILDCARD to disable wildcard processing  
 DISABLE_INCLUDE to disable wildcard processing  
@@ -137,8 +145,15 @@ Add two binary numbers [Add](code/addr.tm)
 Toy-Code Interpreter [Toy](code/toytm/toytm.tm)
 
 [mainsrc]: source/tmsim.cpp  
-[tmsrc]: source/turingmachine.h  
-[tapesrc]: source/tape.h  
-[statesrc]: source/state.h  
-[tupelsrc]: source/transition.h 
-[supsrc]: source/support.h  
+[tmsrc_cpp]: source/turingmachine.cpp  
+[tmsrc_h]: source/include/turingmachine.h  
+[tapesrc_cpp]: source/tape.cpp  
+[tapesrc_h]: source/include/tape.h  
+[statesrc_cpp]: source/state.cpp  
+[statesrc_h]: source/include/state.h  
+[tupelsrc_cpp]: source/transition.cpp  
+[tupelsrc_h]: source/include/transition.h  
+[supsrc_cpp]: source/support.cpp  
+[supsrc_h]: source/include/support.h  
+[tmsimfunc_cpp]: source/tmsimfunc.cpp
+[tmsimfunc_h]: source/include/tmsimfunc.h
