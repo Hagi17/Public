@@ -133,16 +133,16 @@ Internal Functions:  they can also be specified as newstates, that way you need 
 ---
 
 Under /code you will find some TuringMachine-Programs:  
-Copy some characters (0,1,o,z,_) to the right [CopyBinary](code/copybinary.tm)  
-Invert a binary number [Invert](code/not.tm)  
-Shift a binary number one place to the right [rshift](code/rshift.tm)  
-Shift a text one place to the left [lshift](code/lshiftAZ.tm)  
-Encrypt or Decrypt a Text using Monoalphabetic Encryption [CryptMono](code/cryptMono.tm)  
+CopyBinary: Copy some characters (0,1,o,z,_) to the right CopyBinary  
+Invert: Invert a binary number  
+rshift: Shift a binary number one place to the right  
+lshiftAZ: Shift a text one place to the left   
+cryptmono: Encrypt or Decrypt a Text using Monoalphabetic Encryption  
 Encrypt or Decrypt a Text using [ENIGMA](code/enigma/enigma.tm)  
-Increment/Decrement a binary number [Increment](code/increment.tm) / [Decrement](code/decrement.tm)  
-Multiply two binary numbers [Multiply](code/multiplyr.tm)  
-Add two binary numbers [Add](code/addr.tm)  
-Toy-Code Interpreter [Toy](code/toytm/toytm.tm)
+increment/decrement: Increment/Decrement a binary number  
+multiplyr: Multiply two binary numbers   
+addr: Add two binary numbers  
+Toy-Code Interpreter [Toy](code/toytm/toytm.tm)  
 
 [mainsrc]: source/tmsim.cpp  
 [tmsrc_cpp]: source/turingmachine.cpp  

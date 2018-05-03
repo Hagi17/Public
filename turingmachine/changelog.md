@@ -4,6 +4,10 @@
 
 ### Version 1.2.0
 
+__22.04.18__
+
+- reduce space of directory
+
 __23.03.18__
 
 - Splitted up in Header and cpp Files
