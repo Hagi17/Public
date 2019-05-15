@@ -6,11 +6,22 @@
 <title>Touren</title>
 <script src="res/js/jquery-3.2.1.min.js"></script>
 <script>
+  var tbl_data = -1;
+
   $(document).ready(function(){
-    $.getJSON("", function(data){
+    $.getJSON("https://hagi17.github.io/Public/res/tours.json", function(data){
       var table = jQuery("#tbl");
-      data.tours.forEach(function(tour){
-        tbl.append(
+      console.log(data);
+      tbl_data = data.tours;
+      loadData();
+    }).fail(function(err){console.log(err);});
+  });
+  
+  function loadData() {
+      var table = jQuery("#tbody");
+      table.children().remove();
+    tbl_data.forEach(function(tour){
+        table.append(
           jQuery("<tr>").append(
             jQuery("<td>", {text:tour.datum})
           ).append(
@@ -20,97 +31,96 @@
           ).append(
             jQuery("<td>", {text:tour.schwierigkeit})
           ).append(
-            jQuery("<td>", {text:tour.maxhoehe})
+            jQuery("<td>", {text:tour.art})
+          ).append(
+            jQuery("<td>", {text:tour.maxHoehe})
           ).append(
             jQuery("<td>", {text:tour.aufstieg})
           ).append(
+            jQuery("<td>", {text:tour.hoehendistanz})
+          ).append(
             jQuery("<td>", {text:tour.wegdistanz})
           ).append(
-            jQuery("<td>", {text:tour.startpunkt})
+            jQuery("<td>", {text:tour.start})
           ).append(
-            jQuery("<td>", {text:tour.endpunkt})
+            jQuery("<td>", {text:tour.ende})
           )
         );
       });
-    }).fail(function(err){console.log(err);});
-  });
-  
-  // function from https://www.w3schools.com/howto/howto_js_sort_table.asp
-  function sortTable(n) {
-    var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-    table = document.getElementById("tbl");
-    switching = true;
-    // Set the sorting direction to ascending:
-    dir = "asc";
-    /* Make a loop that will continue until
-      no switching has been done: */
-    while (switching) {
-      // Start by saying: no switching is done:
-      switching = false;
-      rows = table.rows;
-      /* Loop through all table rows (except the
-        first, which contains table headers): */
-      for (i = 1; i < (rows.length - 1); i++) {
-        // Start by saying there should be no switching:
-        shouldSwitch = false;
-        /* Get the two elements you want to compare,
-          one from current row and one from the next: */
-        x = rows[i].getElementsByTagName("TD")[n];
-        y = rows[i + 1].getElementsByTagName("TD")[n];
-        /* Check if the two rows should switch place,
-          based on the direction, asc or desc: */
-        if(compare(x.innerHTML, y.innerHTML, dir, n)) {
-          shouldSwitch = true;
-          break;
-        }
-      }
-      if (shouldSwitch) {
-        /* If a switch has been marked, make the switch
-        and mark that a switch has been done: */
-        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-        switching = true;
-        // Each time a switch is done, increase this count by 1:
-        switchcount ++;
-      } else {
-        /* If no switching has been done AND the direction is "asc",
-      set the direction to "desc" and run the while loop again. */
-        if (switchcount == 0 && dir == "asc") {
-          dir = "desc";
-          switching = true;
-        }
-      }
-    }
   }
   
-  function compare(val1, val2, type, n) {
-    if(n >= 4 && n <= 7) {
-      cmp = Number(val1) > Number(val2);
-      if(type === "desc") return !cmp;
-      return cmp;
+  var oldSort = -1;
+  var dir = -1;
+  
+  function sortTable(n) {
+    jQuery("#col"+oldSort).removeClass(dir<0?"descsort":"ascsort")
+    if(n === oldSort) {
+      dir = -dir; // desc <-> asc
     }
-    cmp = val1.toLowerCase() > val2.toLowerCase();
-    if(type === "desc") return !cmp;
-    return cmp;
+    else {
+      dir = 1;
+    }
+    tbl_data.sort(function(a,b){
+      if(n == 0) return cmpJson(a.datum, b.datum, dir, n);
+      if(n == 1) return cmpJson(a.ziel, b.ziel, dir, n);
+      if(n == 6) return cmpJson(a.aufstieg, b.aufstieg, dir, n);
+      if(n == 3) return cmpJson(a.schwierigkeit, b.schwierigkeit, dir, n);
+      if(n == 4) return cmpJson(a.art, b.art, dir, n);
+      if(n == 5) return cmpJson(a.maxHoehe, b.maxHoehe, dir, n);
+      if(n == 7) return cmpJson(a.hoehendistanz, b.hoehendistanz, dir, n);
+      if(n == 8) return cmpJson(a.wegdistanz, b.wegdistanz, dir, n);
+      if(n == 9) return cmpJson(a.start, b.start, dir, n);
+      return 0;
+    });
+    loadData();
+    oldSort = n;
+    jQuery("#col"+n).addClass(dir<0?"descsort":"ascsort")
+  }
+  
+  function cmpJson(val1, val2, type, n) {
+    if(n == 0) {
+      var d1 = Date.parse(val1);
+      console.log(d1);
+      var d2 = Date.parse(val2);
+      return type * ((d1 < d2)?-1:(d1>d2)?1:0);
+    }
+    if(n >= 5 && n <= 8) {
+      var nr1 = Number(val1);
+      var nr2 = Number(val2);
+      return type * ((nr1 < nr2)?-1:(nr1>nr2)?1:0);
+    }
+    cmpA = val1.toLowerCase() > val2.toLowerCase();
+    cmpB = val1.toLowerCase() < val2.toLowerCase();
+    return type * (cmpB ? -1 : cmpA ? 1:0);
   }
 </script>
+<style>
+  .ascsort {
+    text-decoration: underline;
+  }
+  .descsort {
+    text-decoration: overline;
+  }
+</style>
 </head>
 <body>
 <table border="1" id="tbl">
   <thead>
     <tr>
-      <th onclick="sortTable(0)">Datum</th>
-      <th onclick="sortTable(1)">Ziel</th>
+      <th onclick="sortTable(0)" id="col0">Datum</th>
+      <th onclick="sortTable(1)" id="col1">Ziel</th>
       <th>Bezeichnung</th>
-      <th onclick="sortTable(3)">Schwierigkeit</th>
-      <th onclick="sortTable(4)">Maximale H&ouml;he</th>
-      <th onclick="sortTable(5)">Aufstieg</th>
-      <th onclick="sortTable(6)">H&ouml;hendistanz</th>
-      <th onclick="sortTable(7)">Wegdistanz</th>
-      <th onclick="sortTable(8)">Startpunkt</th>
+      <th onclick="sortTable(3)" id="col3">Schwierigkeit</th>
+      <th onclick="sortTable(4)" id="col4">Art</th>
+      <th onclick="sortTable(5)" id="col5">Maximale H&ouml;he<br>m</th>
+      <th onclick="sortTable(6)" id="col6">Aufstieg<br>hm</th>
+      <th onclick="sortTable(7)" id="col7">H&ouml;hendistanz<br>hm</th>
+      <th onclick="sortTable(8)" id="col8">Wegdistanz<br>km</th>
+      <th onclick="sortTable(9)" id="col9">Startpunkt</th>
       <th>Endpunkt</th>
     </tr>
   </thead>
-  <tbody>
+  <tbody id="tbody">
   </tbody>
 </table>
 </body>
