@@ -1,4 +1,4 @@
-{"modification-date":"02.07.2019","tours":[
+{"modification-date":"03.07.2019","tours":[
 {"datum":"1999-05-24","ziel":"Issenanger Alm (1366m); Stubai","bezeichnung":"Besinnungsweg","schwierigkeit":"T2","art":"Wanderung","maxHoehe":1400,"aufstieg":380,"hoehendistanz":380,"wegdistanz":5.5,"start":"Neder (1020m)","ende":"Neder (1020m)"},
 {"datum":"1999-05-30","ziel":"Naviser Hütte (1787m); Navis","bezeichnung":"","schwierigkeit":"T1","art":"Wanderung","maxHoehe":1787,"aufstieg":440,"hoehendistanz":440,"wegdistanz":3.4,"start":"Navis P. Schranzberg (1400m)","ende":"Navis P. Schranzberg (1400m)"},
 {"datum":"1999-06-20","ziel":"Boscheben (2030m); Innsbruck","bezeichnung":"","schwierigkeit":"T2","art":"Wanderung","maxHoehe":2030,"aufstieg":60,"hoehendistanz":1000,"wegdistanz":9.2,"start":"Patscherkofel Bergstation (1964m)","ende":"Mühltal (1039m)"},
@@ -422,8 +422,8 @@
 {"datum":"2018-06-10","ziel":"Brunntal Gipfel (1200m); Graz Umgebung","bezeichnung":"Sanduhrparadies","schwierigkeit":"5  A0","art":"Alpinklettern","maxHoehe":1200,"aufstieg":753,"hoehendistanz":753,"wegdistanz":9,"start":"Mixnitz (447m)","ende":"Mixnitz (447m)"},
 {"datum":"2018-06-16","ziel":"Nördlicher Elferturm (2495m); Stubai","bezeichnung":"Elfer Nordwand KS","schwierigkeit":"D/E, I+","art":"Bergtour|Klettersteig","maxHoehe":2495,"aufstieg":701,"hoehendistanz":701,"wegdistanz":5,"start":"Elferlifte (1794m)","ende":"Elferlifte (1794m)"},
 {"datum":"2018-06-17","ziel":"P. Familienpiste (1420m); Innsbruck","bezeichnung":"","schwierigkeit":"T2","art":"Wanderung","maxHoehe":1420,"aufstieg":406,"hoehendistanz":406,"wegdistanz":4,"start":"Grünwalderhof (1014m)","ende":"Grünwalderhof (1014m)"},
-{"datum":"2018-06-21","ziel":"Hoher Napf (2247m); Wipptal","bezeichnung":"","schwierigkeit":"I","art":"Wanderung","maxHoehe":2247,"aufstieg":785,"hoehendistanz":785,"wegdistanz":6.2,"start":"Toldern (1462m)","ende":"Toldern (1462m)"},
 {"datum":"2018-06-21","ziel":"Zirler Mähder (1200m); Karwendel","bezeichnung":"","schwierigkeit":"T2","art":"Wanderung","maxHoehe":1200,"aufstieg":560,"hoehendistanz":560,"wegdistanz":5.5,"start":"Zirl (616m)","ende":"Zirl (616m)"},
+{"datum":"2018-06-21","ziel":"Hoher Napf (2247m); Wipptal","bezeichnung":"","schwierigkeit":"I","art":"Wanderung","maxHoehe":2247,"aufstieg":785,"hoehendistanz":785,"wegdistanz":6.2,"start":"Toldern (1462m)","ende":"Toldern (1462m)"},
 {"datum":"2018-06-23","ziel":"Frau Hitt (2270m); Nordkette","bezeichnung":"","schwierigkeit":"III (eine Stelle","art":"Bergtour","maxHoehe":2270,"aufstieg":365,"hoehendistanz":365,"wegdistanz":6,"start":"Seegrube (1905m)","ende":"Seegrube (1905m)"},
 {"datum":"2018-06-30","ziel":"Mittlerer Plenderlesee (2317m); Sellrain","bezeichnung":"","schwierigkeit":"T2","art":"Wanderung","maxHoehe":2320,"aufstieg":300,"hoehendistanz":300,"wegdistanz":7.3,"start":"Kühtai (2020m)","ende":"Kühtai (2020m)"},
 {"datum":"2018-07-09","ziel":"Hornelen (820m); Norwegen","bezeichnung":"","schwierigkeit":"T2","art":"Wanderung","maxHoehe":820,"aufstieg":750,"hoehendistanz":750,"wegdistanz":12,"start":"Klubben (70m)","ende":"Klubben (70m)"},
@@ -528,5 +528,6 @@
 {"datum":"2019-06-22","ziel":"Patscherkofel Bergstation (1964m); Innsbruck","bezeichnung":"","schwierigkeit":"T2","art":"Wanderung","maxHoehe":1964,"aufstieg":950,"hoehendistanz":950,"wegdistanz":6.9,"start":"P Heiligwasser (1015m)","ende":"Patscherkofel Bergstation (1964m)"},
 {"datum":"2019-06-27","ziel":"Viggarspitze (2306m); Innsbruck","bezeichnung":"","schwierigkeit":"T2","art":"Wanderung","maxHoehe":2306,"aufstieg":340,"hoehendistanz":340,"wegdistanz":10.2,"start":"Patscherkofel Bergstation (1964m)","ende":"Patscherkofel Bergstation (1964m)"},
 {"datum":"2019-06-29","ziel":"Pockkogel (2807m); Sellrain","bezeichnung":"","schwierigkeit":"T3","art":"Wanderung","maxHoehe":2807,"aufstieg":530,"hoehendistanz":1150,"wegdistanz":10.1,"start":"Kühtai Bergstation Drei Seen Bahn (2409m)","ende":"Haggen (1646m)"},
-{"datum":"2019-07-02","ziel":"Obere Bacherwandalm (1899m); Stubai","bezeichnung":"","schwierigkeit":"T2","art":"Wanderung","maxHoehe":1899,"aufstieg":702,"hoehendistanz":702,"wegdistanz":7.6,"start":"Falbeson Badesee (1194m)","ende":"Falbeson Badesee (1194m)"}
-],"count":530}
+{"datum":"2019-07-02","ziel":"Obere Bacherwandalm (1899m); Stubai","bezeichnung":"","schwierigkeit":"T2","art":"Wanderung","maxHoehe":1899,"aufstieg":702,"hoehendistanz":702,"wegdistanz":7.6,"start":"Falbeson Badesee (1194m)","ende":"Falbeson Badesee (1194m)"},
+{"datum":"2019-07-03","ziel":"Zwölferspitze (2562m); Stubai","bezeichnung":"","schwierigkeit":"II","art":"Bergtour","maxHoehe":2562,"aufstieg":768,"hoehendistanz":2080,"wegdistanz":18.4,"start":"Elferlifte (1794m)","ende":"Neustift P Elfer (978m)"}
+],"count":531}
