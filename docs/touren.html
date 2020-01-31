@@ -12,7 +12,7 @@
         $(document).ready(function() {
             $.getJSON("https://hagi17.github.io/Public/res/tours.json", function(data) {
                 var table = jQuery("#tbl");
-                console.log(data);
+                //console.log(data);
                 tbl_data = data.tours;
                 loadData();
             }).fail(function(err) {

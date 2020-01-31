@@ -1,0 +1,52 @@
+figure{
+  margin: 0;
+}
+
+figure.einzel {
+  display: inline-block;
+  padding: 10px;
+  width: 31%;
+  border: 1px solid gainsboro;
+}
+
+figcaption {
+  padding: 10px;
+  text-align: center;
+  font-family: Arial;
+}
+
+body {
+  max-width: 90em;
+}
+
+figure img {
+  width: 100%;
+}
+	  
+@media only screen and (max-width:800px) {
+  body{
+    width: 100%;
+    margin: 2% 0;
+    padding: 1%;
+  }
+  figure.einzel {
+    width: 48%;
+  }
+}   
+
+@media only screen and (max-width:600px) {
+  figure.einzel {
+    width: 96%;
+  }
+}
+
+span.date
+{
+  color: gray;
+  font-style: italic;
+}
+
+h2
+{
+  text-align: center;
+}
