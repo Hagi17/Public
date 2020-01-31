@@ -9,11 +9,19 @@ $(document).ready(function() {
 	function createAlbum(images)
 	{
 		var album = jQuery("figure.gesamt");
+		var year = 0;
+		var years = [];
 		images.forEach(function(img){
-			var title = img.title;
+			var tmp = parseYear(img.title);
+			if(tmp !== year)
+			{
+				album.append(jQuery("<a>",{name: tmp}));
+				year = tmp;
+				years.push(tmp);
+			}
 			var linecnt = 0;
 			var figcap = jQuery("<figcaption>", {text: img.title});
-			if(title.indexOf("\n") > 0)
+			if(img.title.indexOf("\n") > 0)
 			{
 				linecnt+=1;
 				figcap.html(figcap.html().replace(/\n/g, '<br>'));
@@ -29,5 +37,15 @@ $(document).ready(function() {
 			).append(figcap);
 			album.append(fig);
 		});
+		var time = jQuery("<span>", {class: "timechoice"});
+		years.forEach(function(yr){
+			time.append("<a>", {text: yr, href: "#" + yr});
+		});
+		album.prepend(time);
+	}
+	
+	function parseYear(path)
+	{
+		return parseInt(path.substr(path.length - 4));
 	}
 });
