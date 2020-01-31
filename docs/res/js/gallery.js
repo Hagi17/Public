@@ -39,7 +39,7 @@ $(document).ready(function() {
 		});
 		var time = jQuery("<span>", {class: "timechoice"});
 		years.forEach(function(yr){
-			time.append("<a>", {text: yr, href: "#" + yr});
+			time.append(jQuery("<a>", {text: String(yr), href: "#" + String(yr)}));
 		});
 		time.insertBefore(album);
 	}
