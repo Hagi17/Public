@@ -12,7 +12,7 @@ $(document).ready(function() {
 		var year = 0;
 		var years = [];
 		images.forEach(function(img){
-			var tmp = parseYear(img.title);
+			var tmp = parseYear(img.path);
 			if(tmp !== year)
 			{
 				album.append(jQuery("<a>",{name: tmp}));
@@ -41,7 +41,7 @@ $(document).ready(function() {
 		years.forEach(function(yr){
 			time.append("<a>", {text: yr, href: "#" + yr});
 		});
-		album.prepend(time);
+		time.insertBefore(album);
 	}
 	
 	function parseYear(path)
