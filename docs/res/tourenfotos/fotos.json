@@ -42,5 +42,10 @@
         { "path": "Weissseespitze2020", "title": "Weissseespitze", "date": "Sep. 2020" },
         { "path": "Predigtstein2020", "title": "Blick auf den Predigtstein", "date": "Okt. 2020" },
         { "path": "Acherkogel2020", "title": "Blick auf den Acherkogel", "date": "Okt. 2020" }
-    ]
+		{"path":"Handschuhspitzen2020","title":"Blick auf den Simmering und die Handschuhspitzen","date":"Nov. 2020"},
+		{"path":"Nockspitze2020","title":"Blick auf die Nockspitze","date":"Nov. 2020"},
+		{"path":"NockspitzeVorgipfel2020","title":"Blick auf den Nockspitzen Vorgipfel","date":"Nov. 2020"},
+		{"path":"Roetenspitze2020","title":"Roetenspitze Kreuz vor dem Habicht","date":"Nov. 2020"},
+		{"path":"Serles2020_2","title":"Blick auf die Serles","date":"Nov. 2020"}
+	]
 }
