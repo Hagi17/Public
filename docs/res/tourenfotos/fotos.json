@@ -47,5 +47,12 @@
         { "path": "NockspitzeVorgipfel2020", "title": "Blick auf den Nockspitzen Vorgipfel", "date": "Nov. 2020" },
         { "path": "Roetenspitze2020", "title": "Roetenspitze Kreuz vor dem Habicht", "date": "Nov. 2020" },
         { "path": "Serles2020_2", "title": "Blick auf die Serles", "date": "Nov. 2020" },
-{"path":"Berglasspitze2021","title":"Berglasspitze","date":"Jan. 2021"},{"path":"Zuckerhuetl2021","title":"Zuckerhuetl","date":"Mar. 2021"}    ]
+{"path":"Berglasspitze2021","title":"Berglasspitze","date":"Jan. 2021"},{"path":"Zuckerhuetl2021","title":"Zuckerhuetl","date":"Mar. 2021"},
+	{"path":"Pfriemeswand2021","title":"Pfriemeswand", "date":"Apr. 2021"},
+		{"path":"GschnitzerTribulaun2021","title":"Gschnitztaler Tribulaun","date":"Juli 2021"},
+		{"path":"Tribulaune2021","title":"Tribulaune","date":"Juli 2021"},
+			{"path":"LizumerReckner2021","title":"Lizumer Reckner","date":"Juli 2021"},
+				{"path":"Koenigsspitze2021","title":"Koenigsspitze","date":"Juli 2021"},
+				{"path":"Cevedale2021","title":"Monte Cevedale","date":"Juli 2021"},
+				{"path":"Ortler2021","title":"Ortler","date":"Juli 2021"}]
 }
