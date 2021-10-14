@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="robots" content="noindex,nofollow,noimageindex,noarchive,nocache,nosnippet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0" />
+    <title>Git Repository / Webpage von Clemens</title>
+
+    <!-- CSS  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="res/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection" />
+    <link href="res/css/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
+
+    <style>
+        img.app-view {
+            max-width: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="light-blue lighten-1" role="navigation">
+        <div class="nav-wrapper container">
+            <a id="logo-container" href="#" class="brand-logo"><img src="res/me.jpg" alt="me" style="max-width:100px;" /></a>
+            <ul class="right hide-on-med-and-down">
+                <!--<li><a href="#">Navbar Link</a></li>-->
+            </ul>
+
+            <ul id="nav-mobile" class="sidenav">
+                <!--<li><a href="#">Navbar Link</a></li>-->
+            </ul>
+            <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+        </div>
+    </nav>
+    <div class="section no-pad-bot" id="index-banner">
+        <div class="container">
+            <br><br>
+            <h1 class="header center orange-text">Tour App</h1>
+            <div class="row center">
+                <h5 class="header col s12 light">V 1.0 Simple Android App for planing tours</h5>
+            </div>
+            <div class="row center">
+                <a href="res/tourlogger.apk" id="download-button" class="btn-large waves-effect waves-light orange">
+                  Download</a>
+            </div>
+            <br><br>
+
+        </div>
+    </div>
+
+
+    <div class="container">
+        <div class="section">
+            <div class="row">
+                <div class="col s12">
+                    <h5 class="center">Information</h5>
+                    <p class="light">No Responsibility. The App may be buggy. Updates may be released here somewhen in the future. Bug reports are always welcome (per mail). Copyrights of contents may belong to other organisations.</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <h5 class="center">Install</h5>
+                    <p class="light">For installing the app, use the above apk. Install from unknown sources must be enabled!</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <h2 class="center light-blue-text"><i class="material-icons">map</i></h2>
+                    <h5 class="center">Map</h5>
+                    <p class="light">This displays an OpenTopoMap, allowing you to navigate. You can enable a latitude/longitude grid, as well as your current position. Additionally you can enable waypoints, which allows you to add waypoints upon long presses. You can
+                        use the Graphhopper Routing Engine to find a suitable path over the waypoints. The App will tell you an approximate length, ascend and travel time. (In the current version, it uses 6km/h and 600hm/h) Additionally a tour schedule
+                        for the waypoints can be exported, which will use the routing Engine to estimate arrival times for each waypoint. The routing requires some pre computed files for Graphhopper:
+                        <a href="res/graphhopper_austria.zip">Austria</a> (unpack it best into <i>internal storage/graphhopper</i>)
+                    </p>
+                    <img src="res/imgs/tourlogger_map.png" class="app-view" tooltip="Map" alt="Map" />
+                    <img src="res/imgs/tourlogger_enable_grid.png" class="app-view" />
+                    <img src="res/imgs/tourlogger_location.png" class="app-view" />
+                    <img src="res/imgs/tourlogger_grid.png" class="app-view" />
+                    <img src="res/imgs/tourlogger_enable_points.png" class="app-view" />
+                    <img src="res/imgs/tourlogger_waypoints.png" class="app-view" />
+                    <img src="res/imgs/tourlogger_routing.png" class="app-view" />
+                    <img src="res/imgs/tourlogger_schedule.png" class="app-view" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <h5 class="center">Tour Logging</h5>
+                    <p class="light">You can log your movement to a gpx file, the update intervals can be adapted in the settings.</p>
+                    <img src="res/imgs/tourlogger_main.png" class="app-view" />
+                    <img src="res/imgs/tourlogger_logging_active.png" class="app-view" />
+                    <img src="res/imgs/tourlogger_save_logging.png" class="app-view" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <h2 class="center light-blue-text"><i class="material-icons">alarm</i></h2>
+                    <h5 class="center">Tour Schedule</h5>
+                    <p class="light">In the Tour Schedule View you can open a pre-planned tour schedule (*.schedule). The Waypoints will be displayed with their GPS coordinates and their last reaching time. If the GPS is enabled, the app will regularly poll your position
+                        and will advance to the next waypoint if the previous one has been reached. The app will notify you with an alarm if you have not reached the waypoint on time. In the current Version, it will skip all waypoints which lie in the
+                        past upon loading the file.
+                    </p>
+                    <img src="res/imgs/tourlogger_scheduler.png" class="app-view" />
+                    <img src="res/imgs/tourlogger_scheduler2.png" class="app-view" />
+                    <img src="res/imgs/tourlogger_scheduler3.png" class="app-view" />
+                    <img src="res/imgs/tourlogger_scheduler_overtime.png" class="app-view" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <h5 class="center">Settings</h5>
+                    <p class="light">You can log your movement to a gpx file, the update intervals can be adapted in the settings.</p>
+                    <img src="res/imgs/tourlogger_settings.png" class="app-view" />
+                </div>
+            </div>
+
+        </div>
+        <br><br>
+    </div>
+
+    <footer class="page-footer orange">
+        <div class="container">
+            <div class="row">
+                <div class="col l6 s12">
+                    <h5 class="white-text">Attributions</h5>
+                    <p class="grey-text text-lighten-4">
+                        This App uses the <a href="https://opentopomap.org">OpenTopoMap</a> and a modified
+                        <a href="https://www.graphhopper.com/">GraphHopper</a> Routing Engine.
+                    </p>
+
+
+                </div>
+                <div class="col l3 s12">
+                    <h5 class="white-text">Other Apps</h5>
+                    <ul>
+                        <li><a class="white-text" href="https://play.google.com/store/apps/details?id=ch.admin.swisstopo&hl=de&gl=US">Swiss Topo</a></li>
+                        <li><a class="white-text" href="https://play.google.com/store/apps/details?id=com.outdooractive.alpenverein&hl=de&gl=US">Alpenvereinaktiv</a></li>
+                    </ul>
+                </div>
+                <div class="col l3 s12">
+                    <h5 class="white-text">Online Maps</h5>
+                    <ul>
+                        <li><a class="white-text" href="https://opentopomap.org">Open Topo Map</a></li>
+                        <li><a class="white-text" href="https://basemap.at/bmapp/index.html">Basemap</a></li>
+                        <li><a class="white-text" href="https://www.alpenvereinaktiv.at">Alpenvereinaktiv</a></li>
+                        <li><a class="white-text" href="https://map.geo.admin.ch/?topic=swisstopo&lang=de&bgLayer=ch.swisstopo.pixelkarte-farbe">Swiss Topo</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <div class="container">
+                Made by <a class="orange-text text-lighten-3" href="http://materializecss.com">Materialize</a> &nbsp; &nbsp; &nbsp; <small>
+                  Disclaimer: I don't collect any personal data of you, but Github may. Check this
+                  <a rel="help" class="white" href="https://help.github.com/articles/github-privacy-statement/#what-information-github-collects-and-why">link</a> to find out what.
+                  </small>
+            </div>
+        </div>
+    </footer>
+
+
+    <!--  Scripts-->
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="res/js/materialize.js"></script>
+    <script src="res/js/init.js"></script>
+
+</body>
+
+</html>
