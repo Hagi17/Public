@@ -68,10 +68,13 @@
                 <div class="col s12">
                     <h2 class="center light-blue-text"><i class="material-icons">map</i></h2>
                     <h5 class="center">Map</h5>
-                    <p class="light">This displays an OpenTopoMap, allowing you to navigate. You can enable a latitude/longitude grid, as well as your current position. Additionally you can enable waypoints, which allows you to add waypoints upon long presses. You can
-                        use the Graphhopper Routing Engine to find a suitable path over the waypoints. The App will tell you an approximate length, ascend and travel time. (In the current version, it uses 6km/h and 600hm/h) Additionally a tour schedule
-                        for the waypoints can be exported, which will use the routing Engine to estimate arrival times for each waypoint. The routing requires some pre computed files for Graphhopper:
-                        <a href="res/graphhopper_austria.zip">Austria</a> (unpack it best into <i>internal storage/graphhopper</i>)
+                    <p class="light">This displays an OpenTopoMap, allowing you to navigate. The tiles will be cached, providing some sort of offline availability. You can enable a latitude/longitude grid, as well as your current position. Additionally you can enable
+                        waypoints, which allows you to add waypoints upon long presses. You can use the Graphhopper Routing Engine to find a suitable path over the waypoints. The App will tell you an approximate length, ascend and travel time. (In the
+                        current version, it uses 6km/h and 600hm/h) Additionally a tour schedule for the waypoints can be exported, which will use the routing Engine to estimate arrival times for each waypoint. The routing requires some pre computed files
+                        for Graphhopper: (unpack it best into <i>internal storage/graphhopper</i>)
+                        <ul>
+                            <li><a href="res/graphhopper_austria.zip">Austria</a></li>
+                        </ul>
                     </p>
                     <img src="res/imgs/tourlogger_map.png" class="app-view" tooltip="Map" alt="Map" />
                     <img src="res/imgs/tourlogger_enable_grid.png" class="app-view" />
@@ -121,7 +124,7 @@
     <footer class="page-footer orange">
         <div class="container">
             <div class="row">
-                <div class="col l6 s12">
+                <div class="col l3 s12">
                     <h5 class="white-text">Attributions</h5>
                     <p class="grey-text text-lighten-4">
                         This App uses the <a href="https://opentopomap.org">OpenTopoMap</a> and a modified
@@ -135,6 +138,7 @@
                     <ul>
                         <li><a class="white-text" href="https://play.google.com/store/apps/details?id=ch.admin.swisstopo&hl=de&gl=US">Swiss Topo</a></li>
                         <li><a class="white-text" href="https://play.google.com/store/apps/details?id=com.outdooractive.alpenverein&hl=de&gl=US">Alpenvereinaktiv</a></li>
+                        <li><a class="white-text" href="https://oruxmaps.com/cs/en/more/downloads">OruxMaps</a></li>
                     </ul>
                 </div>
                 <div class="col l3 s12">
@@ -144,6 +148,12 @@
                         <li><a class="white-text" href="https://basemap.at/bmapp/index.html">Basemap</a></li>
                         <li><a class="white-text" href="https://www.alpenvereinaktiv.at">Alpenvereinaktiv</a></li>
                         <li><a class="white-text" href="https://map.geo.admin.ch/?topic=swisstopo&lang=de&bgLayer=ch.swisstopo.pixelkarte-farbe">Swiss Topo</a></li>
+                    </ul>
+                </div>
+                <div class="col l3 s12">
+                    <h5 class="white-text">Online Tools</h5>
+                    <ul>
+                        <li><a class="white-text" href="https://skitourenguru.ch/">Schitourenguru</a></li>
                     </ul>
                 </div>
             </div>
