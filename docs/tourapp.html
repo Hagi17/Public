@@ -38,11 +38,12 @@
             <br><br>
             <h1 class="header center orange-text">Tour App</h1>
             <div class="row center">
-                <h5 class="header col s12 light">V 1.0 Simple Android App for planing tours</h5>
+                <h5 class="header col s12 light">V 1.0.1 Simple Android App for planing tours</h5>
             </div>
             <div class="row center">
-                <a href="res/tourlogger.apk" id="download-button" class="btn-large waves-effect waves-light orange">
-                  Download</a>
+                <a href="https://cloud.tugraz.at/index.php/s/r7fR6J58R724enC/download?path=/&files=app/tourlogger.apk" id="download-button" class="btn-large waves-effect waves-light orange">
+                  Download</a><br>
+                <a href="https://cloud.tugraz.at/index.php/s/r7fR6J58R724enC/download?path=/&files=app/tourlogger-v0.apk">Download (v1.0)</a>
             </div>
             <br><br>
 
@@ -66,33 +67,41 @@
             </div>
             <div class="row">
                 <div class="col s12">
-                    <h2 class="center light-blue-text"><i class="material-icons">map</i></h2>
-                    <h5 class="center">Map</h5>
-                    <p class="light">This displays an OpenTopoMap, allowing you to navigate. The tiles will be cached, providing some sort of offline availability. You can enable a latitude/longitude grid, as well as your current position. Additionally you can enable
-                        waypoints, which allows you to add waypoints upon long presses. You can use the Graphhopper Routing Engine to find a suitable path over the waypoints. The App will tell you an approximate length, ascend and travel time. (In the
-                        current version, it uses 6km/h and 600hm/h) Additionally a tour schedule for the waypoints can be exported, which will use the routing Engine to estimate arrival times for each waypoint. The routing requires some pre computed files
-                        for Graphhopper: (unpack it best into <i>internal storage/graphhopper</i>)
-                        <ul>
-                            <li><a href="https://cloud.tugraz.at/index.php/s/MR8Zp3CjEnyMyk9">Austria</a></li>
-                        </ul>
-                    </p>
-                    <img src="res/imgs/tourlogger_map.png" class="app-view" tooltip="Map" alt="Map" />
-                    <img src="res/imgs/tourlogger_enable_grid.png" class="app-view" />
-                    <img src="res/imgs/tourlogger_location.png" class="app-view" />
-                    <img src="res/imgs/tourlogger_grid.png" class="app-view" />
-                    <img src="res/imgs/tourlogger_enable_points.png" class="app-view" />
-                    <img src="res/imgs/tourlogger_waypoints.png" class="app-view" />
-                    <img src="res/imgs/tourlogger_routing.png" class="app-view" />
-                    <img src="res/imgs/tourlogger_schedule.png" class="app-view" />
+                    <h5 class="center">Overview</h5>
+                    <p class="light">
+						The main pages provides access to the other Activities and Settings, as well as allowing easy start tracking your movement. If a GPS listener is active (due to tracking or scheduling), additional information will be displayed.
+						<br>
+						The GPS update intervals can be changed in the settings.
+						<br>
+						Upon stopping tracking, a save page will be opened, where you can enter additional information. The track will then be stored as a gpx filed in the Download folder.
+						</p>
+                    <img src="res/imgs/tourlogger_main.png" class="app-view" />
+                    <img src="res/imgs/tourlogger_main_info.png" class="app-view" />
+                    <img src="res/imgs/tourlogger_tracking.png" class="app-view" />
+                    <img src="res/imgs/tourlogger_save_track.png" class="app-view" />
                 </div>
             </div>
             <div class="row">
                 <div class="col s12">
-                    <h5 class="center">Tour Logging</h5>
-                    <p class="light">You can log your movement to a gpx file, the update intervals can be adapted in the settings.</p>
-                    <img src="res/imgs/tourlogger_main.png" class="app-view" />
-                    <img src="res/imgs/tourlogger_logging_active.png" class="app-view" />
-                    <img src="res/imgs/tourlogger_save_logging.png" class="app-view" />
+                    <h2 class="center light-blue-text"><i class="material-icons">map</i></h2>
+                    <h5 class="center">Map</h5>
+                    <p class="light">This displays an OpenTopoMap, allowing you to navigate. The tiles will be cached, providing some sort of offline availability. You can enable a latitude/longitude grid, as well as your current position. 
+					You can also show/set your home location (will be set if only one marker is on the map)
+					Additionally you can enable
+                        waypoints, which allows you to add/remove waypoints upon presses. You can use the Graphhopper Routing Engine to find a suitable path over the waypoints. The App will tell you an approximate length, ascend and travel time. (In the
+                        current version, it uses the default Graphhopper settings 4km/h and 400hm/h, however, Elevation data is NOT super trustworthy!). Additionally a tour schedule for the waypoints can be exported, which will use the routing Engine to estimate arrival times for each waypoint. The routing requires some pre computed files
+                        for Graphhopper, which can be downloaded from inside the App (Under RoutingEngine)
+						<br>
+						Zipfile for old version:
+                        <ul>
+                            <li><a href="https://cloud.tugraz.at/index.php/s/MR8Zp3CjEnyMyk9">Austria</a></li>
+                        </ul>
+                    </p>
+                    <img src="res/imgs/tourlogger_map2.png" class="app-view" tooltip="Map" alt="Map" />
+                    <img src="res/imgs/tourlogger_map_options.png" class="app-view" />
+                    <img src="res/imgs/tourlogger_enable_points.png" class="app-view" />
+                    <img src="res/imgs/tourlogger_waypoints.png" class="app-view" />
+                    <img src="res/imgs/tourlogger_routing.png" class="app-view" />
                 </div>
             </div>
             <div class="row">
@@ -102,21 +111,47 @@
                     <p class="light">In the Tour Schedule View you can open a pre-planned tour schedule (*.schedule). The Waypoints will be displayed with their GPS coordinates and their last reaching time. If the GPS is enabled, the app will regularly poll your position
                         and will advance to the next waypoint if the previous one has been reached. The app will notify you with an alarm if you have not reached the waypoint on time. In the current Version, it will skip all waypoints which lie in the
                         past upon loading the file.
+						<br>
+						Each line contains<br>
+							longitude latitude time index name<br>
+							The index is used to find the next waypoint upon turning around. (the scheduler will jump forward to the next entry with the same index)
                     </p>
                     <img src="res/imgs/tourlogger_scheduler.png" class="app-view" />
                     <img src="res/imgs/tourlogger_scheduler2.png" class="app-view" />
-                    <img src="res/imgs/tourlogger_scheduler3.png" class="app-view" />
-                    <img src="res/imgs/tourlogger_scheduler_overtime.png" class="app-view" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12">
+                    <h5 class="center">RoutingEngine</h5>
+                    <p class="light">You can change the routing area and download new areas. The top right icon indicates, whether the area is stored on the device, active in the engine or not existent on the device.</p>
+                    <img src="res/imgs/tourlogger_re_fully.png" class="app-view" />
+                    <img src="res/imgs/tourlogger_re_exist.png" class="app-view" />
+                    <img src="res/imgs/tourlogger_re_notfound.png" class="app-view" />
                 </div>
             </div>
             <div class="row">
                 <div class="col s12">
                     <h5 class="center">Settings</h5>
                     <p class="light">You can log your movement to a gpx file, the update intervals can be adapted in the settings.</p>
-                    <img src="res/imgs/tourlogger_settings.png" class="app-view" />
+                    <img src="res/imgs/tourlogger_settings_1.png" class="app-view" />
+					<img src="res/imgs/tourlogger_settings_2.png" class="app-view" />
                 </div>
             </div>
-
+			<div class="row">
+				<div class="col s12">
+					<h5 class="center">Changes</h5>
+					<p class="light">
+					<ul>
+					<li>x Updated GraphHopper (now using V4.0)</li>
+					<li>x Download of Graphhopper data inside App</li>
+					<li>x More Graphhopper Areas</li>
+					<li>x Ability to set Home location / show Map around home location</li>
+					<li>x Easier settings for Graphhopper (RoutingEngine Activity)</li>
+					<li>x Popup with route Info</li>
+					</ul>
+					</p>
+				</div>
+			</div>
         </div>
         <br><br>
     </div>
